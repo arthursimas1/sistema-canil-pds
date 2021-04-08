@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  pds_api:
+    container_name: pds_api
+    image: pds_api:latest
+    volumes:
+      - ../gateway/unix-sockets:/sockets
+      - ./log:/log
+    network_mode: host

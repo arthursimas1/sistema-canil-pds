@@ -1,0 +1,32 @@
+#!/bin/bash
+# -*- coding: utf-8 -*-
+
+remote_server=web@3wx.ru
+
+set -e
+
+deploy_api() {
+  echo "deploy API"
+
+  echo "building container ..."
+  docker build -t pds_api .
+
+  echo "compressing container ..."
+  docker save pds_api:latest | gzip > pds_api_latest.tar.gz
+
+  docker image prune -f
+
+  echo "sending files to remote server ..."
+  scp pds_api_latest.tar.gz docker-compose.yml setup $remote_server:~
+
+  rm -f pds_api_latest.tar.gz
+
+  echo "setting up API ..."
+  ssh -t $remote_server "sudo ./setup"
+
+  echo -e "\033[1;32mdone\033[0m"
+
+  exit 0
+}
+
+deploy_api

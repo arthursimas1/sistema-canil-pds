@@ -1,0 +1,29 @@
+#!/bin/bash
+# -*- coding: utf-8 -*-
+
+remote_server=web@3wx.ru
+
+set -e
+
+deploy_front() {
+  echo "deploy"
+
+  echo "building project ..."
+  yarn build
+
+  echo "compressing source ..."
+  tar -czf front.tar.gz -C build .
+
+  echo "sending files to remote server ..."
+  scp front.tar.gz setup $remote_server:~
+
+  echo "setting up ..."
+  ssh -t $remote_server "sudo ./setup"
+
+  echo "cleaning up ..."
+  rm -f front.tar.gz
+
+  echo -e "\033[1;32mdone\033[0m"
+}
+
+deploy_front

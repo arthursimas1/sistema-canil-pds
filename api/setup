@@ -1,0 +1,20 @@
+#!/bin/bash
+# -*- coding: utf-8 -*-
+
+set -e
+
+docker load < pds_api_latest.tar.gz
+
+rm -f pds_api_latest.tar.gz $BASH_SOURCE
+
+chown docker:docker -R docker-compose.yml
+mv docker-compose.yml /home/docker/pds_api/
+
+cd /home/docker/pds_api || exit 1
+docker-compose up -d --build --remove-orphans
+
+docker update --restart on-failure pds_api
+
+docker image prune -af
+
+exit 0

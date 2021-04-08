@@ -1,0 +1,80 @@
+@font-face {
+  font-family: Museo;
+  src: url(./assets/fonts/Museo100-Regular.otf);
+  font-style: normal;
+  font-weight: 100;
+}
+
+@font-face {
+  font-family: Museo;
+  src: url(./assets/fonts/Museo300-Regular.otf);
+  font-style: normal;
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: Museo;
+  src: url(./assets/fonts/Museo500-Regular.otf);
+  font-style: normal;
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: Museo;
+  src: url(./assets/fonts/Museo700-Regular.otf);
+  font-style: normal;
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: Museo;
+  src: url(./assets/fonts/Museo900-Regular.otf);
+  font-style: normal;
+  font-weight: 900;
+}
+
+* {
+  font-family: 'Museo', Helvetica, serif;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary: #c83c46ff;
+  --secondary: #0d2f35ff;
+  --background: #558480;
+  --text: #555;
+  --black: #000000ff;
+  --white: #ffffffff;
+  --lightgray: #a9a9a9ff;
+  --success: #2e8b57ff;
+}
+
+html,
+body {
+  font-family: 'Museo', sans-serif;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  color: var(--text);
+  text-decoration: underline;
+}
+
+#root {
+  min-height: 100vh;
+  padding-top: 80px;
+  background-image: linear-gradient(#fff, #f3f2f0);
+}
+
+[hidden] { display: none !important; }
+center {
+  display: block;
+  text-align: center;
+}
+
+legend.MuiFormLabel-root,
+label.MuiInputLabel-root {
+    color: var(--white);
+}
