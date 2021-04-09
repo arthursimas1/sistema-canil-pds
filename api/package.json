@@ -7,7 +7,7 @@
     "start": "NODE_ENV=development nodemon src/index.mjs",
     "startp": "NODE_ENV=production node src/index.mjs &>> /log/error.log",
     "test": "NODE_ENV=test mocha --require chai/register-should --extension .test.mjs --exit",
-    "lint": "eslint src test --ext .mjs",
+    "lint": "eslint src --ext .mjs",
     "deploy": "./deploy"
   },
   "keywords": [],

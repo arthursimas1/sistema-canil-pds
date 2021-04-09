@@ -1,5 +1,4 @@
 import bcrypt from 'bcryptjs'
-import wlc from '../waterline.mjs'
 
 function Normalize(data, proceed) {
   if (typeof data.password === 'string')
