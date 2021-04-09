@@ -12,8 +12,8 @@ app.use(express.json())
 // routes setup
 const routes = express.Router()
 
-import placeholderController from './controllers/placeholderController.mjs'
-placeholderController(routes)
+import PetController from './controllers/PetController.mjs'
+PetController(routes)
 
 import HealthCheckController from './controllers/healthCheckController.mjs'
 HealthCheckController(routes)

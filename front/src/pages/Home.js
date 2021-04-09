@@ -7,7 +7,7 @@ import Search from '../components/Search'
 import Box from '../components/Box'
 
 const Main = styles.main`
-  background-color: red;
+  //background-color: red;
   min-height: 100%;
   display: flex;
   flex-direction: column;
@@ -35,16 +35,16 @@ export default function Home() {
       <Box>
         <Search />
         <Menu>
-            <h3>Core</h3>
-            <Link to='/add-pet'>Adicionar PET</Link>
-            <Link to='/add-owner'>Adicionar Dono</Link>
+          <h3>Core</h3>
+          <Link to='/add-pet'>Adicionar PET</Link>
+          <Link to='/add-owner'>Adicionar Dono</Link>
 
-            <h3>Second</h3>
-            <Link to='/add-vaccine'>Adicionar Vacina</Link>
-            <Link to='/add-ill'>Adicionar Doença</Link>
+          <h3>Second</h3>
+          <Link to='/add-vaccine'>Adicionar Vacina</Link>
+          <Link to='/add-ill'>Adicionar Doença</Link>
 
-            <h3>Managing</h3>
-            <Link to='/finance'>Finanças</Link>
+          <h3>Managing</h3>
+          <Link to='/finance'>Finanças</Link>
         </Menu>
       </Box>
     </Main>

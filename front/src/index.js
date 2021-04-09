@@ -6,6 +6,7 @@ import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles'
 import './index.css'
 
 import Home from './pages/Home'
+import AddPetForm from './pages/AddPetForm'
 
 const theme = createMuiTheme({
   palette: {
@@ -23,7 +24,7 @@ ReactDOM.render(
         <Switch>
           <Route component={Home} path='/' exact />
           <Route component={Home} path='/pet-timeline' exact />
-          <Route component={Home} path='/add-pet' exact />
+          <Route component={AddPetForm} path='/add-pet' exact />
           <Route component={Home} path='/add-owner' exact />
           <Route component={Home} path='/add-vaccine' exact />
           <Route component={Home} path='/add-disease' exact />

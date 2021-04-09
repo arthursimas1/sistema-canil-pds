@@ -76,5 +76,29 @@ center {
 
 legend.MuiFormLabel-root,
 label.MuiInputLabel-root {
-    color: var(--white);
+  color: var(--white);
+}
+
+div.MuiPickersBasePicker-pickerView {
+  background: var(--background);
+  padding: 0 7px;
+}
+
+button.MuiPickersDay-day {
+  color: white;
+}
+
+button.MuiPickersDay-daySelected {
+  color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+button.MuiPickersDay-day:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+div.MuiPickersYear-yearDisabled,
+div.MuiPickersMonth-monthDisabled,
+button.MuiPickersDay-dayDisabled {
+  color: rgba(0, 0, 0, 0.3);
 }
