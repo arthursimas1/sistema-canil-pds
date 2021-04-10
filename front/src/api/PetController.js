@@ -7,7 +7,7 @@ export async function AddPet(attr) {
 }
 
 export async function SearchPet(query) {
-  const { data } = await server.get('/pet', query)
+  const { data } = await server.get('/pet', { params: query })
 
   return data
 }

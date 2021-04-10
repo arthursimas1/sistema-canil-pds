@@ -16,7 +16,20 @@ export default function Controller(routes) {
   })
 
   routes.get('/pet', async (request, response) => {
-    const pet = await wlc.pet.find({ where: request.body }).populate('owner')
+    const data = request.query
+    let query = { }
+    const allowed_props = [
+      'name', 'species', 'breed', 'gender'
+    ]
+
+    for (const key in data) {
+      if (allowed_props.includes(key) && typeof data[key] === 'string')
+        query[key] = { startsWith: data[key] }
+    }
+
+    const pet = await wlc.pet.find({ where: query, limit: 20 })
+      .populate('owner')
+      .meta({ makeLikeModifierCaseInsensitive: true })
 
     return response.json(pet)
   })

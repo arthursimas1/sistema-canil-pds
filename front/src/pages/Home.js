@@ -39,6 +39,10 @@ export default function Home() {
           <Link to='/add-pet'>Adicionar PET</Link>
           <Link to='/add-owner'>Adicionar Dono</Link>
 
+          <h3>Searches</h3>
+          <Link to='/search-pet'>Buscar PET</Link>
+          <Link to='/search-owner'>Buscar Dono</Link>
+
           <h3>Second</h3>
           <Link to='/add-vaccine'>Adicionar Vacina</Link>
           <Link to='/add-ill'>Adicionar Doença</Link>

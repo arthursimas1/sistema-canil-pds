@@ -8,6 +8,8 @@ import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/picker
 
 import { Button, TextField, MenuItem } from '@material-ui/core'
 
+import { LoadingButton } from '@material-ui/lab'
+
 import Header from '../components/Header'
 import Box from '../components/Box'
 import StatusBox from '../components/StatusBox'
@@ -61,12 +63,15 @@ export default class AddPetForm extends Component {
     super(props)
 
     this.initial_state = {
+      // PET fields
       name: '',
       species: '',
       breed: '',
       birthdate: null,
       gender: '',
       owner: null, // not implemented
+
+      // component-related stuff
       loading: false,
       success: false,
       err: false,
@@ -89,7 +94,7 @@ export default class AddPetForm extends Component {
 
     this.setState({ loading: true, err: false, success: false })
     let { err } = await AddPet({ ...this.state })
-    this.setState({ loading: false, err, success: !err })
+    this.setState({ loading: false, err, success: !err && 'PET cadastrado com sucesso' })
   }
 
   renderForm() {
@@ -98,7 +103,7 @@ export default class AddPetForm extends Component {
         <TextField label='Nome' variant='outlined' value={this.state.name} onChange={(e) => this.setState({ name: e.target.value })} required />
 
         <TextField select label='Sexo' variant='outlined' value={this.state.gender} onChange={(e) => this.setState({ gender: e.target.value })} required >
-          { GENDERS.map((label, index) => <MenuItem key={index} value={index} style={{ color: 'black', ...this.state.gender === index ? { background: '#9e9e9e', fontWeight: 'bold' } : {} }}>{ label }</MenuItem>) }
+          { GENDERS.map((label) => <MenuItem key={label} value={label} style={{ color: 'black', ...this.state.gender === label ? { background: '#9e9e9e', fontWeight: 'bold' } : {} }}>{ label }</MenuItem>) }
         </TextField>
 
         <TextField select label='Espécie' variant='outlined' value={this.state.species} onChange={(e) => this.setState({ species: e.target.value, breed: '' })} required >
@@ -126,18 +131,14 @@ export default class AddPetForm extends Component {
           />
         </MuiPickersUtilsProvider>
 
-        <Button variant='contained' onClick={() => this.submit()}>Cadastrar</Button>
+        <LoadingButton disabled={ this.state.loading } onClick={ () => this.submit() } variant='contained' pending={ this.state.loading } pendingPosition='center'>Cadastrar</LoadingButton>
       </>
     )
   }
 
   renderSuccess() {
     return (
-      <>
-        <StatusBox success={'PET cadastrado com sucesso'} />
-
-        <Button variant='contained' onClick={() => this.reset() }>Cadastrar Novo PET</Button>
-      </>
+      <Button variant='contained' onClick={() => this.reset() }>Cadastrar Novo PET</Button>
     )
   }
 
@@ -148,9 +149,10 @@ export default class AddPetForm extends Component {
 
         <Box>
           <Menu>
-            <span>&#8592; <Link to='/add-vaccine'>Voltar</Link></span>
+            <span>&#8592; <Link to='/'>Voltar</Link></span>
             <h3>Adicionar PET</h3>
-            <br />
+
+            <StatusBox err={this.state.err} success={this.state.success} />
 
             <div className='fields'>
               { this.state.success ? this.renderSuccess() : this.renderForm() }

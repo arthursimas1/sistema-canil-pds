@@ -7,6 +7,7 @@ import './index.css'
 
 import Home from './pages/Home'
 import AddPetForm from './pages/AddPetForm'
+import SearchPetForm from './pages/SearchPetForm'
 
 const theme = createMuiTheme({
   palette: {
@@ -23,7 +24,9 @@ ReactDOM.render(
       <BrowserRouter>
         <Switch>
           <Route component={Home} path='/' exact />
-          <Route component={Home} path='/pet-timeline' exact />
+          <Route component={SearchPetForm} path='/search-pet' exact />
+          <Route component={Home} path='/search-owner' exact />
+          <Route component={Home} path='/pet-timeline/:id' exact />
           <Route component={AddPetForm} path='/add-pet' exact />
           <Route component={Home} path='/add-owner' exact />
           <Route component={Home} path='/add-vaccine' exact />
