@@ -21,6 +21,8 @@ RUN yarn config set script-shell /bin/bash
 RUN apk add --no-cache bash curl \
  && mkdir /sockets /log
 
+COPY .bashrc /root/.bashrc
+
 COPY --from=build /build /build/
 
 STOPSIGNAL HUP

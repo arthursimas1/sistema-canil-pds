@@ -2,8 +2,9 @@ version: '3'
 
 services:
   pds_api:
-    container_name: pds_api
     image: pds_api:latest
+    container_name: pds_api
+    hostname: pds_api
     volumes:
       - gateway_sockets:/sockets
       - ./log:/log
