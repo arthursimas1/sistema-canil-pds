@@ -5,8 +5,8 @@ remote_server=web@3wx.ru
 
 set -e
 
-deploy_api() {
-  echo "deploy API"
+deploy() {
+  echo "deploy"
 
   echo "building container ..."
   docker build -t pds_api .
@@ -19,7 +19,7 @@ deploy_api() {
 
   rm -f pds_api_latest.tar.gz
 
-  echo "setting up API ..."
+  echo "setting up ..."
   ssh -t $remote_server "sudo ./setup"
 
   echo -e "\033[1;32mdone\033[0m"
@@ -27,4 +27,4 @@ deploy_api() {
   exit 0
 }
 
-deploy_api
+deploy
