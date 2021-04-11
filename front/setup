@@ -6,7 +6,7 @@ rm -rf /home/docker/gateway/sites-data/pds.3wx.ru/*
 tar -xzf front.tar.gz --one-top-level=/home/docker/gateway/sites-data/pds.3wx.ru
 chown docker:docker -R /home/docker/gateway/sites-data/pds.3wx.ru
 
-rm -f front_end.tar.gz $BASH_SOURCE
+rm -f front.tar.gz $BASH_SOURCE
 
 docker exec gateway /container_entrypoint reload
 
