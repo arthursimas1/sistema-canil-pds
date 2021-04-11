@@ -2,16 +2,10 @@ import React, { Component } from 'react'
 import styles from 'styled-components'
 import { Link } from 'react-router-dom'
 
-import { pt as ptLocale } from 'date-fns/locale'
-import DateFnsUtils from '@date-io/date-fns'
-import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers'
-import dateFormat from '../dateFormat'
-
 import { TextField, MenuItem } from '@material-ui/core'
 import { LoadingButton } from '@material-ui/lab'
 import Header from '../components/Header'
 import Box from '../components/Box'
-import StatusBox from '../components/StatusBox'
 
 import { SearchPet } from '../api/PetController'
 import BREEDS from '../assets/breeds.json'

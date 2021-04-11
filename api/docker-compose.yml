@@ -5,6 +5,10 @@ services:
     container_name: pds_api
     image: pds_api:latest
     volumes:
-      - ../gateway/unix-sockets:/sockets
+      - gateway_sockets:/sockets
       - ./log:/log
     network_mode: host
+
+volumes:
+  gateway_sockets:
+    external: true

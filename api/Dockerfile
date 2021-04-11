@@ -10,7 +10,7 @@ COPY ./package.json /build/
 RUN yarn --cwd /build install
 
 COPY ./config /build/config/
-COPY ./test /build/test/
+#COPY ./test /build/test/
 COPY ./src /build/src/
 
 # runtime stage
