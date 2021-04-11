@@ -13,7 +13,7 @@ mv docker-compose.yml /home/docker/pds_api/
 cd /home/docker/pds_api || exit 1
 docker-compose up -d --build --remove-orphans
 
-docker update --restart on-failure pds_api
+docker update --restart always pds_api
 
 docker image prune -af
 
