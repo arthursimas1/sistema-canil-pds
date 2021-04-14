@@ -8,6 +8,8 @@ import './index.css'
 import Home from './pages/Home'
 import AddPetForm from './pages/AddPetForm'
 import SearchPetForm from './pages/SearchPetForm'
+import AddOwnerForm from './pages/AddOwnerForm'
+import SearchOwnerForm from './pages/SearchOwnerForm'
 
 const theme = createMuiTheme({
   palette: {
@@ -25,10 +27,10 @@ ReactDOM.render(
         <Switch>
           <Route component={Home} path='/' exact />
           <Route component={SearchPetForm} path='/search-pet' exact />
-          <Route component={Home} path='/search-owner' exact />
+          <Route component={SearchOwnerForm} path='/search-owner' exact />
           <Route component={Home} path='/pet-timeline/:id' exact />
           <Route component={AddPetForm} path='/add-pet' exact />
-          <Route component={Home} path='/add-owner' exact />
+          <Route component={AddOwnerForm} path='/add-owner' exact />
           <Route component={Home} path='/add-vaccine' exact />
           <Route component={Home} path='/add-disease' exact />
           <Route component={Home} path='/finance' exact />
