@@ -3,7 +3,6 @@ import styles from 'styled-components'
 import { Link } from 'react-router-dom'
 
 import Header from '../components/Header'
-import Search from '../components/Search'
 import Box from '../components/Box'
 
 const Main = styles.main`
@@ -33,10 +32,8 @@ export default function Home() {
       <Header />
 
       <Box>
-        <Search />
         <Menu>
           <h3>Core</h3>
-          <Link to='/add-pet'>Adicionar PET</Link>
           <Link to='/add-owner'>Adicionar Dono</Link>
 
           <h3>Searches</h3>

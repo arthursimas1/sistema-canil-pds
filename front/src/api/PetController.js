@@ -18,7 +18,7 @@ export async function GetPet(id) {
   return data
 }
 
-export async function UpdatePet({ id, attr }) {
+export async function UpdatePet({ id, ...attr }) {
   const { data } = await server.put(`/pet/${id}`, attr)
 
   return data

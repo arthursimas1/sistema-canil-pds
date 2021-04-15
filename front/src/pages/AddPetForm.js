@@ -10,6 +10,8 @@ import { Button, TextField, MenuItem } from '@material-ui/core'
 
 import { LoadingButton } from '@material-ui/lab'
 
+import qs from 'qs'
+
 import Header from '../components/Header'
 import Box from '../components/Box'
 import StatusBox from '../components/StatusBox'
@@ -62,6 +64,8 @@ export default class AddPetForm extends Component {
   constructor(props) {
     super(props)
 
+    let { owner } = qs.parse(this.props.location.search, { ignoreQueryPrefix: true })
+
     this.initial_state = {
       // PET fields
       name: '',
@@ -69,7 +73,7 @@ export default class AddPetForm extends Component {
       breed: '',
       birthdate: null,
       gender: '',
-      owner: null, // not implemented
+      owner,
 
       // component-related stuff
       loading: false,
@@ -149,7 +153,7 @@ export default class AddPetForm extends Component {
 
         <Box>
           <Menu>
-            <span>&#8592; <Link to='/'>Voltar</Link></span>
+            <span>&#8592; <Link to={`/owner/${this.state.owner}`}>Voltar</Link></span>
             <h3>Adicionar PET</h3>
 
             <StatusBox err={this.state.err} success={this.state.success} />

@@ -16,19 +16,7 @@ export default function Controller(routes) {
   })
 
   routes.get('/owner', async (request, response) => {
-    const data = request.query
-    let query = { }
-    const allowed_props = [
-      'name', 'cpf', 'email', 'gender', 'streetname', 'number', 'postalcode', 'state', 'city'
-    ]
-
-    for (const key in data) {
-      if (allowed_props.includes(key) && typeof data[key] === 'string')
-        query[key] = { startsWith: data[key] }
-    }
-
-    const owner = await wlc.owner.find({ where: query, limit: 20 })
-      //.populate('owner')
+    const owner = await wlc.owner.find({ where: { cpf: request.query.cpf }, limit: 20 })
       .meta({ makeLikeModifierCaseInsensitive: true })
 
     return response.json(owner)
@@ -36,10 +24,10 @@ export default function Controller(routes) {
 
   routes.get('/owner/:id', async (request, response) => {
     const { id } = request.params
-    const pet = await wlc.pet.findOne({ id }).populate('owner')
+    const owner = await wlc.owner.findOne({ id })
 
-    if (pet)
-      return response.json(pet)
+    if (owner)
+      return response.json(owner)
 
     return response.json({ err: 'not_found' })
   })
@@ -47,7 +35,6 @@ export default function Controller(routes) {
   routes.put('/owner/:id', async (request, response) => {
     const { id } = request.params
     delete request.body.id // doesn't allow id to be updated
-    //delete request.body.owner // doesn't allow owner to be updated by this route
 
     try {
       await wlc.owner.update({ id }).set(request.body)

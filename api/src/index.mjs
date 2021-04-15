@@ -15,6 +15,9 @@ const routes = express.Router()
 import PetController from './controllers/PetController.mjs'
 PetController(routes)
 
+import OwnerController from './controllers/OwnerController.mjs'
+OwnerController(routes)
+
 import HealthCheckController from './controllers/healthCheckController.mjs'
 HealthCheckController(routes)
 

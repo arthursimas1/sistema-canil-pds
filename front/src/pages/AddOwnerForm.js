@@ -6,7 +6,7 @@ import { pt as ptLocale } from 'date-fns/locale'
 import DateFnsUtils from '@date-io/date-fns'
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers'
 
-import { Button, TextField, MenuItem } from '@material-ui/core'
+import { Button, TextField, MenuItem, FormControlLabel, Checkbox } from '@material-ui/core'
 
 import { LoadingButton } from '@material-ui/lab'
 
@@ -74,6 +74,8 @@ export default class AddOwnerForm extends Component {
       state: '',
       city: '',
       notes: '',
+      has_animals: false,
+      had_animals: false,
 
       // component-related stuff
       loading: false,
@@ -92,6 +94,14 @@ export default class AddOwnerForm extends Component {
     for (let i of l) {
       i.oninput = (e) => e.target.setCustomValidity('')
 
+      // date check
+      let aria_invalid = i.getAttribute('aria-invalid')
+      if (aria_invalid === 'true') {
+        i.setCustomValidity('Data inválida')
+
+        return i.reportValidity()
+      }
+
       if (!i.checkValidity())
         return i.reportValidity()
     }
@@ -108,7 +118,7 @@ export default class AddOwnerForm extends Component {
 
         <TextField label='CPF' variant='outlined' value={this.state.cpf} onChange={(e) => this.setState({ cpf: e.target.value })} required />
 
-        <TextField label='E-Mail' variant='outlined' value={this.state.email} onChange={(e) => this.setState({ email: e.target.value })} required />
+        <TextField label='E-Mail' type='email' autoComplete='email' variant='outlined' value={this.state.email} onChange={(e) => this.setState({ email: e.target.value })} required />
 
         <TextField select label='Sexo' variant='outlined' value={this.state.gender} onChange={(e) => this.setState({ gender: e.target.value })} required >
           { GENDERS.map((label) => <MenuItem key={label} value={label} style={{ color: 'black', ...this.state.gender === label ? { background: '#9e9e9e', fontWeight: 'bold' } : {} }}>{ label }</MenuItem>) }
@@ -131,15 +141,27 @@ export default class AddOwnerForm extends Component {
           />
         </MuiPickersUtilsProvider>
 
-        <TextField label='Rua' variant='outlined' value={this.state.streetname} onChange={(e) => this.setState({ streetname: e.target.value })} required />
-
         <TextField label='CEP' variant='outlined' value={this.state.postalcode} onChange={(e) => this.setState({ postalcode: e.target.value })} required />
+
+        <TextField label='Logradouro' variant='outlined' value={this.state.streetname} onChange={(e) => this.setState({ streetname: e.target.value })} required />
+
+        <TextField label='Número' variant='outlined' value={this.state.number} onChange={(e) => this.setState({ number: e.target.value })} required />
 
         <TextField label='Estado' variant='outlined' value={this.state.state} onChange={(e) => this.setState({ state: e.target.value })} required />
 
         <TextField label='Cidade' variant='outlined' value={this.state.city} onChange={(e) => this.setState({ city: e.target.value })} required />
 
-        <TextField label='Notas adicionais' variant='outlined' value={this.state.notes} onChange={(e) => this.setState({ notes: e.target.value })} required />
+        <FormControlLabel
+          control={<Checkbox checked={this.state.had_animals} onChange={() => this.setState({ had_animals: !this.state.had_animals })} />}
+          label='Teve animais anteriormente?'
+        />
+
+        <FormControlLabel
+          control={<Checkbox checked={this.state.has_animals} onChange={() => this.setState({ has_animals: !this.state.has_animals })} />}
+          label='Possui animais?'
+        />
+
+        <TextField label='Notas adicionais' multiline={true} variant='outlined' value={this.state.notes} onChange={(e) => this.setState({ notes: e.target.value })} />
 
         <LoadingButton disabled={ this.state.loading } onClick={ () => this.submit() } variant='contained' pending={ this.state.loading } pendingPosition='center'>Cadastrar</LoadingButton>
       </>

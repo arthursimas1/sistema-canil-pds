@@ -18,7 +18,7 @@ export async function GetOwner(id) {
   return data
 }
 
-export async function UpdateOwner({ id, attr }) {
+export async function UpdateOwner({ id, ...attr }) {
   const { data } = await server.put(`/owner/${id}`, attr)
 
   return data
