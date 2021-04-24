@@ -118,10 +118,11 @@ export default class SearchOwnerForm extends Component {
           <Menu>
             <span>&#8592; <Link to='/'>Voltar</Link></span>
             <h3>Buscar Dono</h3>
+            <Link to='/add-owner'>Adicionar Dono</Link>
             <br />
 
             <div className='fields'>
-              <TextField label='CPF' variant='outlined' value={this.state.cpf} onChange={(e) => this.setState({ cpf: e.target.value })} required />
+              <TextField label='CPF' variant='outlined' value={this.state.cpf} onChange={(e) => this.setState({ cpf: e.target.value })} />
             </div>
 
             <div className='search-button'>

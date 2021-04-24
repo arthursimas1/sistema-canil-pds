@@ -18,7 +18,10 @@ PetController(routes)
 import OwnerController from './controllers/OwnerController.mjs'
 OwnerController(routes)
 
-import HealthCheckController from './controllers/healthCheckController.mjs'
+import DiseaseController from './controllers/DiseaseController.mjs'
+DiseaseController(routes)
+
+import HealthCheckController from './controllers/HealthCheckController.mjs'
 HealthCheckController(routes)
 
 app.use(routes)

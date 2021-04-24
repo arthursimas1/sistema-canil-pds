@@ -2,6 +2,8 @@ export default {
   primaryKey: 'id',
   attributes: {
     id: { type: 'string', columnName: '_id' },
-    // TODO: define disease attributes
+    name: { type: 'string' },
+    description: { type: 'string' },
+    hidden: { type: 'boolean', defaultsTo: false },
   },
 }

@@ -181,7 +181,7 @@ export default class AddOwnerForm extends Component {
 
         <Box>
           <Menu>
-            <span>&#8592; <Link to='/'>Voltar</Link></span>
+            <span>&#8592; <Link to='/search-owner'>Voltar</Link></span>
             <h3>Adicionar Dono</h3>
 
             <StatusBox err={this.state.err} success={this.state.success} />

@@ -127,19 +127,19 @@ export default class SearchPetForm extends Component {
 
             <div className='fields'>
 
-              <TextField label='Nome' variant='outlined' value={this.state.name} onChange={(e) => this.setState({ name: e.target.value })} required />
+              <TextField label='Nome' variant='outlined' value={this.state.name} onChange={(e) => this.setState({ name: e.target.value })} />
 
-              <TextField select label='Sexo' variant='outlined' value={this.state.gender} onChange={(e) => this.setState({ gender: e.target.value })} required >
+              <TextField select label='Sexo' variant='outlined' value={this.state.gender} onChange={(e) => this.setState({ gender: e.target.value })} >
                 <MenuItem key='' value='' style={{ color: 'black' }}>Não Selecionado</MenuItem>
                 { GENDERS.map((label) => <MenuItem key={label} value={label} style={{ color: 'black', ...this.state.gender === label ? { background: '#9e9e9e', fontWeight: 'bold' } : {} }}>{ label }</MenuItem>) }
               </TextField>
 
-              <TextField select label='Espécie' variant='outlined' value={this.state.species} onChange={(e) => this.setState({ species: e.target.value, breed: '' })} required >
+              <TextField select label='Espécie' variant='outlined' value={this.state.species} onChange={(e) => this.setState({ species: e.target.value, breed: '' })} >
                 <MenuItem key='' value='' style={{ color: 'black' }}>Não Selecionado</MenuItem>
                 { Object.keys(BREEDS).map((label) => <MenuItem key={label} value={label} style={{ color: 'black', ...this.state.species === label ? { background: '#9e9e9e', fontWeight: 'bold' } : {} }}>{ label }</MenuItem>) }
               </TextField>
 
-              <TextField select label='Raça' variant='outlined' disabled={this.state.species === ''} value={this.state.breed} onChange={(e) => this.setState({ breed: e.target.value })} required >
+              <TextField select label='Raça' variant='outlined' disabled={this.state.species === ''} value={this.state.breed} onChange={(e) => this.setState({ breed: e.target.value })} >
                 <MenuItem key='' value='' style={{ color: 'black' }}>Não Selecionado</MenuItem>
                 { this.state.species !== '' && BREEDS[this.state.species].map((label) => <MenuItem key={label} value={label} style={{ color: 'black', ...this.state.breed === label ? { background: '#9e9e9e', fontWeight: 'bold' } : {} }}>{ label }</MenuItem>) }
               </TextField>
@@ -151,8 +151,8 @@ export default class SearchPetForm extends Component {
 
             <table className='results' hidden={this.state.results.length <= 0}>
               <tbody>
-                <tr><th>Nome</th><th>Sexo</th><th>Espécie</th><th>Raça</th></tr>
-                { this.state.results.map((e) => <tr key={e.id}><td><Link to={`/pet-timeline/${e.id}`}>{e.name}</Link></td><td>{e.gender}</td><td>{e.species}</td><td>{e.breed}</td></tr>) }
+                <tr><th>Nome</th><th>Dono</th><th>Sexo</th><th>Espécie</th><th>Raça</th></tr>
+                { this.state.results.map((e) => <tr key={e.id}><td><Link to={`/pet-timeline/${e.id}`}>{e.name}</Link></td><td>{e.owner.name}</td><td>{e.gender}</td><td>{e.species}</td><td>{e.breed}</td></tr>) }
               </tbody>
             </table>
           </Menu>

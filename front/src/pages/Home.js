@@ -33,18 +33,15 @@ export default function Home() {
 
       <Box>
         <Menu>
-          <h3>Core</h3>
-          <Link to='/add-owner'>Adicionar Dono</Link>
+          <h3>Frequentes</h3>
+          <Link to='/search-pet'>PETs</Link>
+          <Link to='/search-owner'>Donos</Link>
 
-          <h3>Searches</h3>
-          <Link to='/search-pet'>Buscar PET</Link>
-          <Link to='/search-owner'>Buscar Dono</Link>
+          <h3>Interno</h3>
+          <Link to='/edit-diseases'>Controle de Doenças</Link>
+          <Link to='/edit-vaccine'>Controle de Vacina</Link>
 
-          <h3>Second</h3>
-          <Link to='/add-vaccine'>Adicionar Vacina</Link>
-          <Link to='/add-ill'>Adicionar Doença</Link>
-
-          <h3>Managing</h3>
+          <h3>Gerência</h3>
           <Link to='/finance'>Finanças</Link>
         </Menu>
       </Box>

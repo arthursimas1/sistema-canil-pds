@@ -11,6 +11,9 @@ import SearchPetForm from './pages/SearchPetForm'
 import AddOwnerForm from './pages/AddOwnerForm'
 import SearchOwnerForm from './pages/SearchOwnerForm'
 import Owner from './pages/Owner'
+import AddDiseaseForm from './pages/AddDiseaseForm'
+import EditDiseasesForm from './pages/EditDiseasesForm'
+
 
 const theme = createMuiTheme({
   palette: {
@@ -34,7 +37,8 @@ ReactDOM.render(
           <Route component={AddPetForm} path='/add-pet' exact />
           <Route component={AddOwnerForm} path='/add-owner' exact />
           <Route component={Home} path='/add-vaccine' exact />
-          <Route component={Home} path='/add-disease' exact />
+          <Route component={AddDiseaseForm} path='/add-disease' exact />
+          <Route component={EditDiseasesForm} path='/edit-diseases' exact />
           <Route component={Home} path='/finance' exact />
           <Redirect push={false} to='/' />
         </Switch>
