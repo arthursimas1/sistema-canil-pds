@@ -39,7 +39,7 @@ export default function Home() {
 
           <h3>Interno</h3>
           <Link to='/edit-diseases'>Controle de Doenças</Link>
-          <Link to='/edit-vaccine'>Controle de Vacina</Link>
+          <Link to='/edit-vaccines'>Controle de Vacina</Link>
 
           <h3>Gerência</h3>
           <Link to='/finance'>Finanças</Link>

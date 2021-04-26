@@ -21,6 +21,9 @@ OwnerController(routes)
 import DiseaseController from './controllers/DiseaseController.mjs'
 DiseaseController(routes)
 
+import VaccineController from './controllers/VaccineController.mjs'
+VaccineController(routes)
+
 import HealthCheckController from './controllers/HealthCheckController.mjs'
 HealthCheckController(routes)
 

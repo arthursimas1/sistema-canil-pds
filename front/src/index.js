@@ -13,6 +13,8 @@ import SearchOwnerForm from './pages/SearchOwnerForm'
 import Owner from './pages/Owner'
 import AddDiseaseForm from './pages/AddDiseaseForm'
 import EditDiseasesForm from './pages/EditDiseasesForm'
+import AddVaccineForm from './pages/AddVaccineForm'
+import EditVaccinesForm from './pages/EditVaccinesForm'
 
 
 const theme = createMuiTheme({
@@ -36,8 +38,9 @@ ReactDOM.render(
           <Route component={Home} path='/pet-timeline/:id' exact />
           <Route component={AddPetForm} path='/add-pet' exact />
           <Route component={AddOwnerForm} path='/add-owner' exact />
-          <Route component={Home} path='/add-vaccine' exact />
+          <Route component={AddVaccineForm} path='/add-vaccine' exact />
           <Route component={AddDiseaseForm} path='/add-disease' exact />
+          <Route component={EditVaccinesForm} path='/edit-vaccines' exact />
           <Route component={EditDiseasesForm} path='/edit-diseases' exact />
           <Route component={Home} path='/finance' exact />
           <Redirect push={false} to='/' />

@@ -2,6 +2,9 @@ export default {
   primaryKey: 'id',
   attributes: {
     id: { type: 'string', columnName: '_id' },
-    // TODO: define vaccine attributes
+    name: { type: 'string' },
+    manufacturer: { type: 'string' },
+    description: { type: 'string' },
+    hidden: { type: 'boolean', defaultsTo: false },
   },
 }
