@@ -19,7 +19,7 @@ export default function Controller(routes) {
     const data = request.query
     let query = { }
     const allowed_props = [
-      'name', 'breed', 'gender'
+      'name', 'breed', 'gender', 'owner'
     ]
 
     for (const key in data) {

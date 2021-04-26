@@ -15,6 +15,7 @@ import Box from '../components/Box'
 import StatusBox from '../components/StatusBox'
 
 import { GetOwner, UpdateOwner } from '../api/OwnerController'
+import { SearchPet } from '../api/PetController'
 import GENDERS from '../assets/genders_human.json'
 
 const Main = styles.main`
@@ -55,6 +56,29 @@ const Menu = styles.div`
       min-height: 66px;
     }
   }
+
+  table.pets {
+    margin-top: 20px;
+    border-collapse: collapse;
+
+    tr {
+      background: rgba(0, 0, 0, 0.10);
+      text-align: left;
+
+      &:nth-child(even) {
+        background: rgba(0, 0, 0, 0.03);
+      }
+    }
+
+    th, td {
+      padding: 8px;
+
+      a {
+        color: var(--white);
+      }
+    }
+  }
+
 `
 
 export default class AddOwnerForm extends Component {
@@ -77,6 +101,8 @@ export default class AddOwnerForm extends Component {
       notes: '',
       has_animals: false,
       had_animals: false,
+      current_pets: [],
+      previous_pets: [],
 
       // component-related stuff
       loading: false,
@@ -89,7 +115,13 @@ export default class AddOwnerForm extends Component {
   async componentDidMount() {
     this.setState({ loading: true })
     let owner_data = await GetOwner(this.props.match.params.id)
-    this.setState({ ...owner_data, loading: false })
+
+    if (owner_data.err === 'not_found')
+      return this.props.history.push('/')
+
+    let curret_pets_data = await SearchPet({ owner: owner_data.id })
+
+    this.setState({ ...owner_data, current_pets: curret_pets_data, loading: false })
   }
 
   reset() {
@@ -171,6 +203,24 @@ export default class AddOwnerForm extends Component {
               <TextField label='Cidade' variant='outlined' value={this.state.city} onChange={(e) => this.setState({ city: e.target.value })} required />
 
               <TextField label='Notas adicionais' multiline={true} variant='outlined' value={this.state.notes} onChange={(e) => this.setState({ notes: e.target.value })} />
+
+              <h3>PETs atuais</h3>
+              <span hidden={this.state.current_pets.length > 0}>Não foram encontrados PETs atuais</span>
+              <table className='pets' hidden={this.state.current_pets.length <= 0}>
+                <tbody>
+                  <tr><th>Nome</th><th>Sexo</th><th>Raça</th></tr>
+                  { this.state.current_pets.map((e) => <tr key={e.id}><td><Link to={`/pet-timeline/${e.id}`}>{e.name}</Link></td><td>{e.gender}</td><td>{e.breed}</td></tr>) }
+                </tbody>
+              </table>
+
+              <h3>PETs anteriores</h3>
+              <span hidden={this.state.previous_pets.length > 0}>Não foram encontrados PETs anteriores</span>
+              <table className='pets' hidden={this.state.previous_pets.length <= 0}>
+                <tbody>
+                  <tr><th>Nome</th><th>Sexo</th><th>Raça</th></tr>
+                  { this.state.current_pets.map((e) => <tr key={e.id}><td><Link to={`/pet-timeline/${e.id}`}>{e.name}</Link></td><td>{e.gender}</td><td>{e.breed}</td></tr>) }
+                </tbody>
+              </table>
 
               <LoadingButton disabled={ this.state.loading } onClick={ () => this.submit() } variant='contained' pending={ this.state.loading } pendingPosition='center'>Atualizar</LoadingButton>
             </div>
