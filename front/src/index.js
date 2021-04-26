@@ -16,7 +16,6 @@ import EditDiseasesForm from './pages/EditDiseasesForm'
 import AddVaccineForm from './pages/AddVaccineForm'
 import EditVaccinesForm from './pages/EditVaccinesForm'
 
-
 const theme = createMuiTheme({
   palette: {
     primary: { main: '#fff' },

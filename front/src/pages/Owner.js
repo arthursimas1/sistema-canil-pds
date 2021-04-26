@@ -6,7 +6,7 @@ import { pt as ptLocale } from 'date-fns/locale'
 import DateFnsUtils from '@date-io/date-fns'
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers'
 
-import { Button, TextField, MenuItem } from '@material-ui/core'
+import { TextField, MenuItem } from '@material-ui/core'
 
 import { LoadingButton } from '@material-ui/lab'
 
