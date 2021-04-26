@@ -18,7 +18,7 @@ import StatusBox from '../components/StatusBox'
 
 import { AddPet } from '../api/PetController'
 import BREEDS from '../assets/breeds.json'
-import GENDERS from '../assets/genders.json'
+import GENDERS from '../assets/genders_pet.json'
 
 const Main = styles.main`
   //background-color: red;
@@ -69,7 +69,6 @@ export default class AddPetForm extends Component {
     this.initial_state = {
       // PET fields
       name: '',
-      species: '',
       breed: '',
       birthdate: null,
       gender: '',
@@ -110,12 +109,8 @@ export default class AddPetForm extends Component {
           { GENDERS.map((label) => <MenuItem key={label} value={label} style={{ color: 'black', ...this.state.gender === label ? { background: '#9e9e9e', fontWeight: 'bold' } : {} }}>{ label }</MenuItem>) }
         </TextField>
 
-        <TextField select label='Espécie' variant='outlined' value={this.state.species} onChange={(e) => this.setState({ species: e.target.value, breed: '' })} required >
-          { Object.keys(BREEDS).map((label) => <MenuItem key={label} value={label} style={{ color: 'black', ...this.state.species === label ? { background: '#9e9e9e', fontWeight: 'bold' } : {} }}>{ label }</MenuItem>) }
-        </TextField>
-
-        <TextField select label='Raça' variant='outlined' disabled={this.state.species === ''} value={this.state.breed} onChange={(e) => this.setState({ breed: e.target.value })} required >
-          { this.state.species !== '' && BREEDS[this.state.species].map((label) => <MenuItem key={label} value={label} style={{ color: 'black', ...this.state.breed === label ? { background: '#9e9e9e', fontWeight: 'bold' } : {} }}>{ label }</MenuItem>) }
+        <TextField select label='Raça' variant='outlined' value={this.state.breed} onChange={(e) => this.setState({ breed: e.target.value })} required >
+          { BREEDS.map((label) => <MenuItem key={label} value={label} style={{ color: 'black', ...this.state.breed === label ? { background: '#9e9e9e', fontWeight: 'bold' } : {} }}>{ label }</MenuItem>) }
         </TextField>
 
         <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ptLocale}>

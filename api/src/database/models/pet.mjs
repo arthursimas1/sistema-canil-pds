@@ -3,7 +3,6 @@ export default {
   attributes: {
     id: { type: 'string', columnName: '_id' },
     name: { type: 'string' },
-    species: { type: 'string' },
     breed: { type: 'string' },
     birthdate: { type: 'string' },
     gender: { type: 'string' },

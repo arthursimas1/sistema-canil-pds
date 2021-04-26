@@ -5,7 +5,6 @@ export default async () => Promise.all([
     {
       id: 'qfRy_a2djCWF9b-lZG12J',
       name: 'Forrest Gump',
-      species: 'Gato',
       breed: 'Sem raça definida (SRD)',
       birthdate: '2019-01-08T11:11:00.000Z',
       gender: 'Macho',
@@ -14,7 +13,6 @@ export default async () => Promise.all([
     {
       id: 'QMW3Pttbtn9b3h4tDPYn_',
       name: 'Amora',
-      species: 'Gato',
       breed: 'Sem raça definida (SRD)',
       birthdate: '2018-01-10T11:11:00.000Z',
       gender: 'Fêmea',
@@ -28,7 +26,7 @@ export default async () => Promise.all([
       name: 'Arthur Simas',
       cpf: '42636917845',
       email: 'arthursimas1@gmail.com',
-      gender: 'Macho',
+      gender: 'Masculino',
       birthdate: '2000-06-18T02:25:00.000Z',
       streetname: 'Rua Benvenuto Di Giovani',
       number: '214',

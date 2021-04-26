@@ -15,7 +15,7 @@ import Box from '../components/Box'
 import StatusBox from '../components/StatusBox'
 
 import { AddOwner } from '../api/OwnerController'
-import GENDERS from '../assets/genders.json'
+import GENDERS from '../assets/genders_human.json'
 
 const Main = styles.main`
   //background-color: red;
@@ -120,7 +120,7 @@ export default class AddOwnerForm extends Component {
 
         <TextField label='E-Mail' type='email' autoComplete='email' variant='outlined' value={this.state.email} onChange={(e) => this.setState({ email: e.target.value })} required />
 
-        <TextField select label='Sexo' variant='outlined' value={this.state.gender} onChange={(e) => this.setState({ gender: e.target.value })} required >
+        <TextField select label='Gênero' variant='outlined' value={this.state.gender} onChange={(e) => this.setState({ gender: e.target.value })} required >
           { GENDERS.map((label) => <MenuItem key={label} value={label} style={{ color: 'black', ...this.state.gender === label ? { background: '#9e9e9e', fontWeight: 'bold' } : {} }}>{ label }</MenuItem>) }
         </TextField>
 

@@ -131,7 +131,7 @@ export default class SearchOwnerForm extends Component {
 
             <table className='results' hidden={this.state.results.length <= 0}>
               <tbody>
-                <tr><th>Nome</th><th>E-Mail</th><th>Sexo</th><th>Rua</th><th>CEP</th><th>Estado</th><th>Cidade</th></tr>
+                <tr><th>Nome</th><th>E-Mail</th><th>Gênero</th><th>Rua</th><th>CEP</th><th>Estado</th><th>Cidade</th></tr>
                 { this.state.results.map((e) => <tr key={e.id}><td><Link to={`/owner/${e.id}`}>{e.name}</Link></td><td>{e.email}</td><td>{e.gender}</td><td>{e.streetname}</td><td>{e.postalcode}</td><td>{e.state}</td><td>{e.city}</td></tr>) }
               </tbody>
             </table>
