@@ -35,4 +35,8 @@ const Box = styles.div`
   }
 `
 
+export const BoxNoMargin = styles(Box)`
+  margin: 0;
+`
+
 export default Box

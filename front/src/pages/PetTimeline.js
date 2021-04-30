@@ -11,25 +11,24 @@ import { TextField, MenuItem } from '@material-ui/core'
 import { LoadingButton } from '@material-ui/lab'
 
 import Header from '../components/Header'
-import Box from '../components/Box'
+import { BoxNoMargin } from '../components/Box'
 import StatusBox from '../components/StatusBox'
 
-import { GetOwner, UpdateOwner } from '../api/OwnerController'
-import { SearchPet } from '../api/PetController'
-import GENDERS from '../assets/genders_human.json'
+import { GetPet, UpdatePet, GetTimeline, AddEvent } from '../api/PetController'
+import GENDERS from '../assets/genders_pet.json'
+import BREEDS from '../assets/breeds.json'
 
 const Main = styles.main`
   //background-color: red;
   min-height: 100%;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   padding: 20px;
 `
 
 const Menu = styles.div`
   display: flex;
   width: 250px;
-  margin: 0 auto;
   flex-direction: column;
   //background: pink;
   place-content: center;
@@ -81,28 +80,31 @@ const Menu = styles.div`
 
 `
 
-export default class Owner extends Component {
+const Timeline = styles.div`
+  //background-color: red;
+`
+
+const Event = styles.div`
+  // background: var(--lightgray);
+  // border-radius: 4px;
+  border: solid var(--white) 3px;
+  margin: 13px;
+  padding: 5px;
+  box-shadow: #d4d4d4 1px 2px 13px -2px;
+`
+
+export default class PetTimeline extends Component {
   constructor(props) {
     super(props)
 
     this.initial_state = {
-      // Owner fields
-      id: '',
+      // PET fields
       name: '',
-      cpf: '',
-      email: '',
-      gender: '',
+      breed: '',
       birthdate: null,
-      streetname: '',
-      number: '',
-      postalcode: '',
-      state: '',
-      city: '',
-      notes: '',
-      has_animals: false,
-      had_animals: false,
-      current_pets: [],
-      previous_pets: [],
+      gender: '',
+      owner: {},
+      timeline: [],
 
       // component-related stuff
       loading: false,
@@ -114,21 +116,21 @@ export default class Owner extends Component {
 
   async componentDidMount() {
     this.setState({ loading: true })
-    let owner_data = await GetOwner(this.props.match.params.id)
+    let pet_data = await GetPet(this.props.match.params.id)
 
-    if (owner_data.err === 'not_found')
+    if (pet_data.err === 'not_found')
       return this.props.history.push('/')
 
-    let curret_pets_data = await SearchPet({ owner: owner_data.id })
+    let timeline = await GetTimeline(this.props.match.params.id)
 
-    this.setState({ ...owner_data, current_pets: curret_pets_data, loading: false })
+    this.setState({ ...pet_data, timeline, loading: false })
   }
 
   reset() {
     this.setState({ ...this.initial_state })
   }
 
-  async submit() {
+  async edit_pet() {
     let l = Array.from(document.getElementsByTagName('input'))
     for (let i of l) {
       i.oninput = (e) => e.target.setCustomValidity('')
@@ -146,7 +148,35 @@ export default class Owner extends Component {
     }
 
     this.setState({ loading: true, err: false, success: false })
-    let { err } = await UpdateOwner({ ...this.state })
+    let { err } = await UpdatePet({ ...this.state })
+    this.setState({ loading: false, err, success: !err && 'Dono atualizado com sucesso' })
+  }
+
+  async create_event() {
+    let l = Array.from(document.getElementsByTagName('input'))
+    for (let i of l) {
+      i.oninput = (e) => e.target.setCustomValidity('')
+
+      if (!i.checkValidity())
+        return i.reportValidity()
+    }
+
+    this.setState({ loading: true, err: false, success: false })
+
+    const attr = {
+      /*
+      event: <new_pet, ownership_transfer, vaccination, sick, other>
+      date: <ISOString>
+      pet: <id>,
+      description: string,
+      metadata: {},
+      // event ownership_transfer: {previous_owner: owner, new_owner: owner, type: <sell,donation>}
+      // event vaccination: {vaccine: <vaccine id>, amount: <number>}
+      // event sick: {disease: <disease id>}
+       */
+    }
+
+    let { err } = await AddEvent({ id: this.props.match.params.id, ...attr })
     this.setState({ loading: false, err, success: !err && 'Dono atualizado com sucesso' })
   }
 
@@ -155,24 +185,33 @@ export default class Owner extends Component {
       <Main>
         <Header/>
 
-        <Box>
+        <Timeline>
+          <h3>Linha do Tempo do PET</h3>
+          <div className='events'>
+            { this.state.timeline.map((e) =>
+              <Event key={e.id}>
+                { e.event }<br/>
+                { e.date }<br/>
+                { e.description }<br/>
+              </Event>) }
+          </div>
+        </Timeline>
+
+        <BoxNoMargin>
           <Menu>
-            <span>&#8592; <Link to='/search-owner'>Voltar</Link></span>
-            <h3>Perfil do Dono</h3>
+            <span>&#8592; <Link to='/search-pet'>Voltar</Link></span>
 
             <StatusBox err={this.state.err} success={this.state.success} />
 
             <div className='fields'>
-              <Link to={`/add-pet?owner=${this.state.id}`}>Adicionar PET</Link>
-
               <TextField label='Nome' variant='outlined' value={this.state.name} onChange={(e) => this.setState({ name: e.target.value })} required />
 
-              <TextField label='CPF' variant='outlined' value={this.state.cpf} onChange={(e) => this.setState({ cpf: e.target.value })} required />
-
-              <TextField label='E-Mail' type='email' autoComplete='email' variant='outlined' value={this.state.email} onChange={(e) => this.setState({ email: e.target.value })} required />
-
-              <TextField select label='Gênero' variant='outlined' value={this.state.gender} onChange={(e) => this.setState({ gender: e.target.value })} required >
+              <TextField select label='Sexo' variant='outlined' value={this.state.gender} onChange={(e) => this.setState({ gender: e.target.value })} required >
                 { GENDERS.map((label) => <MenuItem key={label} value={label} style={{ color: 'black', ...this.state.gender === label ? { background: '#9e9e9e', fontWeight: 'bold' } : {} }}>{ label }</MenuItem>) }
+              </TextField>
+
+              <TextField select label='Raça' variant='outlined' value={this.state.breed} onChange={(e) => this.setState({ breed: e.target.value })} required >
+                { BREEDS.map((label) => <MenuItem key={label} value={label} style={{ color: 'black', ...this.state.breed === label ? { background: '#9e9e9e', fontWeight: 'bold' } : {} }}>{ label }</MenuItem>) }
               </TextField>
 
               <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ptLocale}>
@@ -192,40 +231,10 @@ export default class Owner extends Component {
                 />
               </MuiPickersUtilsProvider>
 
-              <TextField label='CEP' variant='outlined' value={this.state.postalcode} onChange={(e) => this.setState({ postalcode: e.target.value })} required />
-
-              <TextField label='Logradouro' variant='outlined' value={this.state.streetname} onChange={(e) => this.setState({ streetname: e.target.value })} required />
-
-              <TextField label='Número' variant='outlined' value={this.state.number} onChange={(e) => this.setState({ number: e.target.value })} required />
-
-              <TextField label='Estado' variant='outlined' value={this.state.state} onChange={(e) => this.setState({ state: e.target.value })} required />
-
-              <TextField label='Cidade' variant='outlined' value={this.state.city} onChange={(e) => this.setState({ city: e.target.value })} required />
-
-              <TextField label='Notas adicionais' multiline={true} variant='outlined' value={this.state.notes} onChange={(e) => this.setState({ notes: e.target.value })} />
-
-              <h3>PETs atuais</h3>
-              <span hidden={this.state.current_pets.length > 0}>Não foram encontrados PETs atuais</span>
-              <table className='pets' hidden={this.state.current_pets.length <= 0}>
-                <tbody>
-                  <tr><th>Nome</th><th>Sexo</th><th>Raça</th></tr>
-                  { this.state.current_pets.map((e) => <tr key={e.id}><td><Link to={`/pet-timeline/${e.id}`}>{e.name}</Link></td><td>{e.gender}</td><td>{e.breed}</td></tr>) }
-                </tbody>
-              </table>
-
-              <h3>PETs anteriores</h3>
-              <span hidden={this.state.previous_pets.length > 0}>Não foram encontrados PETs anteriores</span>
-              <table className='pets' hidden={this.state.previous_pets.length <= 0}>
-                <tbody>
-                  <tr><th>Nome</th><th>Sexo</th><th>Raça</th></tr>
-                  { this.state.current_pets.map((e) => <tr key={e.id}><td><Link to={`/pet-timeline/${e.id}`}>{e.name}</Link></td><td>{e.gender}</td><td>{e.breed}</td></tr>) }
-                </tbody>
-              </table>
-
               <LoadingButton disabled={ this.state.loading } onClick={ () => this.submit() } variant='contained' pending={ this.state.loading } pendingPosition='center'>Atualizar</LoadingButton>
             </div>
           </Menu>
-        </Box>
+        </BoxNoMargin>
       </Main>
     )
   }

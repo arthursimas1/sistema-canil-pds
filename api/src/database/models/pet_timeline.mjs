@@ -2,6 +2,13 @@ export default {
   primaryKey: 'id',
   attributes: {
     id: { type: 'string', columnName: '_id' },
-    // TODO: define pet_timeline attributes
+    event: { type: 'string' }, // new_pet, ownership_transfer, vaccination, sick, other
+    date: { type: 'string' },
+    pet: { model: 'pet' },
+    description: { type: 'string', defaultsTo: '' },
+    metadata: { type: 'json', defaultsTo: {} },
+    // event ownership_transfer: {previous_owner: owner, new_owner: owner, type: <sell,donation>}
+    // event vaccination: {vaccine: vaccine, amount: number}
+    // event sick: {disease: disease}
   },
 }

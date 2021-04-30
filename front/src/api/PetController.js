@@ -23,3 +23,15 @@ export async function UpdatePet({ id, ...attr }) {
 
   return data
 }
+
+export async function GetTimeline(id) {
+  const { data } = await server.get(`/pet/${id}/timeline`)
+
+  return data
+}
+
+export async function AddEvent({ id, ...attr }) {
+  const { data } = await server.put(`/pet/${id}/timeline`, attr)
+
+  return data
+}

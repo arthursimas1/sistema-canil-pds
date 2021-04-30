@@ -11,6 +11,7 @@ import SearchPetForm from './pages/SearchPetForm'
 import AddOwnerForm from './pages/AddOwnerForm'
 import SearchOwnerForm from './pages/SearchOwnerForm'
 import Owner from './pages/Owner'
+import PetTimeline from './pages/PetTimeline'
 import AddDiseaseForm from './pages/AddDiseaseForm'
 import EditDiseasesForm from './pages/EditDiseasesForm'
 import AddVaccineForm from './pages/AddVaccineForm'
@@ -34,7 +35,7 @@ ReactDOM.render(
           <Route component={SearchPetForm} path='/search-pet' exact />
           <Route component={SearchOwnerForm} path='/search-owner' exact />
           <Route component={Owner} path='/owner/:id' exact />
-          <Route component={Home} path='/pet-timeline/:id' exact />
+          <Route component={PetTimeline} path='/pet-timeline/:id' exact />
           <Route component={AddPetForm} path='/add-pet' exact />
           <Route component={AddOwnerForm} path='/add-owner' exact />
           <Route component={AddVaccineForm} path='/add-vaccine' exact />
