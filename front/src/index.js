@@ -16,6 +16,7 @@ import AddDiseaseForm from './pages/AddDiseaseForm'
 import EditDiseasesForm from './pages/EditDiseasesForm'
 import AddVaccineForm from './pages/AddVaccineForm'
 import EditVaccinesForm from './pages/EditVaccinesForm'
+import FinanceForm from './pages/Finance'
 
 const theme = createMuiTheme({
   palette: {
@@ -42,7 +43,7 @@ ReactDOM.render(
           <Route component={AddDiseaseForm} path='/add-disease' exact />
           <Route component={EditVaccinesForm} path='/edit-vaccines' exact />
           <Route component={EditDiseasesForm} path='/edit-diseases' exact />
-          <Route component={Home} path='/finance' exact />
+          <Route component={FinanceForm} path='/finance' exact />
           <Redirect push={false} to='/' />
         </Switch>
       </BrowserRouter>

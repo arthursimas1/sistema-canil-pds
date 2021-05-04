@@ -95,4 +95,11 @@ export default async () => Promise.all([
       had_animals: false,
     },
   ]),
+
+  wlc.finance.createEach([
+    {id: "rPOke97X1AoxBybNLIDLe",amount: -3000,date: "2021-05-04T18:42:57.954Z",description: "Pagamento de funcionário"},
+    {id: "lT8B9FQt_iFXeOjoLs3k5",amount: 2000,date: "2021-05-04T18:42:02.429Z",description: "Venda de um PET"},
+    {id: "aKnLARV1XQ3YCedltvCJI",amount: 5000,date: "2021-05-04T18:41:45.222Z",description: "Venda de um PET"},
+    {id: "SDVf4Hs4hvQFZ8cPGTwPb",amount: -1000,date: "2021-05-04T18:40:22.680Z",description: "Compra de ração"},
+  ]),
 ])

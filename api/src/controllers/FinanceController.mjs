@@ -3,6 +3,7 @@ import wlc from '../database/waterline.mjs'
 export default function Controller(routes) {
   routes.post('/finance', async (request, response) => {
     delete request.body.id // doesn't allow id to be set
+    request.body.date = new Date().toISOString()
 
     try {
       await wlc.finance.create(request.body)
@@ -16,14 +17,12 @@ export default function Controller(routes) {
   })
 
   routes.get('/finance', async (request, response) => {
-    let { limit } = { limit: 20, ...request.query } // limit defaults to 20
-
-    const sum = await wlc.finance.sum('amount')
+    const balance = await wlc.finance.sum('amount')
     
-    const finance = await wlc.finance.find({
-      sort: 'date'
+    const events = await wlc.finance.find({
+      sort: 'date DESC'
     })
 
-    return response.json({sum, finance})
+    return response.json({balance, events})
   })
 }
