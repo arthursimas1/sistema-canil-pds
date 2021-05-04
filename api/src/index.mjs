@@ -24,6 +24,9 @@ DiseaseController(routes)
 import VaccineController from './controllers/VaccineController.mjs'
 VaccineController(routes)
 
+import FinanceController from './controllers/FinanceController.mjs'
+FinanceController(routes)
+
 import HealthCheckController from './controllers/HealthCheckController.mjs'
 HealthCheckController(routes)
 
