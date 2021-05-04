@@ -1,8 +1,9 @@
 import assert from 'assert'
 import wlc from '../database/waterline.mjs'
+import { AuthHealthCheck } from '../middlewares/authenticate.mjs'
 
 export default function Controller(routes) {
-  routes.get('/health_check', async (request, response) => {
+  routes.get('/health_check', AuthHealthCheck, async (request, response) => {
     let health_check = {
       uptime: process.uptime(),
       message: 'OK',

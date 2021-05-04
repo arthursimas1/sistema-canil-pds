@@ -24,7 +24,7 @@ export default function Controller(routes) {
     const data = request.query
     let query = { }
     const allowed_props = [
-      'name', 'breed', 'gender', 'owner'
+      'name', 'breed', 'gender', 'owner',
     ]
 
     for (const key in data) {
@@ -89,19 +89,20 @@ export default function Controller(routes) {
     timeline = await Promise.all(timeline.map(async (e) => {
       switch (e.event) {
         case 'ownership_transfer':
-          e.metadata.previous_owner = await wlc.owner.findOne({ id: e.metadata.previous_owner })
-          e.metadata.new_owner = await wlc.owner.findOne({ id: e.metadata.new_owner })
-          break;
+          e.metadata.previous_owner = await wlc.owner.findOne({ id: e.metadata.previous_owner }) // eslint-disable-line require-atomic-updates
+          e.metadata.new_owner = await wlc.owner.findOne({ id: e.metadata.new_owner }) // eslint-disable-line require-atomic-updates
+          break
 
         case 'vaccination':
-          e.metadata.vaccine = await wlc.vaccine.findOne({ id: e.metadata.vaccine })
-          break;
+          e.metadata.vaccine = await wlc.vaccine.findOne({ id: e.metadata.vaccine }) // eslint-disable-line require-atomic-updates
+          break
 
         case 'sick':
-          e.metadata.disease = await wlc.disease.findOne({ id: e.metadata.disease })
-          break;
+          e.metadata.disease = await wlc.disease.findOne({ id: e.metadata.disease }) // eslint-disable-line require-atomic-updates
+          break
       }
       delete e.pet
+
       return e
     }))
 

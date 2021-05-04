@@ -27,7 +27,7 @@ export default function Controller(routes) {
         ],
         hidden: false,
       },
-      limit
+      limit,
     })
       .meta({ makeLikeModifierCaseInsensitive: true })
 

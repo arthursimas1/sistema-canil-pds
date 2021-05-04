@@ -18,11 +18,11 @@ export default function Controller(routes) {
 
   routes.get('/finance', async (request, response) => {
     const balance = await wlc.finance.sum('amount')
-    
+
     const events = await wlc.finance.find({
-      sort: 'date DESC'
+      sort: 'date DESC',
     })
 
-    return response.json({balance, events})
+    return response.json({ balance, events })
   })
 }

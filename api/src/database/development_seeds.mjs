@@ -19,7 +19,7 @@ export default async () => Promise.all([
       owner: 'dEWVp2db7x_PzZvl9GKfO',
     },
   ]),
-/*
+  /*
     id: { type: 'string', columnName: '_id' },
     event: { type: 'string' }, // new_pet, ownership_transfer, vaccination, sick, other
     date: { type: 'string' },
@@ -29,7 +29,7 @@ export default async () => Promise.all([
     // event ownership_transfer: {previous_owner: owner, new_owner: owner, type: <sell,donation>}
     // event vaccination: {vaccine: vaccine, amount: number}
     // event sick: {disease: disease}
-* */
+  */
   wlc.pet_timeline.createEach([
     {
       id: 'p6kl99_jD0jjhMvWI891x',
@@ -97,9 +97,9 @@ export default async () => Promise.all([
   ]),
 
   wlc.finance.createEach([
-    {id: "rPOke97X1AoxBybNLIDLe",amount: -3000,date: "2021-05-04T18:42:57.954Z",description: "Pagamento de funcionário"},
-    {id: "lT8B9FQt_iFXeOjoLs3k5",amount: 2000,date: "2021-05-04T18:42:02.429Z",description: "Venda de um PET"},
-    {id: "aKnLARV1XQ3YCedltvCJI",amount: 5000,date: "2021-05-04T18:41:45.222Z",description: "Venda de um PET"},
-    {id: "SDVf4Hs4hvQFZ8cPGTwPb",amount: -1000,date: "2021-05-04T18:40:22.680Z",description: "Compra de ração"},
+    { id: 'rPOke97X1AoxBybNLIDLe', amount: -3000, date: '2021-05-04T18:42:57.954Z', description: 'Pagamento de funcionário' },
+    { id: 'lT8B9FQt_iFXeOjoLs3k5', amount: 2000, date: '2021-05-04T18:42:02.429Z', description: 'Venda de um PET' },
+    { id: 'aKnLARV1XQ3YCedltvCJI', amount: 5000, date: '2021-05-04T18:41:45.222Z', description: 'Venda de um PET' },
+    { id: 'SDVf4Hs4hvQFZ8cPGTwPb', amount: -1000, date: '2021-05-04T18:40:22.680Z', description: 'Compra de ração' },
   ]),
 ])
