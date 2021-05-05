@@ -128,11 +128,15 @@ export default class SearchOwnerForm extends Component {
             <div className='search-button'>
               <LoadingButton disabled={ this.state.loading } onClick={ () => this.search() } variant='contained' pending={ this.state.loading } pendingPosition='center'>Buscar</LoadingButton>
             </div>
+          </Menu>
+        </Box>
 
-            <table className='results' hidden={this.state.results.length <= 0}>
+        <Box hidden={this.state.results.length <= 0}>
+          <Menu>
+            <table className='results'>
               <tbody>
-                <tr><th>Nome</th><th>E-Mail</th><th>Gênero</th><th>Rua</th><th>CEP</th><th>Estado</th><th>Cidade</th></tr>
-                { this.state.results.map((e) => <tr key={e.id}><td><Link to={`/owner/${e.id}`}>{e.name}</Link></td><td>{e.email}</td><td>{e.gender}</td><td>{e.streetname}</td><td>{e.postalcode}</td><td>{e.state}</td><td>{e.city}</td></tr>) }
+                <tr><th>Nome</th><th>CPF</th><th>E-Mail</th><th>Gênero</th><th>Rua</th><th>CEP</th><th>Estado</th><th>Cidade</th></tr>
+                { this.state.results.map((e) => <tr key={e.id}><td><Link to={`/owner/${e.id}`}>{e.name}</Link></td><td>{e.cpf}</td><td>{e.email}</td><td>{e.gender}</td><td>{e.streetname}</td><td>{e.postalcode}</td><td>{e.state}</td><td>{e.city}</td></tr>) }
               </tbody>
             </table>
           </Menu>

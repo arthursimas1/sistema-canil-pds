@@ -7,7 +7,7 @@ export async function AddFinance(attr) {
 }
 
 export async function GetAllFinance() {
-  const { data } = await server.get(`/finance`)
+  const { data } = await server.get('/finance')
 
   return data
 }

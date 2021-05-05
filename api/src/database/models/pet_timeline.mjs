@@ -11,4 +11,9 @@ export default {
     // event vaccination: {vaccine: vaccine, amount: number}
     // event sick: {disease: disease}
   },
+  beforeCreate: function(data, proceed) {
+    if (data.date.length === 0) data.date = new Date().toISOString()
+
+    proceed()
+  },
 }

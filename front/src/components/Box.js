@@ -5,6 +5,7 @@ const Box = styles.div`
   width: fit-content;
   color: var(--white);
   margin: 0 auto;
+  margin-bottom: 25px;
   padding: 20px;
   background: var(--lightgray);
   border: 3px solid white;

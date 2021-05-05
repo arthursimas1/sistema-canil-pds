@@ -5,9 +5,9 @@ export default function Controller(routes) {
     delete request.body.id // doesn't allow id to be set
 
     try {
-      await wlc.owner.create(request.body)
+      const owner = await wlc.owner.create(request.body).fetch()
 
-      return response.json({ })
+      return response.json({ owner: owner.id })
     } catch (e) {
       console.log(e)
 

@@ -142,11 +142,15 @@ export default class SearchPetForm extends Component {
             <div className='search-button'>
               <LoadingButton disabled={ this.state.loading } onClick={ () => this.search() } variant='contained' pending={ this.state.loading } pendingPosition='center'>Buscar</LoadingButton>
             </div>
+          </Menu>
+        </Box>
 
-            <table className='results' hidden={this.state.results.length <= 0}>
+        <Box hidden={this.state.results.length <= 0}>
+          <Menu>
+            <table className='results'>
               <tbody>
                 <tr><th>Nome</th><th>Dono</th><th>Sexo</th><th>Raça</th></tr>
-                { this.state.results.map((e) => <tr key={e.id}><td><Link to={`/pet-timeline/${e.id}`}>{e.name}</Link></td><td>{e.owner.name}</td><td>{e.gender}</td><td>{e.breed}</td></tr>) }
+                { this.state.results.map((e) => <tr key={e.id}><td><Link to={`/pet-timeline/${e.id}`}>{e.name}</Link></td><td><Link to={`/owner/${e.owner.id}`}>{e.owner.name} ({e.owner.cpf})</Link></td><td>{e.gender}</td><td>{e.breed}</td></tr>) }
               </tbody>
             </table>
           </Menu>

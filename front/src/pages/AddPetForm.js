@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import styles from 'styled-components'
-import { Link } from 'react-router-dom'
 
 import { pt as ptLocale } from 'date-fns/locale'
 import DateFnsUtils from '@date-io/date-fns'
@@ -15,6 +14,7 @@ import qs from 'qs'
 import Header from '../components/Header'
 import Box from '../components/Box'
 import StatusBox from '../components/StatusBox'
+import LinkOnClick from '../components/LinkOnClick'
 
 import { AddPet } from '../api/PetController'
 import BREEDS from '../assets/breeds.json'
@@ -96,8 +96,11 @@ export default class AddPetForm extends Component {
     }
 
     this.setState({ loading: true, err: false, success: false })
-    let { err } = await AddPet({ ...this.state })
-    this.setState({ loading: false, err, success: !err && 'PET cadastrado com sucesso' })
+    let { err, pet } = await AddPet({ ...this.state })
+    this.setState({ loading: false, err, success: !err })
+
+    if (!err)
+      return this.props.history.push(`/pet-timeline/${pet}`)
   }
 
   renderForm() {
@@ -148,7 +151,7 @@ export default class AddPetForm extends Component {
 
         <Box>
           <Menu>
-            <span>&#8592; <Link onClick={() => this.props.history.goBack()}>Voltar</Link></span>
+            <span>&#8592; <LinkOnClick onClick={() => this.props.history.goBack()}>Voltar</LinkOnClick></span>
             <h3>Adicionar PET</h3>
 
             <StatusBox err={this.state.err} success={this.state.success} />

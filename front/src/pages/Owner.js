@@ -13,6 +13,7 @@ import { LoadingButton } from '@material-ui/lab'
 import Header from '../components/Header'
 import Box from '../components/Box'
 import StatusBox from '../components/StatusBox'
+import LinkOnClick from '../components/LinkOnClick'
 
 import { GetOwner, UpdateOwner } from '../api/OwnerController'
 import GENDERS from '../assets/genders_human.json'
@@ -116,7 +117,7 @@ export default class Owner extends Component {
     let owner_data = await GetOwner(this.props.match.params.id)
 
     if (owner_data.err === 'not_found')
-      return this.props.history.push('/')
+      return this.props.history.replace('/')
 
     this.setState({ ...owner_data, loading: false })
   }
@@ -154,7 +155,7 @@ export default class Owner extends Component {
 
         <Box>
           <Menu>
-            <span>&#8592; <Link onClick={() => this.props.history.goBack()}>Voltar</Link></span>
+            <span>&#8592; <LinkOnClick onClick={() => this.props.history.goBack()}>Voltar</LinkOnClick></span>
             <h3>Perfil do Dono</h3>
 
             <StatusBox err={this.state.err} success={this.state.success} />

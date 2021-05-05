@@ -20,6 +20,7 @@ import { LoadingButton } from '@material-ui/lab'
 import Header from '../components/Header'
 import { BoxNoMargin } from '../components/Box'
 import StatusBox from '../components/StatusBox'
+import LinkOnClick from '../components/LinkOnClick'
 
 import dateFormat from '../dateFormat'
 
@@ -121,6 +122,10 @@ const StyledEvent = styles.div`
 
 const StyledEventDark = styles(StyledEvent)`
   background: var(--lightgray);
+  & > * {
+    width: 100%;
+    margin: 10px 0 !important;
+  }
 `
 
 class Event extends Component {
@@ -199,46 +204,40 @@ class NewEvent extends Component {
       // Event fields
       event: '',
       description: '',
-      metadata: {},
 
       // search vaccine
       vaccine_text: '',
-      vaccine: '',
+      vaccine_index: '',
       vaccine_amount: 1,
       vaccines_results: [],
 
       // search disease
       disease_text: '',
-      disease: '',
+      disease_index: '',
       diseases_results: [],
 
       // search new owner
       new_owner_cpf: '',
       owner_result: false,
 
-      sell_price: 0,
+      sell_price: 1,
 
       // component-related stuff
       loading: false,
       success: false,
       err: false,
     }
-    /*this.events = {
-      ownership_transfer: {previous_owner: owner, new_owner: owner, type: <sell,donation>, price: int}
-      vaccination: {vaccine: <vaccine id>, amount: <number>}
-      sick: {disease: <disease id>}
-    }*/
     this.state = { ...this.initial_state }
   }
 
   async search_vaccine() {
-    this.setState({ loading: true, err: false, success: false })
+    this.setState({ loading: true, err: false, success: false, vaccine_index: '' })
     let vaccines_results = await SearchVaccine({ text: this.state.vaccine_text, limit: null })
     this.setState({ loading: false, vaccines_results, err: false, success: true })
   }
 
   async search_disease() {
-    this.setState({ loading: true, err: false, success: false })
+    this.setState({ loading: true, err: false, success: false, disease_index: '' })
     let diseases_results = await SearchDisease({ text: this.state.disease_text, limit: null })
     this.setState({ loading: false, diseases_results, err: false, success: true })
   }
@@ -246,7 +245,15 @@ class NewEvent extends Component {
   async search_owner() {
     this.setState({ loading: true, err: false, success: false })
     let owner_result = await SearchOwner({ cpf: this.state.new_owner_cpf })
-    this.setState({ loading: false, owner_result: owner_result.length ? owner_result[0] : null, err: false, success: true })
+    owner_result = owner_result.length ? owner_result[0] : null
+    let err = false
+
+    if (owner_result?.cpf === this.props.owner.cpf) {
+      owner_result = false
+      err = 'Não pode ser o mesmo dono'
+    }
+
+    this.setState({ loading: false, owner_result, err, success: true })
   }
 
   async submit() {
@@ -260,46 +267,69 @@ class NewEvent extends Component {
     switch (data.event) {
       case 'sell':
       case 'donation': // eslint-disable-line padding-line-between-statements
-        data['metadata'] = {
+        if (!this.state.owner_result)
+          return this.setState({ loading: false, err: true, success: 'Selecione o novo dono' })
+
+        data.metadata = {
           type: data.event,
           previous_owner: this.props.owner.id,
           new_owner: this.state.owner_result.id,
           ...data.event === 'sell' && { price: Number(this.state.sell_price) },
         }
-        data['event'] = 'ownership_transfer'
+        data.event = 'ownership_transfer'
         break
 
       case 'vaccination':
-        data['metadata'] = {
-          vaccine: this.state.vaccine,
+        if (this.state.vaccine_index === '')
+          return this.setState({ loading: false, err: true, success: 'Selecione a vacina' })
+
+        data.metadata = {
+          vaccine: this.state.vaccines_results[Number(this.state.vaccine_index)].id,
           amount: this.state.vaccine_amount,
         }
         break
 
       case 'sick':
-        data['metadata'] = {
-          disease: this.state.disease,
+        if (this.state.disease_index === '')
+          return this.setState({ loading: false, err: true, success: 'Selecione a doença' })
+
+        data.metadata = {
+          disease: this.state.diseases_results[Number(this.state.disease_index)].id,
         }
         break
 
-      //case 'other':
-      //default:
+      case 'other':
+        if (data.description.length === 0)
+          return this.setState({ loading: false, err: true, success: 'Preencha a descrição' })
     }
 
     let { err } = await AddEvent(data)
 
     if (!err && this.props.onNewEvent) {
-      data['date'] = new Date().toISOString()
-      data['id'] = data['date']
-      data['new'] = true
+      data.date = new Date().toISOString()
+      data.id = data.date
+      data.new = true
 
-      if (data.event === 'ownership_transfer' && this.props.onOwnerChange) {
-        data['metadata']['previous_owner'] = { ...this.props.owner }
-        data['metadata']['new_owner'] = { ...this.state.owner_result }
-        this.props.onOwnerChange(this.state.owner_result)
+      switch (data.event) {
+        case 'ownership_transfer':
+          if (this.props.onOwnerChange) {
+            data.metadata.previous_owner = this.props.owner
+            data.metadata.new_owner = this.state.owner_result
+            this.props.onOwnerChange(JSON.parse(JSON.stringify(this.state.owner_result)))
+          }
+
+          break
+
+        case 'vaccination':
+          data.metadata.vaccine = this.state.vaccines_results[Number(this.state.vaccine_index)]
+          break
+
+        case 'sick':
+          data.metadata.disease = this.state.diseases_results[Number(this.state.disease_index)]
+          break
       }
 
-      this.props.onNewEvent(data)
+      this.props.onNewEvent(JSON.parse(JSON.stringify(data)))
 
       this.setState(this.initial_state)
     }
@@ -310,88 +340,66 @@ class NewEvent extends Component {
   render() {
     return (
       <StyledEventDark>
-        <AddIcon color='secondary' />
+        <StatusBox err={this.state.err} success={this.state.success} />
+
+        <div style={{ color: 'white' }}><AddIcon color='secondary' style={{ marginBottom: '-4px' }} /> Adicionar evento</div>
 
         <TextField select label='Tipo' variant='outlined' value={this.state.event} onChange={(e) => this.setState({ event: e.target.value })} required>
           {EVENTS.map(([name, label]) => <MenuItem key={name} value={name} style={{ color: 'black', ...this.state.event === name ? { background: '#9e9e9e', fontWeight: 'bold' } : {} }}>{label}</MenuItem>)}
         </TextField>
 
-        <div hidden={this.state.event !== 'donation' && this.state.event !== 'sell'}>
-          <TextField
-            label='Buscar Novo Dono (CPF)'
-            value={this.state.new_owner_cpf}
-            onChange={(e) => this.setState({ new_owner_cpf: e.target.value })}
-            InputProps={{
-              endAdornment:
-                <InputAdornment position='end'>
-                  <IconButton
-                    onClick={() => this.search_owner()}
-                    //onMouseDown={handleMouseDownPassword}
-                    edge='end'
-                  >
-                    <SearchIcon color={'primary'} />
-                  </IconButton>
-                </InputAdornment>,
-            }}
-            variant='outlined'
-          />
-          { this.state.owner_result && <span>Novo dono: {this.state.owner_result.name} ({this.state.owner_result.cpf})</span> }
-          <span hidden={this.state.owner_result !== null}>Não encontrado</span>
+        {
+          (this.state.event === 'donation' || this.state.event === 'sell') &&
+            <>
+              <TextField
+                label='Buscar Novo Dono (CPF)'
+                value={this.state.new_owner_cpf}
+                onChange={(e) => this.setState({ new_owner_cpf: e.target.value })}
+                InputProps={{ endAdornment: <InputAdornment position='end'><IconButton onClick={() => this.search_owner()} edge='end'><SearchIcon color={'primary'}/></IconButton></InputAdornment> }}
+                variant='outlined'
+              />
+              {this.state.owner_result && <span style={{ color: 'white' }}>Novo dono: {this.state.owner_result.name} ({this.state.owner_result.cpf})</span>}
+              <span hidden={this.state.owner_result !== null} style={{ color: 'white' }}>Não encontrado</span>
 
-          <TextField hidden={this.state.event !== 'sell'} label='Valor' variant='outlined' type='number' inputProps={{ min: 1 }} value={this.state.sell_price} onChange={(e) => this.setState({ sell_price: e.target.value })} required />
-        </div>
+              <TextField hidden={this.state.event !== 'sell'} label='Valor' variant='outlined' type='number' inputProps={{ min: 1, step: '0.01' }} value={this.state.sell_price} onChange={(e) => this.setState({ sell_price: e.target.value })} required/>
+            </>
+        }
 
-        <div hidden={this.state.event !== 'vaccination'}>
-          <TextField
-            label='Buscar Vacina'
-            value={this.state.vaccine_text}
-            onChange={(e) => this.setState({ vaccine_text: e.target.value })}
-            InputProps={{
-              endAdornment:
-                <InputAdornment position='end'>
-                  <IconButton
-                    onClick={() => this.search_vaccine()}
-                    //onMouseDown={handleMouseDownPassword}
-                    edge='end'
-                  >
-                    <SearchIcon color='primary' />
-                  </IconButton>
-                </InputAdornment>,
-            }}
-            variant='outlined'
-          />
-          <TextField select label='Vacina' variant='outlined' value={this.state.vaccine} onChange={(e) => this.setState({ vaccine: e.target.value })} required>
-            {this.state.vaccines_results.map((v) => <MenuItem key={v.id} value={v.id} style={{ color: 'black', ...this.state.vaccine === v.id ? { background: '#9e9e9e', fontWeight: 'bold' } : {} }}>{v.name}</MenuItem>)}
-          </TextField>
+        {
+          this.state.event === 'vaccination' &&
+            <>
+              <TextField
+                label='Buscar Vacina'
+                value={this.state.vaccine_text}
+                onChange={(e) => this.setState({ vaccine_text: e.target.value })}
+                InputProps={{ endAdornment: <InputAdornment position='end'><IconButton onClick={() => this.search_vaccine()} edge='end'><SearchIcon color='primary' /></IconButton></InputAdornment> }}
+                variant='outlined'
+              />
+              <TextField select label='Vacina' variant='outlined' value={this.state.vaccine_index} onChange={(e) => this.setState({ vaccine_index: e.target.value })} required>
+                {this.state.vaccines_results.map((v, i) => <MenuItem key={v.key} value={i} style={{ color: 'black', ...this.state.vaccine_index === i ? { background: '#9e9e9e', fontWeight: 'bold' } : {} }}>{v.name}</MenuItem>)}
+              </TextField>
 
-          <TextField label='Quantidade' variant='outlined' type='number' inputProps={{ min: 1 }} value={this.state.vaccine_amount} onChange={(e) => this.setState({ vaccine_amount: e.target.value })} required />
-        </div>
+              <TextField label='Doses' variant='outlined' type='number' inputProps={{ min: 1 }} value={this.state.vaccine_amount} onChange={(e) => this.setState({ vaccine_amount: e.target.value })} required />
+            </>
+        }
 
-        <div hidden={this.state.event !== 'sick'}>
-          <TextField
-            label='Buscar Doença'
-            value={this.state.disease_text}
-            onChange={(e) => this.setState({ disease_text: e.target.value })}
-            InputProps={{
-              endAdornment:
-                <InputAdornment position='end'>
-                  <IconButton
-                    onClick={() => this.search_disease()}
-                    //onMouseDown={handleMouseDownPassword}
-                    edge='end'
-                  >
-                    <SearchIcon color={'primary'} />
-                  </IconButton>
-                </InputAdornment>,
-            }}
-            variant='outlined'
-          />
-          <TextField select label='Doença' variant='outlined' value={this.state.disease} onChange={(e) => this.setState({ disease: e.target.value })} required>
-            {this.state.diseases_results.map((v) => <MenuItem key={v.id} value={v.id} style={{ color: 'black', ...this.state.disease === v.id ? { background: '#9e9e9e', fontWeight: 'bold' } : {} }}>{v.name}</MenuItem>)}
-          </TextField>
-        </div>
+        {
+          this.state.event === 'sick' &&
+            <>
+              <TextField
+                label='Buscar Doença'
+                value={this.state.disease_text}
+                onChange={(e) => this.setState({ disease_text: e.target.value })}
+                InputProps={{ endAdornment: <InputAdornment position='end'><IconButton onClick={() => this.search_disease()} edge='end'><SearchIcon color='primary' /></IconButton></InputAdornment> }}
+                variant='outlined'
+              />
+              <TextField select label='Doença' variant='outlined' value={this.state.disease_index} onChange={(e) => this.setState({ disease_index: e.target.value })} required>
+                {this.state.diseases_results.map((v, i) => <MenuItem key={v.id} value={i} style={{ color: 'black', ...this.state.disease_index === i ? { background: '#9e9e9e', fontWeight: 'bold' } : {} }}>{v.name}</MenuItem>)}
+              </TextField>
+            </>
+        }
 
-        <TextField label='Detalhes' variant='outlined' multiline={true} hidden={this.state.event === ''} value={this.state.description} onChange={(e) => this.setState({ description: e.target.value })} required />
+        <TextField label='Detalhes' variant='outlined' multiline={true} hidden={this.state.event === ''} value={this.state.description} onChange={(e) => this.setState({ description: e.target.value })} />
 
         <LoadingButton disabled={this.state.loading} hidden={this.state.event === ''} onClick={() => this.submit()} variant='contained' pending={this.state.loading} pendingPosition='center'>Adicionar</LoadingButton>
       </StyledEventDark>
@@ -424,9 +432,8 @@ export default class PetTimeline extends Component {
     this.setState({ loading: true })
     let pet_data = await GetPet(this.props.match.params.id)
 
-    if (pet_data.err === 'not_found') {
-      return this.props.history.push('/')
-    }
+    if (pet_data.err === 'not_found')
+      return this.props.history.replace('/')
 
     let timeline = await GetTimeline(this.props.match.params.id)
 
@@ -437,76 +444,11 @@ export default class PetTimeline extends Component {
     })
   }
 
-  reset() {
-    this.setState({ ...this.initial_state })
-  }
-
   async edit_pet() {
-    let l = Array.from(document.getElementsByTagName('input'))
-    for (let i of l) {
-      i.oninput = (e) => e.target.setCustomValidity('')
-
-      // date check
-      let aria_invalid = i.getAttribute('aria-invalid')
-      if (aria_invalid === 'true') {
-        i.setCustomValidity('Data inválida')
-
-        return i.reportValidity()
-      }
-
-      if (!i.checkValidity()) {
-        return i.reportValidity()
-      }
-    }
-
-    this.setState({
-      loading: true,
-      err: false,
-      success: false,
-    })
-    let { err } = await UpdatePet({ ...this.state })
-    this.setState({
-      loading: false,
-      err,
-      success: !err && 'Dono atualizado com sucesso',
-    })
-  }
-
-  async create_event() {
-    let l = Array.from(document.getElementsByTagName('input'))
-    for (let i of l) {
-      i.oninput = (e) => e.target.setCustomValidity('')
-
-      if (!i.checkValidity()) {
-        return i.reportValidity()
-      }
-    }
-
-    this.setState({
-      loading: true,
-      err: false,
-      success: false,
-    })
-
-    const attr = {
-      /*
-      event: <new_pet, ownership_transfer, vaccination, sick, other>
-      date: <ISOString>
-      pet: <id>,
-      description: string,
-      metadata: {},
-      // event ownership_transfer: {previous_owner: owner, new_owner: owner, type: <sell,donation>}
-      // event vaccination: {vaccine: <vaccine id>, amount: <number>}
-      // event sick: {disease: <disease id>}
-       */
-    }
-
-    let { err } = await AddEvent({ id: this.props.match.params.id, ...attr })
-    this.setState({
-      loading: false,
-      err,
-      success: !err && 'Dono atualizado com sucesso',
-    })
+    this.setState({ loading: true, err: false, success: false })
+    const { timeline, owner, previous_owners, ...data } = this.state // eslint-disable-line no-unused-vars
+    let { err } = await UpdatePet(data)
+    this.setState({ loading: false, err, success: !err && 'PET atualizado' })
   }
 
   render() {
@@ -527,7 +469,7 @@ export default class PetTimeline extends Component {
 
         <BoxNoMargin style={{ marginRight: 'auto' }}>
           <Menu>
-            <span>&#8592; <Link onClick={() => this.props.history.goBack()}>Voltar</Link></span><br />
+            <span>&#8592; <LinkOnClick onClick={() => this.props.history.goBack()}>Voltar</LinkOnClick></span><br />
 
             <span>Dono: <Link to={`/owner/${this.state.owner.id}`}>{this.state.owner.name}</Link></span><br />
 
@@ -561,7 +503,7 @@ export default class PetTimeline extends Component {
                 />
               </MuiPickersUtilsProvider>
 
-              <LoadingButton disabled={this.state.loading} onClick={() => this.submit()} variant='contained' pending={this.state.loading} pendingPosition='center'>Atualizar</LoadingButton>
+              <LoadingButton disabled={this.state.loading} onClick={() => this.edit_pet()} variant='contained' pending={this.state.loading} pendingPosition='center'>Atualizar</LoadingButton>
             </div>
           </Menu>
         </BoxNoMargin>

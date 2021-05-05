@@ -24,7 +24,7 @@ const Main = styles.main`
 
 const Menu = styles.div`
   display: flex;
-  width: 250px;
+  //width: 250px;
   margin: 0 auto;
   flex-direction: column;
   //background: pink;
@@ -60,6 +60,10 @@ const Menu = styles.div`
     tr {
       text-align: left;
 
+      &:not(:first-child,:last-child) {
+        border-bottom: solid white 2px;
+      }
+
       &.entrada {
         background: var(--success);
       }
@@ -86,11 +90,11 @@ export default class Finance extends Component {
 
     this.initial_state = {
       // Owner fields
-      amount: 0,
+      amount: 1,
       description: '',
       type: '',
       balance: 0,
-      events: [],      
+      events: [],
 
       // component-related stuff
       loading: false,
@@ -120,7 +124,7 @@ export default class Finance extends Component {
         return i.reportValidity()
     }
 
-    if(this.state.type === 'Saída')
+    if (this.state.type === 'Saída')
       this.state.amount *= -1
 
     let new_event = {
@@ -149,27 +153,30 @@ export default class Finance extends Component {
             <StatusBox err={this.state.err} success={this.state.success} />
 
             <div className='fields'>
-              <TextField label='Valor' variant='outlined' value={this.state.amount} inputProps={{ min: 1 }} type='number' onChange={(e) => this.setState({ amount: e.target.value })} required />
-
-              <TextField label='Descrição' variant='outlined' value={this.state.description} onChange={(e) => this.setState({ description: e.target.value })} required />              
-
               <TextField select label='Tipo' variant='outlined' value={this.state.type} onChange={(e) => this.setState({ type: e.target.value })} required >
                 { ['Entrada', 'Saída'].map((label) => <MenuItem key={label} value={label} style={{ color: 'black', ...this.state.type === label ? { background: '#9e9e9e', fontWeight: 'bold' } : {} }}>{ label }</MenuItem>) }
               </TextField>
 
+              <TextField label='Valor' variant='outlined' value={this.state.amount} inputProps={{ min: 1, step: '0.01' }} type='number' onChange={(e) => this.setState({ amount: e.target.value })} required />
+
+              <TextField label='Descrição' variant='outlined' value={this.state.description} onChange={(e) => this.setState({ description: e.target.value })} required />
+
               <LoadingButton disabled={ this.state.loading } onClick={ () => this.submit() } variant='contained' pending={ this.state.loading } pendingPosition='center'>Adicionar</LoadingButton>
-
-              <h3>Balanço: R$ {this.state.balance}</h3>
-
-              <h3>Eventos</h3>
-              <span hidden={this.state.events.length > 0}>Não foram encontrados eventos</span>
-              <table className='finance' hidden={this.state.events.length <= 0}>
-                <tbody>
-                  <tr><th>Valor</th><th>Descrição</th><th>Data</th></tr>
-                  { this.state.events.map((e) => <tr className={e.amount >0 ? 'entrada' : 'saida'} key={e.id}><td>R$ {e.amount}</td><td>{e.description}</td><td>{dateFormat(e.date, 'HH:mm dd/MM/yy')}</td></tr>) }
-                </tbody>
-              </table>              
             </div>
+          </Menu>
+        </Box>
+
+        <Box>
+          <Menu>
+            <h3>Balanço: R$ {this.state.balance}</h3>
+            <h3>Eventos</h3>
+            <span hidden={this.state.events.length > 0}>Não foram encontrados eventos</span>
+            <table className='finance' hidden={this.state.events.length <= 0}>
+              <tbody>
+                <tr><th>Valor</th><th>Descrição</th><th>Data</th></tr>
+                { this.state.events.map((e) => <tr className={e.amount > 0 ? 'entrada' : 'saida'} key={e.id}><td>R$&nbsp;{e.amount}</td><td style={{ width: '350px' }} dangerouslySetInnerHTML={{ __html: e.description }} /><td>{dateFormat(e.date, 'HH:mm\xa0dd/MM/yy')}</td></tr>) }
+              </tbody>
+            </table>
           </Menu>
         </Box>
       </Main>

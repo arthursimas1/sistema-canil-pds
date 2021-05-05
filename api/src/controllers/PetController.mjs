@@ -6,13 +6,14 @@ export default function Controller(routes) {
 
     try {
       const pet = await wlc.pet.create(request.body).fetch()
+
+      // date set at modeling level
       await wlc.pet_timeline.create({
         event: 'new_pet',
-        date: new Date().toISOString(),
         pet: pet.id,
       })
 
-      return response.json({ })
+      return response.json({ pet: pet.id })
     } catch (e) {
       console.log(e)
 
@@ -69,7 +70,6 @@ export default function Controller(routes) {
     delete request.body.id // doesn't allow id to be set
 
     const { pet } = request.params
-    const date = new Date().toISOString()
 
     try {
       const { event, description, metadata } = request.body
@@ -77,12 +77,21 @@ export default function Controller(routes) {
       if (['new_pet', 'ownership_transfer', 'vaccination', 'sick', 'other'].indexOf(event) < 0)
         return response.json({ err: 'invalid_event' })
 
-      await wlc.pet_timeline.create({ pet, date, event, description, metadata })
+      // date set at modeling level
+      await wlc.pet_timeline.create({ pet, event, description, metadata })
 
       if (event === 'ownership_transfer') {
-        await wlc.pet.update({ id: pet }).set({ owner: metadata['new_owner'] })
-        await wlc.pet.addToCollection(pet, 'previous_owners', metadata['previous_owner'])
-        await wlc.pet.removeFromCollection(pet, 'previous_owners', metadata['new_owner'])
+        await wlc.pet.update({ id: pet }).set({ owner: metadata.new_owner })
+        await wlc.pet.addToCollection(pet, 'previous_owners', metadata.previous_owner)
+        await wlc.pet.removeFromCollection(pet, 'previous_owners', metadata.new_owner)
+
+        if (metadata.type === 'sell') {
+          // date set at modeling level
+          await wlc.finance.create({
+            amount: metadata.price,
+            description: `PET [pet](${pet}) vendido de [owner](${metadata.previous_owner}) para [owner](${metadata.new_owner}).`,
+          })
+        }
       }
 
       return response.json({ })

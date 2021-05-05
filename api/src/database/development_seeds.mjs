@@ -81,7 +81,7 @@ export default async () => Promise.all([
         previous_owner: 'dEWVp2db7x_PzZvl9GKfO',
         new_owner: 'zPR1i264oBj6q51DuzFKI',
         type: 'sell',
-        price: 120,
+        price: 5000,
       },
     },
   ]),
@@ -126,37 +126,31 @@ export default async () => Promise.all([
       id: 'idgxHQDXjj5PpFyqx0jh0',
       name: 'Primo-vacinação',
       manufacturer: 'diversos',
-      description: 'Tomar ao perfazer 6 semanas',
+      description: 'Tomar ao perfazer 6 semanas.',
     },
     {
       id: 'IwOEjQtzgysRUVyksy8p-',
       name: 'Vacina Trivalente',
       manufacturer: 'diversos',
-      description: 'Tomar às 12 semanas.\nConfere imunidade contra: cinomose canina, hepatite infecciosa canina e leptospirose.',
+      description: 'Tomar às 12 semanas depois anualmente.\nConfere imunidade contra: cinomose canina, hepatite infecciosa canina e leptospirose.',
     },
     {
       id: 'RfNYU5Z8xy_H8DigsXxBg',
       name: 'Vacina Tetravalente',
       manufacturer: 'diversos',
-      description: 'Tomar às 12 semanas.\nConfere imunidade contra: cinomose canina, hepatite infecciosa canina, leptospirose e parvovirose canina.',
+      description: 'Tomar às 12 semanas depois anualmente.\nConfere imunidade contra: cinomose canina, hepatite infecciosa canina, leptospirose e parvovirose canina.',
     },
     {
       id: 'WceL3xT-tkCiIHqNGdU7Y',
       name: 'Vacina Polivalente',
       manufacturer: 'diversos',
-      description: 'Tomar às 12 semanas.\nConfere imunidade contra: cinomose canina, hepatite infecciosa canina, leptospirose, parvovirose canina, tosse dos canis e coronavírus canino.',
-    },
-    {
-      id: 'hzzatdf5cY2w_xrRO8v4d',
-      name: 'Reforço da vacina multivalente',
-      manufacturer: 'diversos',
-      description: 'Tomar inicialmente às 12 semanas depois anualmente',
+      description: 'Tomar às 12 semanas depois anualmente.\nConfere imunidade contra: cinomose canina, hepatite infecciosa canina, leptospirose, parvovirose canina, tosse dos canis e coronavírus canino.',
     },
     {
       id: '8QCVBqF5ZjvtC0g0L_Kxt',
       name: 'Raiva',
       manufacturer: 'diversos',
-      description: 'Tomar inicialmente às 16 semanas depois anualmente',
+      description: 'Tomar inicialmente às 16 semanas depois anualmente.',
     },
   ]),
 
@@ -169,9 +163,8 @@ export default async () => Promise.all([
   ]),
 
   wlc.finance.createEach([
+    { id: 'lT8B9FQt_iFXeOjoLs3k5', amount: 5000, date: '2021-05-02T13:54:06.963Z', description: 'PET [pet](qfRy_a2djCWF9b-lZG12J) vendido de [owner](dEWVp2db7x_PzZvl9GKfO) para [owner](zPR1i264oBj6q51DuzFKI).' },
     { id: 'rPOke97X1AoxBybNLIDLe', amount: -3000, date: '2021-05-04T18:42:57.954Z', description: 'Pagamento de funcionário' },
-    { id: 'lT8B9FQt_iFXeOjoLs3k5', amount:  2000, date: '2021-05-04T18:42:02.429Z', description: 'Venda de um PET' },
-    { id: 'aKnLARV1XQ3YCedltvCJI', amount:  5000, date: '2021-05-04T18:41:45.222Z', description: 'Venda de um PET' },
     { id: 'SDVf4Hs4hvQFZ8cPGTwPb', amount: -1000, date: '2021-05-04T18:40:22.680Z', description: 'Compra de ração' },
   ]),
 ])

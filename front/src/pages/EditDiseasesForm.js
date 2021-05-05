@@ -167,7 +167,7 @@ class EditableDisease extends Component {
 
   renderDisplay() {
     return (
-      <tr><td>{this.state.name}</td><td style={{ whiteSpace: 'pre-line' }} dangerouslySetInnerHTML={{ __html: this.state.description }} /><td><EditIcon className='edit' onClick={() => this.setEdit()} /></td></tr>
+      <tr><td>{this.state.name}</td><td style={{ width: '350px', whiteSpace: 'pre-line' }} dangerouslySetInnerHTML={{ __html: this.state.description }} /><td><EditIcon className='edit' onClick={() => this.setEdit()} /></td></tr>
     )
   }
 
@@ -243,10 +243,14 @@ export default class EditDiseasesForm extends Component {
             <div className='search-button'>
               <LoadingButton disabled={ this.state.loading } onClick={ () => this.search() } variant='contained' pending={ this.state.loading } pendingPosition='center'>Buscar</LoadingButton>
             </div>
+          </Menu>
+        </Box>
 
-            <table className='results' hidden={this.state.results.length <= 0}>
+        <Box hidden={this.state.results.length <= 0}>
+          <Menu>
+            <table className='results'>
               <tbody>
-                <tr><th>Nome</th><th>Descrição</th><th></th></tr>
+                <tr><th>Nome</th><th>Descrição</th><th /></tr>
                 { this.state.results.map((e) => <EditableDisease key={e.id} {...e} />) }
               </tbody>
             </table>

@@ -3,9 +3,9 @@ import wlc from '../database/waterline.mjs'
 export default function Controller(routes) {
   routes.post('/finance', async (request, response) => {
     delete request.body.id // doesn't allow id to be set
-    request.body.date = new Date().toISOString()
 
     try {
+      // date set at modeling level
       await wlc.finance.create(request.body)
 
       return response.json({ })
@@ -22,6 +22,25 @@ export default function Controller(routes) {
     const events = await wlc.finance.find({
       sort: 'date DESC',
     })
+
+    async function ReplaceAsync(str, regex, asyncFn) {
+      const promises = []
+      str.replace(regex, (match, ...args) => {
+        const promise = asyncFn(match, ...args)
+        promises.push(promise)
+      })
+      const data = await Promise.all(promises)
+
+      return str.replace(regex, () => data.shift())
+    }
+
+    for (const event of events) {
+      event.description = await ReplaceAsync(event.description, /\[(.*?)\]\((.*?)\)/g, async (str, collection, id) => {
+        let page = collection === 'pet' ? 'pet-timeline' : collection
+
+        return `<a href='${page}/${id}'>${(await wlc[collection].findOne({ id })).name}</a>`
+      })
+    }
 
     return response.json({ balance, events })
   })

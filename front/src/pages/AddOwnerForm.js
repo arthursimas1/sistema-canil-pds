@@ -107,8 +107,11 @@ export default class AddOwnerForm extends Component {
     }
 
     this.setState({ loading: true, err: false, success: false })
-    let { err } = await AddOwner({ ...this.state })
-    this.setState({ loading: false, err, success: !err && 'Dono cadastrado com sucesso' })
+    let { err, owner } = await AddOwner({ ...this.state })
+    this.setState({ loading: false, err, success: !err })
+
+    if (!err)
+      return this.props.history.push(`/owner/${owner}`)
   }
 
   renderForm() {
