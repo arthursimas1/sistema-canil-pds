@@ -16,15 +16,14 @@ export default function Controller(routes) {
   })
 
   routes.get('/owner', async (request, response) => {
-    const owner = await wlc.owner.find({ where: { cpf: request.query.cpf }, limit: 20 })
-      .meta({ makeLikeModifierCaseInsensitive: true })
+    const owner = await wlc.owner.find({ cpf: request.query.cpf })
 
     return response.json(owner)
   })
 
   routes.get('/owner/:id', async (request, response) => {
     const { id } = request.params
-    const owner = await wlc.owner.findOne({ id })
+    const owner = await wlc.owner.findOne({ id }).populate('current_pets').populate('previous_pets')
 
     if (owner)
       return response.json(owner)

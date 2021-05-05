@@ -141,7 +141,7 @@ class EditableVaccine extends Component {
     let { err } = await UpdateVaccine({ id: this.props.id, ...this.state })
     if (!err) {
       this.initial_state.name = this.state.name
-      this.initial_state.manufacturer = this.manufacturer.name
+      this.initial_state.manufacturer = this.state.manufacturer
       this.initial_state.description = this.state.description
 
       this.setState({ loading: false, err: false, editing: false })
@@ -171,7 +171,7 @@ class EditableVaccine extends Component {
 
   renderDisplay() {
     return (
-      <tr><td>{this.state.name}</td><td>{this.state.manufacturer}</td><td>{this.state.description}<EditIcon className='edit' onClick={() => this.setEdit()} /></td></tr>
+      <tr><td>{this.state.name}</td><td>{this.state.manufacturer}</td><td style={{ whiteSpace: 'pre-line' }} dangerouslySetInnerHTML={{ __html: this.state.description }} /><td><EditIcon className='edit' onClick={() => this.setEdit()} /></td></tr>
     )
   }
 
@@ -186,6 +186,8 @@ class EditableVaccine extends Component {
         </td>
         <td>
           <TextField multiline={true} value={this.state.description} onChange={(e) => this.setState({ description: e.target.value })} required />
+        </td>
+        <td>
           <DeleteIcon onClick={() => this.delete()} />
           <BlockIcon onClick={() => this.unsetEdit()} />
           <DoneIcon onClick={() => this.submit()} />
@@ -251,7 +253,7 @@ export default class EditVaccinesForm extends Component {
 
             <table className='results' hidden={this.state.results.length <= 0}>
               <tbody>
-                <tr><th>Nome</th><th>Fabricante</th><th>Descrição</th></tr>
+                <tr><th>Nome</th><th>Fabricante</th><th>Descrição</th><th></th></tr>
                 { this.state.results.map((e) => <EditableVaccine key={e.id} {...e} />) }
               </tbody>
             </table>

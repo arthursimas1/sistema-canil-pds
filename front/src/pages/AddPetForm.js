@@ -148,7 +148,7 @@ export default class AddPetForm extends Component {
 
         <Box>
           <Menu>
-            <span>&#8592; <Link to={`/owner/${this.state.owner}`}>Voltar</Link></span>
+            <span>&#8592; <Link onClick={() => this.props.history.goBack()}>Voltar</Link></span>
             <h3>Adicionar PET</h3>
 
             <StatusBox err={this.state.err} success={this.state.success} />

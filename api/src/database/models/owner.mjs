@@ -15,5 +15,7 @@ export default {
     has_animals: { type: 'boolean', defaultsTo: false },
     had_animals: { type: 'boolean', defaultsTo: false },
     notes: { type: 'string' },
+    current_pets: { collection: 'pet', via: 'owner' },
+    previous_pets: { collection: 'pet', via: 'previous_owners' },
   },
 }

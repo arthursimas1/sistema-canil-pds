@@ -7,7 +7,7 @@ export default {
     pet: { model: 'pet' },
     description: { type: 'string', defaultsTo: '' },
     metadata: { type: 'json', defaultsTo: {} },
-    // event ownership_transfer: {previous_owner: owner, new_owner: owner, type: <sell,donation>}
+    // event ownership_transfer: {previous_owner: owner, new_owner: owner, type: <sell,donation>, price: int}
     // event vaccination: {vaccine: vaccine, amount: number}
     // event sick: {disease: disease}
   },

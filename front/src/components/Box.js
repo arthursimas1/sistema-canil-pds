@@ -1,6 +1,7 @@
 import styles from 'styled-components'
 
 const Box = styles.div`
+  height: fit-content;
   width: fit-content;
   color: var(--white);
   margin: 0 auto;

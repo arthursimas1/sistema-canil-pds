@@ -15,7 +15,6 @@ import Box from '../components/Box'
 import StatusBox from '../components/StatusBox'
 
 import { GetOwner, UpdateOwner } from '../api/OwnerController'
-import { SearchPet } from '../api/PetController'
 import GENDERS from '../assets/genders_human.json'
 
 const Main = styles.main`
@@ -119,9 +118,7 @@ export default class Owner extends Component {
     if (owner_data.err === 'not_found')
       return this.props.history.push('/')
 
-    let curret_pets_data = await SearchPet({ owner: owner_data.id })
-
-    this.setState({ ...owner_data, current_pets: curret_pets_data, loading: false })
+    this.setState({ ...owner_data, loading: false })
   }
 
   reset() {
@@ -157,7 +154,7 @@ export default class Owner extends Component {
 
         <Box>
           <Menu>
-            <span>&#8592; <Link to='/search-owner'>Voltar</Link></span>
+            <span>&#8592; <Link onClick={() => this.props.history.goBack()}>Voltar</Link></span>
             <h3>Perfil do Dono</h3>
 
             <StatusBox err={this.state.err} success={this.state.success} />
@@ -218,7 +215,7 @@ export default class Owner extends Component {
               <table className='pets' hidden={this.state.previous_pets.length <= 0}>
                 <tbody>
                   <tr><th>Nome</th><th>Sexo</th><th>Raça</th></tr>
-                  { this.state.current_pets.map((e) => <tr key={e.id}><td><Link to={`/pet-timeline/${e.id}`}>{e.name}</Link></td><td>{e.gender}</td><td>{e.breed}</td></tr>) }
+                  { this.state.previous_pets.map((e) => <tr key={e.id}><td><Link to={`/pet-timeline/${e.id}`}>{e.name}</Link></td><td>{e.gender}</td><td>{e.breed}</td></tr>) }
                 </tbody>
               </table>
 

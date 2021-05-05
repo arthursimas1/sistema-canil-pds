@@ -167,7 +167,7 @@ class EditableDisease extends Component {
 
   renderDisplay() {
     return (
-      <tr><td>{this.state.name}</td><td>{this.state.description}<EditIcon className='edit' onClick={() => this.setEdit()} /></td></tr>
+      <tr><td>{this.state.name}</td><td style={{ whiteSpace: 'pre-line' }} dangerouslySetInnerHTML={{ __html: this.state.description }} /><td><EditIcon className='edit' onClick={() => this.setEdit()} /></td></tr>
     )
   }
 
@@ -179,6 +179,8 @@ class EditableDisease extends Component {
         </td>
         <td>
           <TextField multiline={true} value={this.state.description} onChange={(e) => this.setState({ description: e.target.value })} required />
+        </td>
+        <td>
           <DeleteIcon onClick={() => this.delete()} />
           <BlockIcon onClick={() => this.unsetEdit()} />
           <DoneIcon onClick={() => this.submit()} />
@@ -244,7 +246,7 @@ export default class EditDiseasesForm extends Component {
 
             <table className='results' hidden={this.state.results.length <= 0}>
               <tbody>
-                <tr><th>Nome</th><th>Descrição</th></tr>
+                <tr><th>Nome</th><th>Descrição</th><th></th></tr>
                 { this.state.results.map((e) => <EditableDisease key={e.id} {...e} />) }
               </tbody>
             </table>

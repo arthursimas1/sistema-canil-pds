@@ -7,5 +7,6 @@ export default {
     birthdate: { type: 'string' },
     gender: { type: 'string' },
     owner: { model: 'owner' },
+    previous_owners: { collection: 'owner', via: 'previous_pets' },
   },
 }

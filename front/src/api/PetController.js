@@ -30,8 +30,8 @@ export async function GetTimeline(id) {
   return data
 }
 
-export async function AddEvent({ id, ...attr }) {
-  const { data } = await server.put(`/pet/${id}/timeline`, attr)
+export async function AddEvent({ pet, ...attr }) {
+  const { data } = await server.put(`/pet/${pet}/timeline`, attr)
 
   return data
 }

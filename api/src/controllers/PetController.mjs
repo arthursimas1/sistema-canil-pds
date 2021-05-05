@@ -41,7 +41,7 @@ export default function Controller(routes) {
 
   routes.get('/pet/:id', async (request, response) => {
     const { id } = request.params
-    const pet = await wlc.pet.findOne({ id }).populate('owner')
+    const pet = await wlc.pet.findOne({ id }).populate('owner').populate('previous_owners')
 
     if (pet)
       return response.json(pet)
@@ -72,7 +72,18 @@ export default function Controller(routes) {
     const date = new Date().toISOString()
 
     try {
-      await wlc.pet_timeline.create({ ...request.body, pet, date })
+      const { event, description, metadata } = request.body
+
+      if (['new_pet', 'ownership_transfer', 'vaccination', 'sick', 'other'].indexOf(event) < 0)
+        return response.json({ err: 'invalid_event' })
+
+      await wlc.pet_timeline.create({ pet, date, event, description, metadata })
+
+      if (event === 'ownership_transfer') {
+        await wlc.pet.update({ id: pet }).set({ owner: metadata['new_owner'] })
+        await wlc.pet.addToCollection(pet, 'previous_owners', metadata['previous_owner'])
+        await wlc.pet.removeFromCollection(pet, 'previous_owners', metadata['new_owner'])
+      }
 
       return response.json({ })
     } catch (e) {

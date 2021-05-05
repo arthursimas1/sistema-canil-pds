@@ -9,6 +9,7 @@ export default async () => Promise.all([
       birthdate: '2019-01-08T11:11:00.000Z',
       gender: 'Macho',
       owner: 'zPR1i264oBj6q51DuzFKI',
+      previous_owners: ['dEWVp2db7x_PzZvl9GKfO'],
     },
     {
       id: 'QMW3Pttbtn9b3h4tDPYn_',
@@ -19,17 +20,7 @@ export default async () => Promise.all([
       owner: 'dEWVp2db7x_PzZvl9GKfO',
     },
   ]),
-  /*
-    id: { type: 'string', columnName: '_id' },
-    event: { type: 'string' }, // new_pet, ownership_transfer, vaccination, sick, other
-    date: { type: 'string' },
-    pet: { model: 'pet' },
-    description: { type: 'string', defaultsTo: '' },
-    metadata: { type: 'json', defaultsTo: {} },
-    // event ownership_transfer: {previous_owner: owner, new_owner: owner, type: <sell,donation>}
-    // event vaccination: {vaccine: vaccine, amount: number}
-    // event sick: {disease: disease}
-  */
+
   wlc.pet_timeline.createEach([
     {
       id: 'p6kl99_jD0jjhMvWI891x',
@@ -54,9 +45,43 @@ export default async () => Promise.all([
       pet: 'qfRy_a2djCWF9b-lZG12J',
       description: '',
       metadata: {
+        previous_owner: 'zPR1i264oBj6q51DuzFKI',
+        new_owner: 'dEWVp2db7x_PzZvl9GKfO',
+        type: 'donation',
+      },
+    },
+    {
+      id: 'C_v_ej-UqZSVEp2AtVxCa',
+      event: 'vaccination',
+      date: '2021-05-01T13:43:32.653Z',
+      pet: 'qfRy_a2djCWF9b-lZG12J',
+      description: '',
+      metadata: {
+        vaccine: 'idgxHQDXjj5PpFyqx0jh0',
+        amount: 1,
+      },
+    },
+    {
+      id: 'hr5_vDN0WwH1SyiN993aA',
+      event: 'sick',
+      date: '2021-05-01T19:42:09.129Z',
+      pet: 'qfRy_a2djCWF9b-lZG12J',
+      description: 'Apenas sintomas leves. Sem maiores complicações.',
+      metadata: {
+        disease: 'NGMDfCU9kXWN8Zhz2xO-t',
+      },
+    },
+    {
+      id: 'mxmF0eRqvIHy2ExdX4wRV',
+      event: 'ownership_transfer',
+      date: '2021-05-02T13:54:06.963Z',
+      pet: 'qfRy_a2djCWF9b-lZG12J',
+      description: '',
+      metadata: {
         previous_owner: 'dEWVp2db7x_PzZvl9GKfO',
         new_owner: 'zPR1i264oBj6q51DuzFKI',
-        type: 'donation',
+        type: 'sell',
+        price: 120,
       },
     },
   ]),
@@ -96,10 +121,57 @@ export default async () => Promise.all([
     },
   ]),
 
+  wlc.vaccine.createEach([
+    {
+      id: 'idgxHQDXjj5PpFyqx0jh0',
+      name: 'Primo-vacinação',
+      manufacturer: 'diversos',
+      description: 'Tomar ao perfazer 6 semanas',
+    },
+    {
+      id: 'IwOEjQtzgysRUVyksy8p-',
+      name: 'Vacina Trivalente',
+      manufacturer: 'diversos',
+      description: 'Tomar às 12 semanas.\nConfere imunidade contra: cinomose canina, hepatite infecciosa canina e leptospirose.',
+    },
+    {
+      id: 'RfNYU5Z8xy_H8DigsXxBg',
+      name: 'Vacina Tetravalente',
+      manufacturer: 'diversos',
+      description: 'Tomar às 12 semanas.\nConfere imunidade contra: cinomose canina, hepatite infecciosa canina, leptospirose e parvovirose canina.',
+    },
+    {
+      id: 'WceL3xT-tkCiIHqNGdU7Y',
+      name: 'Vacina Polivalente',
+      manufacturer: 'diversos',
+      description: 'Tomar às 12 semanas.\nConfere imunidade contra: cinomose canina, hepatite infecciosa canina, leptospirose, parvovirose canina, tosse dos canis e coronavírus canino.',
+    },
+    {
+      id: 'hzzatdf5cY2w_xrRO8v4d',
+      name: 'Reforço da vacina multivalente',
+      manufacturer: 'diversos',
+      description: 'Tomar inicialmente às 12 semanas depois anualmente',
+    },
+    {
+      id: '8QCVBqF5ZjvtC0g0L_Kxt',
+      name: 'Raiva',
+      manufacturer: 'diversos',
+      description: 'Tomar inicialmente às 16 semanas depois anualmente',
+    },
+  ]),
+
+  wlc.disease.createEach([
+    {
+      id: 'NGMDfCU9kXWN8Zhz2xO-t',
+      name: 'Gripe canina',
+      description: 'Sintomas: tosse, febre e corrimento nasal.\nA vacina para gripe canina não é recomendada para todos os cães (consultar o médico veterinário).',
+    },
+  ]),
+
   wlc.finance.createEach([
     { id: 'rPOke97X1AoxBybNLIDLe', amount: -3000, date: '2021-05-04T18:42:57.954Z', description: 'Pagamento de funcionário' },
-    { id: 'lT8B9FQt_iFXeOjoLs3k5', amount: 2000, date: '2021-05-04T18:42:02.429Z', description: 'Venda de um PET' },
-    { id: 'aKnLARV1XQ3YCedltvCJI', amount: 5000, date: '2021-05-04T18:41:45.222Z', description: 'Venda de um PET' },
+    { id: 'lT8B9FQt_iFXeOjoLs3k5', amount:  2000, date: '2021-05-04T18:42:02.429Z', description: 'Venda de um PET' },
+    { id: 'aKnLARV1XQ3YCedltvCJI', amount:  5000, date: '2021-05-04T18:41:45.222Z', description: 'Venda de um PET' },
     { id: 'SDVf4Hs4hvQFZ8cPGTwPb', amount: -1000, date: '2021-05-04T18:40:22.680Z', description: 'Compra de ração' },
   ]),
 ])
