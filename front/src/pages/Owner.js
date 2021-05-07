@@ -143,8 +143,12 @@ export default class Owner extends Component {
         return i.reportValidity()
     }
 
+    let updater = { ...this.state }
+    delete updater.current_pets
+    delete updater.previous_pets
+
     this.setState({ loading: true, err: false, success: false })
-    let { err } = await UpdateOwner({ ...this.state })
+    let { err } = await UpdateOwner(updater)
     this.setState({ loading: false, err, success: !err && 'Dono atualizado com sucesso' })
   }
 
