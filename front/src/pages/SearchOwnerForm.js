@@ -8,6 +8,7 @@ import Header from '../components/Header'
 import Box from '../components/Box'
 
 import { SearchOwner } from '../api/OwnerController'
+import StatusBox from '../components/StatusBox'
 
 const Main = styles.main`
   //background-color: red;
@@ -98,6 +99,10 @@ export default class SearchOwnerForm extends Component {
     this.state = { ...this.initial_state }
   }
 
+  async componentDidMount() {
+    await this.search()
+  }
+
   reset() {
     this.setState({ ...this.initial_state })
   }
@@ -106,7 +111,8 @@ export default class SearchOwnerForm extends Component {
     this.setState({ loading: true, err: false, success: false })
     let query = this.state.cpf.length > 0 ? { cpf: this.state.cpf } : {}
     let results = await SearchOwner(query)
-    this.setState({ loading: false, results, err: false, success: true })
+    const err = results.length ? false : 'Nenhum resultado encontrado'
+    this.setState({ loading: false, results, err, success: !err })
   }
 
   render() {
@@ -128,6 +134,8 @@ export default class SearchOwnerForm extends Component {
             <div className='search-button'>
               <LoadingButton disabled={ this.state.loading } onClick={ () => this.search() } variant='contained' pending={ this.state.loading } pendingPosition='center'>Buscar</LoadingButton>
             </div>
+
+            <StatusBox err={this.state.err} />
           </Menu>
         </Box>
 

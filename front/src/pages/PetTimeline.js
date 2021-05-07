@@ -253,7 +253,7 @@ class NewEvent extends Component {
       err = 'Não pode ser o mesmo dono'
     }
 
-    this.setState({ loading: false, owner_result, err, success: true })
+    this.setState({ loading: false, owner_result, err, success: !err })
   }
 
   async submit() {
@@ -268,7 +268,7 @@ class NewEvent extends Component {
       case 'sell':
       case 'donation': // eslint-disable-line padding-line-between-statements
         if (!this.state.owner_result)
-          return this.setState({ loading: false, err: true, success: 'Selecione o novo dono' })
+          return this.setState({ loading: false, err: 'Selecione o novo dono', success: false })
 
         data.metadata = {
           type: data.event,
@@ -281,7 +281,7 @@ class NewEvent extends Component {
 
       case 'vaccination':
         if (this.state.vaccine_index === '')
-          return this.setState({ loading: false, err: true, success: 'Selecione a vacina' })
+          return this.setState({ loading: false, err: 'Selecione a vacina', success: false })
 
         data.metadata = {
           vaccine: this.state.vaccines_results[Number(this.state.vaccine_index)].id,
@@ -291,7 +291,7 @@ class NewEvent extends Component {
 
       case 'sick':
         if (this.state.disease_index === '')
-          return this.setState({ loading: false, err: true, success: 'Selecione a doença' })
+          return this.setState({ loading: false, err: 'Selecione a doença', success: false })
 
         data.metadata = {
           disease: this.state.diseases_results[Number(this.state.disease_index)].id,
@@ -300,7 +300,7 @@ class NewEvent extends Component {
 
       case 'other':
         if (data.description.length === 0)
-          return this.setState({ loading: false, err: true, success: 'Preencha a descrição' })
+          return this.setState({ loading: false, err: 'Preencha a descrição', success: false })
     }
 
     let { err } = await AddEvent(data)

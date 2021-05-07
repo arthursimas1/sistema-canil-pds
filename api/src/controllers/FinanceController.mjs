@@ -23,6 +23,7 @@ export default function Controller(routes) {
       sort: 'date DESC',
     })
 
+    // https://stackoverflow.com/questions/33631041/javascript-async-await-in-replace
     async function ReplaceAsync(str, regex, asyncFn) {
       const promises = []
       str.replace(regex, (match, ...args) => {

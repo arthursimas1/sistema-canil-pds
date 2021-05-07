@@ -12,6 +12,7 @@ import Header from '../components/Header'
 import Box from '../components/Box'
 
 import { SearchVaccine, UpdateVaccine, DeleteVaccine } from '../api/VaccineController'
+import StatusBox from '../components/StatusBox'
 
 const Main = styles.main`
   //background-color: red;
@@ -221,6 +222,10 @@ export default class EditVaccinesForm extends Component {
     this.state = { ...this.initial_state }
   }
 
+  async componentDidMount() {
+    await this.search()
+  }
+
   reset() {
     this.setState({ ...this.initial_state })
   }
@@ -228,7 +233,8 @@ export default class EditVaccinesForm extends Component {
   async search() {
     this.setState({ loading: true, err: false, success: false })
     let results = await SearchVaccine({ text: this.state.text, limit: null })
-    this.setState({ loading: false, results, err: false, success: true })
+    const err = results.length ? false : 'Nenhum resultado encontrado'
+    this.setState({ loading: false, results, err, success: !err })
   }
 
   render() {
@@ -250,6 +256,8 @@ export default class EditVaccinesForm extends Component {
             <div className='search-button'>
               <LoadingButton disabled={ this.state.loading } onClick={ () => this.search() } variant='contained' pending={ this.state.loading } pendingPosition='center'>Buscar</LoadingButton>
             </div>
+
+            <StatusBox err={this.state.err} />
           </Menu>
         </Box>
 

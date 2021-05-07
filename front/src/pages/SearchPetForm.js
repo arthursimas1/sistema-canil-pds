@@ -10,6 +10,7 @@ import Box from '../components/Box'
 import { SearchPet } from '../api/PetController'
 import BREEDS from '../assets/breeds.json'
 import GENDERS from '../assets/genders_pet.json'
+import StatusBox from '../components/StatusBox'
 
 const Main = styles.main`
   //background-color: red;
@@ -102,6 +103,10 @@ export default class SearchPetForm extends Component {
     this.state = { ...this.initial_state }
   }
 
+  async componentDidMount() {
+    await this.search()
+  }
+
   reset() {
     this.setState({ ...this.initial_state })
   }
@@ -110,7 +115,8 @@ export default class SearchPetForm extends Component {
     this.setState({ loading: true, err: false, success: false })
     const { name, breed, gender } = this.state
     let results = await SearchPet({ name, breed, gender })
-    this.setState({ loading: false, results, err: false, success: true })
+    const err = results.length ? false : 'Nenhum resultado encontrado'
+    this.setState({ loading: false, results, err, success: !err })
   }
 
   render() {
@@ -142,6 +148,8 @@ export default class SearchPetForm extends Component {
             <div className='search-button'>
               <LoadingButton disabled={ this.state.loading } onClick={ () => this.search() } variant='contained' pending={ this.state.loading } pendingPosition='center'>Buscar</LoadingButton>
             </div>
+
+            <StatusBox err={this.state.err} />
           </Menu>
         </Box>
 
