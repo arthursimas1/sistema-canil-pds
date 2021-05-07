@@ -4,7 +4,7 @@ import sailsMongoAdapter from 'sails-mongo'
 import config from 'config'
 import { nanoid } from 'nanoid'
 import * as models from './models/index.mjs'
-import developmentSeeds from './development_seeds.mjs'
+import devSeeds from './dev_seeds/index.mjs'
 
 const WaterlineStatic = {}
 
@@ -74,7 +74,7 @@ waterline.initialize(conf, async (err, ontology) => {
       .catch(() => console.log('regular account exists'))
 
     if (process.env.NODE_ENV === 'development')
-      await developmentSeeds()
+      await devSeeds()
 
     console.log('Waterline initialized')
   }
