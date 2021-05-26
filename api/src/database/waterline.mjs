@@ -57,7 +57,7 @@ waterline.initialize(conf, async (err, ontology) => {
 
     await user.create({
       id: 'admin-user-9ZjC28G9',
-      email: 'admin@pds.3wx.ru',
+      username: 'admin',
       name: 'Admin User',
       password: 'Jb_nqk4AL9',
       roles: ['admin'],
@@ -66,7 +66,7 @@ waterline.initialize(conf, async (err, ontology) => {
 
     await user.create({
       id: 'regular-user-3k4e4QzB',
-      email: 'user@pds.3wx.ru',
+      username: 'user',
       name: 'Regular User',
       password: 'K_cH3mtZFZ',
       roles: ['regular'],

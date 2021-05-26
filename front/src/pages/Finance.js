@@ -13,6 +13,7 @@ import StatusBox from '../components/StatusBox'
 import dateFormat from '../dateFormat'
 
 import { AddFinance, GetAllFinance } from '../api/FinanceController'
+import { IsLogged } from '../api/AccountController'
 
 const Main = styles.main`
   //background-color: red;
@@ -105,6 +106,9 @@ export default class Finance extends Component {
   }
 
   async componentDidMount() {
+    if (!IsLogged())
+      return this.props.history.push('/login')
+
     this.setState({ loading: true })
     let finance_data = await GetAllFinance()
 

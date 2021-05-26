@@ -12,6 +12,9 @@ app.use(express.json())
 // routes setup
 const routes = express.Router()
 
+import AccountController from './controllers/AccountController.mjs'
+AccountController(routes)
+
 import PetController from './controllers/PetController.mjs'
 PetController(routes)
 

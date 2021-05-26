@@ -30,6 +30,7 @@ import { SearchDisease } from '../api/DiseaseController'
 import { SearchOwner } from '../api/OwnerController'
 import GENDERS from '../assets/genders_pet.json'
 import BREEDS from '../assets/breeds.json'
+import { IsLogged } from '../api/AccountController'
 
 const EVENTS = [
   ['vaccination', 'Vacinação'],
@@ -429,6 +430,9 @@ export default class PetTimeline extends Component {
   }
 
   async componentDidMount() {
+    if (!IsLogged())
+      return this.props.history.push('/login')
+
     this.setState({ loading: true })
     let pet_data = await GetPet(this.props.match.params.id)
 

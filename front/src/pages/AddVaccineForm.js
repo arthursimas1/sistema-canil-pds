@@ -11,6 +11,7 @@ import Box from '../components/Box'
 import StatusBox from '../components/StatusBox'
 
 import { AddVaccine } from '../api/VaccineController'
+import { IsLogged } from '../api/AccountController'
 
 const Main = styles.main`
   //background-color: red;
@@ -68,6 +69,11 @@ export default class AddVaccineForm extends Component {
       err: false,
     }
     this.state = { ...this.initial_state }
+  }
+
+  componentDidMount() {
+    if (!IsLogged())
+      this.props.history.push('/login')
   }
 
   reset() {

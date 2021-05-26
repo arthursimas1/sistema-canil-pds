@@ -16,6 +16,7 @@ import StatusBox from '../components/StatusBox'
 
 import { AddOwner } from '../api/OwnerController'
 import GENDERS from '../assets/genders_human.json'
+import { IsLogged } from '../api/AccountController'
 
 const Main = styles.main`
   //background-color: red;
@@ -83,6 +84,11 @@ export default class AddOwnerForm extends Component {
       err: false,
     }
     this.state = { ...this.initial_state }
+  }
+
+  componentDidMount() {
+    if (!IsLogged())
+      this.props.history.push('/login')
   }
 
   reset() {

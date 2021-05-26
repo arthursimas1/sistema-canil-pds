@@ -11,6 +11,7 @@ import { SearchPet } from '../api/PetController'
 import BREEDS from '../assets/breeds.json'
 import GENDERS from '../assets/genders_pet.json'
 import StatusBox from '../components/StatusBox'
+import { IsLogged } from '../api/AccountController'
 
 const Main = styles.main`
   //background-color: red;
@@ -104,6 +105,9 @@ export default class SearchPetForm extends Component {
   }
 
   async componentDidMount() {
+    if (!IsLogged())
+      return this.props.history.push('/login')
+
     await this.search()
   }
 

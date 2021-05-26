@@ -17,6 +17,7 @@ import LinkOnClick from '../components/LinkOnClick'
 
 import { GetOwner, UpdateOwner } from '../api/OwnerController'
 import GENDERS from '../assets/genders_human.json'
+import { IsLogged } from '../api/AccountController'
 
 const Main = styles.main`
   //background-color: red;
@@ -113,6 +114,9 @@ export default class Owner extends Component {
   }
 
   async componentDidMount() {
+    if (!IsLogged())
+      return this.props.history.push('/login')
+
     this.setState({ loading: true })
     let owner_data = await GetOwner(this.props.match.params.id)
 

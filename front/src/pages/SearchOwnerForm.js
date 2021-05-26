@@ -9,6 +9,7 @@ import Box from '../components/Box'
 
 import { SearchOwner } from '../api/OwnerController'
 import StatusBox from '../components/StatusBox'
+import { IsLogged } from '../api/AccountController'
 
 const Main = styles.main`
   //background-color: red;
@@ -100,6 +101,9 @@ export default class SearchOwnerForm extends Component {
   }
 
   async componentDidMount() {
+    if (!IsLogged())
+      return this.props.history.push('/login')
+
     await this.search()
   }
 

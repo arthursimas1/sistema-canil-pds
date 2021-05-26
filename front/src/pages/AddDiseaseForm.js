@@ -11,6 +11,7 @@ import Box from '../components/Box'
 import StatusBox from '../components/StatusBox'
 
 import { AddDisease } from '../api/DiseaseController'
+import { IsLogged } from '../api/AccountController'
 
 const Main = styles.main`
   //background-color: red;
@@ -67,6 +68,11 @@ export default class AddDiseaseForm extends Component {
       err: false,
     }
     this.state = { ...this.initial_state }
+  }
+
+  componentDidMount() {
+    if (!IsLogged())
+      this.props.history.push('/login')
   }
 
   reset() {

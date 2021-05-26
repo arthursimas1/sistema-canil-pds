@@ -13,6 +13,7 @@ import Box from '../components/Box'
 
 import { SearchVaccine, UpdateVaccine, DeleteVaccine } from '../api/VaccineController'
 import StatusBox from '../components/StatusBox'
+import { IsLogged } from '../api/AccountController'
 
 const Main = styles.main`
   //background-color: red;
@@ -223,6 +224,9 @@ export default class EditVaccinesForm extends Component {
   }
 
   async componentDidMount() {
+    if (!IsLogged())
+      return this.props.history.push('/login')
+
     await this.search()
   }
 

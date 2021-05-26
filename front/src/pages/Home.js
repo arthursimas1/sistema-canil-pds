@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 
 import Header from '../components/Header'
 import Box from '../components/Box'
+import { IsLogged } from '../api/AccountController'
 
 const Main = styles.main`
   //background-color: red;
@@ -27,6 +28,9 @@ const Menu = styles.div`
 `
 
 export default function Home() {
+  if (!IsLogged())
+    return this.props.history.push('/login')
+
   return (
     <Main>
       <Header />

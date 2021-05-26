@@ -13,6 +13,7 @@ import Box from '../components/Box'
 
 import { SearchDisease, UpdateDisease, DeleteDisease } from '../api/DiseaseController'
 import StatusBox from '../components/StatusBox'
+import { IsLogged } from '../api/AccountController'
 
 const Main = styles.main`
   //background-color: red;
@@ -216,6 +217,9 @@ export default class EditDiseasesForm extends Component {
   }
 
   async componentDidMount() {
+    if (!IsLogged())
+      return this.props.history.push('/login')
+
     await this.search()
   }
 

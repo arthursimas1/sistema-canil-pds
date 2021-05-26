@@ -6,6 +6,7 @@ import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles'
 import './index.css'
 
 import Home from './pages/Home'
+import LoginForm from './pages/LoginForm'
 import AddPetForm from './pages/AddPetForm'
 import SearchPetForm from './pages/SearchPetForm'
 import AddOwnerForm from './pages/AddOwnerForm'
@@ -33,6 +34,7 @@ ReactDOM.render(
       <BrowserRouter>
         <Switch>
           <Route component={Home} path='/' exact />
+          <Route component={LoginForm} path='/login' exact />
           <Route component={SearchPetForm} path='/search-pet' exact />
           <Route component={SearchOwnerForm} path='/search-owner' exact />
           <Route component={Owner} path='/owner/:id' exact />

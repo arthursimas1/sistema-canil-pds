@@ -17,7 +17,7 @@ export default {
   primaryKey: 'id',
   attributes: {
     id: { type: 'string', columnName: '_id' },
-    email: { type: 'string', required: true, autoMigrations: { unique: true } },
+    username: { type: 'string', required: true, autoMigrations: { unique: true } },
     name: { type: 'string' },
     password: { type: 'string' },
     roles: { type: 'json', defaultsTo: ['spectator'] }, //[string]

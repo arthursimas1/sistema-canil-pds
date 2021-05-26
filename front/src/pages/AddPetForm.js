@@ -19,6 +19,7 @@ import LinkOnClick from '../components/LinkOnClick'
 import { AddPet } from '../api/PetController'
 import BREEDS from '../assets/breeds.json'
 import GENDERS from '../assets/genders_pet.json'
+import { IsLogged } from '../api/AccountController'
 
 const Main = styles.main`
   //background-color: red;
@@ -80,6 +81,11 @@ export default class AddPetForm extends Component {
       err: false,
     }
     this.state = { ...this.initial_state }
+  }
+
+  componentDidMount() {
+    if (!IsLogged())
+      this.props.history.push('/login')
   }
 
   reset() {
