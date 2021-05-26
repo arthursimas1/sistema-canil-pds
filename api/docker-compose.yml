@@ -6,10 +6,10 @@ services:
     container_name: pds_api
     hostname: pds_api
     volumes:
-      - gateway_sockets:/sockets
       - ./log:/log
-    network_mode: host
+    networks:
+      - gateway
 
-volumes:
-  gateway_sockets:
+networks:
+  gateway:
     external: true

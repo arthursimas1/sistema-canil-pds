@@ -1,13 +1,15 @@
 #!/bin/bash
 # -*- coding: utf-8 -*-
 
-rm -rf /home/docker/gateway/sites-data/pds.3wx.ru/*
+SERVICE_DOMAIN='pds.3wx.ru'
 
-tar -xzf front.tar.gz --one-top-level=/home/docker/gateway/sites-data/pds.3wx.ru
-chown docker:docker -R /home/docker/gateway/sites-data/pds.3wx.ru
+rm -rf /home/docker/gateway/sites-data/${SERVICE_DOMAIN}/*
 
-rm -f front.tar.gz $BASH_SOURCE
+tar -xzf front.tar.gz --one-top-level=/home/docker/gateway/sites-data/${SERVICE_DOMAIN}
+chown docker:docker -R /home/docker/gateway/sites-data/${SERVICE_DOMAIN}
 
-docker exec gateway /container_entrypoint reload
+rm -f front.tar.gz ${BASH_SOURCE}
+
+docker exec gateway /init reload
 
 exit 0

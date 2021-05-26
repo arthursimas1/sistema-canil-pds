@@ -12,12 +12,12 @@ deploy() {
   docker build -t pds_api .
 
   echo "compressing container ..."
-  docker save pds_api:latest | gzip > pds_api_latest.tar.gz
+  docker save api:latest | gzip > api_latest.tar.gz
 
   echo "sending files to remote server ..."
-  scp pds_api_latest.tar.gz docker-compose.yml setup $remote_server:~
+  scp api_latest.tar.gz docker-compose.yml setup $remote_server:~
 
-  rm -f pds_api_latest.tar.gz
+  rm -f api_latest.tar.gz
 
   echo "setting up ..."
   ssh -t $remote_server "sudo ./setup"

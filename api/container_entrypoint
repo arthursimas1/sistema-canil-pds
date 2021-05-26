@@ -4,7 +4,6 @@ cleanup() {
   echo "caught Signal ... stopping application ..."
 
   killall -HUP node
-  rm -rf /sockets/pds.sock
 
   echo "done."
   exit 0
@@ -13,8 +12,6 @@ cleanup() {
 trap cleanup HUP
 
 if [[ -z "$@" ]]; then
-  rm -rf /sockets/pds.sock
-
   yarn --cwd /build startp
   exit $?
 

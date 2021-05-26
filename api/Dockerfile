@@ -28,7 +28,7 @@ COPY --from=build /build /build/
 STOPSIGNAL HUP
 
 HEALTHCHECK --interval=5m --timeout=5s --retries=3 \
-  CMD curl --unix-socket /sockets/pds.sock http://api.pds.3wx.ru/health_check -fs -H "authorization: h%mA5Uv&*q8i4Ler" > dev/null || exit 1
+  CMD curl http://api.pds.3wx.ru/health_check -fs -H "authorization: h%mA5Uv&*q8i4Ler" > dev/null || exit 1
 
-COPY ./container_entrypoint /
-ENTRYPOINT ["/container_entrypoint"]
+COPY ./container_entrypoint /init
+ENTRYPOINT ["/init"]

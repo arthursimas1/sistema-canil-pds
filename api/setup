@@ -3,17 +3,19 @@
 
 set -e
 
-docker load < pds_api_latest.tar.gz
+SERVICE_NAME='pds_api'
 
-rm -f pds_api_latest.tar.gz $BASH_SOURCE
+docker load < api_latest.tar.gz
+
+rm -f api_latest.tar.gz ${BASH_SOURCE}
 
 chown docker:docker -R docker-compose.yml
-mv docker-compose.yml /home/docker/pds_api/
+mv docker-compose.yml /home/docker/${SERVICE_NAME}/
 
-cd /home/docker/pds_api || exit 1
+cd /home/docker/${SERVICE_NAME} || exit 1
 docker-compose up -d --build --remove-orphans
 
-docker update --restart always pds_api
+docker update --restart always ${SERVICE_NAME}
 
 docker image prune -af
 
