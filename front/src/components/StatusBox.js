@@ -15,7 +15,7 @@ const StyledStatusBox = styles.div`
   }
 
   h3.error {
-    background: var(--primary);
+    background: var(--error);
   }
 
   h3.success {

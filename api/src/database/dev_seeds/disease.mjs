@@ -5,7 +5,7 @@ export default () =>
     {
       id: 'NGMDfCU9kXWN8Zhz2xO-t',
       name: 'Gripe canina',
-      description: 'Sintomas: tosse, febre e corrimento nasal.\nA vacina para gripe canina não é recomendada para todos os cães (consultar o médico veterinário).',
+      description: 'Sintomas: tosse, febre e corrimento nasal. A vacina para gripe canina não é recomendada para todos os cães (consultar o médico veterinário).',
     },
     {
       id: '5yxveckOXIFRor81G2F8L',

@@ -12,19 +12,19 @@ export default () =>
       id: 'IwOEjQtzgysRUVyksy8p-',
       name: 'Vacina Trivalente',
       manufacturer: 'diversos',
-      description: 'Tomar às 12 semanas depois anualmente.\nConfere imunidade contra: cinomose canina, hepatite infecciosa canina e leptospirose.',
+      description: 'Tomar às 12 semanas depois anualmente. Confere imunidade contra: cinomose canina, hepatite infecciosa canina e leptospirose.',
     },
     {
       id: 'RfNYU5Z8xy_H8DigsXxBg',
       name: 'Vacina Tetravalente',
       manufacturer: 'diversos',
-      description: 'Tomar às 12 semanas depois anualmente.\nConfere imunidade contra: cinomose canina, hepatite infecciosa canina, leptospirose e parvovirose canina.',
+      description: 'Tomar às 12 semanas depois anualmente. Confere imunidade contra: cinomose canina, hepatite infecciosa canina, leptospirose e parvovirose canina.',
     },
     {
       id: 'WceL3xT-tkCiIHqNGdU7Y',
       name: 'Vacina Polivalente',
       manufacturer: 'diversos',
-      description: 'Tomar às 12 semanas depois anualmente.\nConfere imunidade contra: cinomose canina, hepatite infecciosa canina, leptospirose, parvovirose canina, tosse dos canis e coronavírus canino.',
+      description: 'Tomar às 12 semanas depois anualmente. Confere imunidade contra: cinomose canina, hepatite infecciosa canina, leptospirose, parvovirose canina, tosse dos canis e coronavírus canino.',
     },
     {
       id: '8QCVBqF5ZjvtC0g0L_Kxt',

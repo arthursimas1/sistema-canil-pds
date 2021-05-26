@@ -46,6 +46,8 @@
   --black: #000000ff;
   --white: #ffffffff;
   --lightgray: #a9a9a9ff;
+
+  --error: #c61c1c;
   --success: #2e8b57ff;
 }
 

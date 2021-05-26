@@ -3,6 +3,22 @@ import wlc from '../waterline.mjs'
 export default () =>
   wlc.owner.createEach([
     {
+      id: '_9Mkv8cJC7RayNq3WQyBQ',
+      name: 'Underdog Kennels',
+      cpf: '00000000000',
+      email: 'contato@pds.3wx.ru',
+      gender: 'Masculino',
+      birthdate: '2021-05-07T02:25:00.000Z',
+      streetname: 'Rod. João Leme dos Santos km 110 - SP-264',
+      number: 'S/N',
+      postalcode: '18052780',
+      state: 'SP',
+      city: 'Sorocaba',
+      notes: '',
+      has_animals: true,
+      had_animals: true,
+    },
+    {
       id: 'dEWVp2db7x_PzZvl9GKfO',
       name: 'Arthur Simas',
       cpf: '42636917845',
