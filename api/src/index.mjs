@@ -30,6 +30,9 @@ VaccineController(routes)
 import FinanceController from './controllers/FinanceController.mjs'
 FinanceController(routes)
 
+import LogController from './controllers/LogController.mjs'
+LogController(routes)
+
 import HealthCheckController from './controllers/HealthCheckController.mjs'
 HealthCheckController(routes)
 

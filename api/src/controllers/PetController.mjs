@@ -7,11 +7,15 @@ export default function Controller(routes) {
     try {
       const pet = await wlc.pet.create(request.body).fetch()
 
+      await wlc.log.create({ user: request.body.user, table: 'pet', operation: 'create', key: pet.id })
+
       // date set at modeling level
-      await wlc.pet_timeline.create({
+      const pet_timeline = await wlc.pet_timeline.create({
         event: 'new_pet',
         pet: pet.id,
-      })
+      }).fetch()
+
+      await wlc.log.create({ user: request.body.user, table: 'pet_timeline', operation: 'create', key: pet_timeline.id })
 
       return response.json({ pet: pet.id })
     } catch (e) {
@@ -58,6 +62,8 @@ export default function Controller(routes) {
     try {
       await wlc.pet.update({ id }).set(request.body)
 
+      await wlc.log.create({ user: request.body.user, table: 'pet', operation: 'update', key: id })
+
       return response.json({ })
     } catch (e) {
       console.log(e)
@@ -78,7 +84,9 @@ export default function Controller(routes) {
         return response.json({ err: 'invalid_event' })
 
       // date set at modeling level
-      await wlc.pet_timeline.create({ pet, event, description, metadata })
+      const pet_timeline = await wlc.pet_timeline.create({ pet, event, description, metadata }).fetch()
+
+      await wlc.log.create({ user: request.body.user, table: 'pet_timeline', operation: 'create', key: pet_timeline.id })
 
       if (event === 'ownership_transfer') {
         await wlc.pet.update({ id: pet }).set({ owner: metadata.new_owner })
@@ -87,10 +95,11 @@ export default function Controller(routes) {
 
         if (metadata.type === 'sell') {
           // date set at modeling level
-          await wlc.finance.create({
+          const finance = await wlc.finance.create({
             amount: metadata.price,
             description: `PET [pet](${pet}) vendido de [owner](${metadata.previous_owner}) para [owner](${metadata.new_owner}).`,
-          })
+          }).fetch()
+          await wlc.log.create({ user: request.body.user, table: 'finance', operation: 'create', key: finance.id })
         }
       }
 

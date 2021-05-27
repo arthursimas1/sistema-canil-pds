@@ -7,6 +7,8 @@ export default function Controller(routes) {
     try {
       const owner = await wlc.owner.create(request.body).fetch()
 
+      await wlc.log.create({ user: request.body.user, table: 'owner', operation: 'create', key: owner.id })
+
       return response.json({ owner: owner.id })
     } catch (e) {
       console.log(e)
@@ -37,6 +39,8 @@ export default function Controller(routes) {
 
     try {
       await wlc.owner.update({ id }).set(request.body)
+
+      await wlc.log.create({ user: request.body.user, table: 'owner', operation: 'update', key: id })
 
       return response.json({ })
     } catch (e) {

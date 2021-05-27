@@ -5,7 +5,9 @@ export default function Controller(routes) {
     delete request.body.id // doesn't allow id to be set
 
     try {
-      await wlc.vaccine.create(request.body)
+      const data = await wlc.vaccine.create(request.body).fetch()      
+
+      await wlc.log.create({ user: request.body.user, table: 'vaccine', operation: 'create', key: data.id })
 
       return response.json({ })
     } catch (e) {
@@ -51,6 +53,8 @@ export default function Controller(routes) {
     try {
       await wlc.vaccine.update({ id }).set(request.body)
 
+      await wlc.log.create({ user: request.body.user, table: 'vaccine', operation: 'update', key: id })
+
       return response.json({ })
     } catch (e) {
       console.log(e)
@@ -64,6 +68,8 @@ export default function Controller(routes) {
 
     try {
       await wlc.vaccine.update({ id }).set({ hidden: true })
+
+      await wlc.log.create({ user: request.body.user, table: 'vaccine', operation: 'delete', key: id })
 
       return response.json({ })
     } catch (e) {
