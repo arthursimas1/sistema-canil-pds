@@ -1,7 +1,11 @@
 import wlc from '../database/waterline.mjs'
+import { ACL, Auth } from '../middlewares/authenticate.mjs'
 
 export default function Controller(routes) {
-  routes.post('/finance', async (request, response) => {
+  routes.post('/finance', Auth, async (request, response) => {
+    const permission = ACL.can(request.user.roles).createAny('finance')
+    if (!permission.granted) return response.json({ err: 'not_allowed' })
+
     delete request.body.id // doesn't allow id to be set
 
     try {
@@ -18,7 +22,10 @@ export default function Controller(routes) {
     }
   })
 
-  routes.get('/finance', async (request, response) => {
+  routes.get('/finance', Auth, async (request, response) => {
+    const permission = ACL.can(request.user.roles).readAny('finance')
+    if (!permission.granted) return response.json({ err: 'not_allowed' })
+
     const balance = await wlc.finance.sum('amount')
 
     const events = await wlc.finance.find({

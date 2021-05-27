@@ -14,6 +14,7 @@ import dateFormat from '../dateFormat'
 
 import { AddFinance, GetAllFinance } from '../api/FinanceController'
 import { IsLogged } from '../api/AccountController'
+import { can } from '../api/authenticate'
 
 const Main = styles.main`
   //background-color: red;
@@ -109,6 +110,8 @@ export default class Finance extends Component {
     if (!IsLogged())
       return this.props.history.push('/login')
 
+    if (!can().readAny('finance').granted) return
+
     this.setState({ loading: true })
     let finance_data = await GetAllFinance()
 
@@ -170,7 +173,7 @@ export default class Finance extends Component {
           </Menu>
         </Box>
 
-        <Box>
+        <Box hidden={!can().readAny('finance').granted}>
           <Menu>
             <h3>Balanço: R$ {this.state.balance}</h3>
             <h3>Eventos</h3>

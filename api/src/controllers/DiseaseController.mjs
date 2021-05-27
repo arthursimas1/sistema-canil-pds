@@ -1,7 +1,11 @@
 import wlc from '../database/waterline.mjs'
+import { ACL, Auth } from '../middlewares/authenticate.mjs'
 
 export default function Controller(routes) {
-  routes.post('/disease', async (request, response) => {
+  routes.post('/disease', Auth, async (request, response) => {
+    const permission = ACL.can(request.user.roles).createAny('disease')
+    if (!permission.granted) return response.json({ err: 'not_allowed' })
+
     delete request.body.id // doesn't allow id to be set
 
     try {
@@ -17,7 +21,10 @@ export default function Controller(routes) {
     }
   })
 
-  routes.get('/disease', async (request, response) => {
+  routes.get('/disease', Auth, async (request, response) => {
+    const permission = ACL.can(request.user.roles).readAny('disease')
+    if (!permission.granted) return response.json({ err: 'not_allowed' })
+
     let { limit } = { limit: 20, ...request.query } // limit defaults to 20
 
     const owner = await wlc.disease.find({
@@ -35,7 +42,10 @@ export default function Controller(routes) {
     return response.json(owner)
   })
 
-  routes.get('/disease/:id', async (request, response) => {
+  routes.get('/disease/:id', Auth, async (request, response) => {
+    const permission = ACL.can(request.user.roles).readAny('disease')
+    if (!permission.granted) return response.json({ err: 'not_allowed' })
+
     const { id } = request.params
     const owner = await wlc.disease.findOne({ id })
 
@@ -45,7 +55,10 @@ export default function Controller(routes) {
     return response.json({ err: 'not_found' })
   })
 
-  routes.put('/disease/:id', async (request, response) => {
+  routes.put('/disease/:id', Auth, async (request, response) => {
+    const permission = ACL.can(request.user.roles).updateAny('disease')
+    if (!permission.granted) return response.json({ err: 'not_allowed' })
+
     const { id } = request.params
     delete request.body.id // doesn't allow id to be updated
 
@@ -62,7 +75,10 @@ export default function Controller(routes) {
     }
   })
 
-  routes.delete('/disease/:id', async (request, response) => {
+  routes.delete('/disease/:id', Auth, async (request, response) => {
+    const permission = ACL.can(request.user.roles).deleteAny('disease')
+    if (!permission.granted) return response.json({ err: 'not_allowed' })
+
     const { id } = request.params
 
     try {

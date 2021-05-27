@@ -14,6 +14,7 @@ import Box from '../components/Box'
 import { SearchVaccine, UpdateVaccine, DeleteVaccine } from '../api/VaccineController'
 import StatusBox from '../components/StatusBox'
 import { IsLogged } from '../api/AccountController'
+import { can } from '../api/authenticate'
 
 const Main = styles.main`
   //background-color: red;
@@ -250,7 +251,7 @@ export default class EditVaccinesForm extends Component {
           <Menu>
             <span>&#8592; <Link to='/'>Voltar</Link></span>
             <h3>Buscar Vacinas</h3>
-            <Link to='/add-vaccine'>Adicionar Vacina</Link>
+            <Link to='/add-vaccine' hidden={!can().createAny('vaccine').granted}>Adicionar Vacina</Link>
             <br />
 
             <div className='fields'>

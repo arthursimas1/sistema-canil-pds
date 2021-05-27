@@ -2,7 +2,10 @@ import React from 'react'
 import styles, { css } from 'styled-components'
 import { Link, withRouter } from 'react-router-dom'
 
+import { IsLogged, Logout } from '../api/AccountController'
+
 import Logo from '../assets/logo-clean.png'
+import { Button } from '@material-ui/core'
 
 const Menu = styles.nav(css`
   z-index: 100;
@@ -50,13 +53,16 @@ const StyledLink = styles(Link)(css`
 `)
 
 function Header(props) {
+  const firstname = (localStorage.name || '').split(' ')[0]
+
   return (
     <Menu>
       <StyledLink to='/' style={{ padding: 0 }}><img src={Logo} /></StyledLink>
       <h1>Underdog Kennels</h1>
       <span style={{ marginLeft: 'auto' }} />
 
-      { props.children }
+      <span>{ firstname }</span>
+      <Button onClick={ () => Logout(props.history) } hidden={!IsLogged()}><span style={{ color: 'var(--text)' }}>Sair</span></Button>
     </Menu>
   )
 }

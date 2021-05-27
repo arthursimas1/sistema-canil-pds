@@ -1,7 +1,11 @@
 import wlc from '../database/waterline.mjs'
+import { ACL, Auth } from '../middlewares/authenticate.mjs'
 
 export default function Controller(routes) {
-  routes.post('/pet', async (request, response) => {
+  routes.post('/pet', Auth, async (request, response) => {
+    const permission = ACL.can(request.user.roles).createAny('pet')
+    if (!permission.granted) return response.json({ err: 'not_allowed' })
+
     delete request.body.id // doesn't allow id to be set
 
     try {
@@ -25,7 +29,10 @@ export default function Controller(routes) {
     }
   })
 
-  routes.get('/pet', async (request, response) => {
+  routes.get('/pet', Auth, async (request, response) => {
+    const permission = ACL.can(request.user.roles).readAny('pet')
+    if (!permission.granted) return response.json({ err: 'not_allowed' })
+
     const data = request.query
     let query = { }
     const allowed_props = [
@@ -44,7 +51,10 @@ export default function Controller(routes) {
     return response.json(pet)
   })
 
-  routes.get('/pet/:id', async (request, response) => {
+  routes.get('/pet/:id', Auth, async (request, response) => {
+    const permission = ACL.can(request.user.roles).readAny('pet')
+    if (!permission.granted) return response.json({ err: 'not_allowed' })
+
     const { id } = request.params
     const pet = await wlc.pet.findOne({ id }).populate('owner').populate('previous_owners')
 
@@ -54,7 +64,10 @@ export default function Controller(routes) {
     return response.json({ err: 'not_found' })
   })
 
-  routes.put('/pet/:id', async (request, response) => {
+  routes.put('/pet/:id', Auth, async (request, response) => {
+    const permission = ACL.can(request.user.roles).updateAny('pet')
+    if (!permission.granted) return response.json({ err: 'not_allowed' })
+
     const { id } = request.params
     delete request.body.id // doesn't allow id to be updated
     delete request.body.owner // doesn't allow owner to be updated by this route
@@ -72,7 +85,10 @@ export default function Controller(routes) {
     }
   })
 
-  routes.put('/pet/:pet/timeline', async (request, response) => {
+  routes.put('/pet/:pet/timeline', Auth, async (request, response) => {
+    const permission = ACL.can(request.user.roles).createAny('pet_timeline')
+    if (!permission.granted) return response.json({ err: 'not_allowed' })
+
     delete request.body.id // doesn't allow id to be set
 
     const { pet } = request.params
@@ -111,7 +127,10 @@ export default function Controller(routes) {
     }
   })
 
-  routes.get('/pet/:pet/timeline', async (request, response) => {
+  routes.get('/pet/:pet/timeline', Auth, async (request, response) => {
+    const permission = ACL.can(request.user.roles).readAny('pet_timeline')
+    if (!permission.granted) return response.json({ err: 'not_allowed' })
+
     const { pet } = request.params
     let timeline = await wlc.pet_timeline.find({ where: { pet }, sort: 'date ASC' })
 

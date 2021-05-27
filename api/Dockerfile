@@ -9,10 +9,6 @@ RUN apk add --no-cache python make g++
 COPY ./package.json /build/
 RUN yarn --cwd /build install
 
-COPY ./config /build/config/
-#COPY ./test /build/test/
-COPY ./src /build/src/
-
 # runtime stage
 FROM node:15.5-alpine3.11 AS runtime
 
@@ -25,10 +21,14 @@ COPY .bashrc /root/.bashrc
 
 COPY --from=build /build /build/
 
+COPY ./config /build/config/
+#COPY ./test /build/test/
+COPY ./src /build/src/
+
 STOPSIGNAL HUP
 
 HEALTHCHECK --interval=5m --timeout=5s --retries=3 \
-  CMD curl http://api.pds.3wx.ru/health_check -fs -H "authorization: h%mA5Uv&*q8i4Ler" > dev/null || exit 1
+  CMD curl http://127.0.0.1/health_check -fs > dev/null || exit 1
 
 COPY ./container_entrypoint /init
 ENTRYPOINT ["/init"]

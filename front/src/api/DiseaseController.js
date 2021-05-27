@@ -1,31 +1,41 @@
 import { server } from './index'
 
 export async function AddDisease(attr) {
-  const { data } = await server.post('/disease', attr)
+  let authorization = localStorage.auth_token
+
+  const { data } = await server.post('/disease', attr, { headers: { authorization } })
 
   return data
 }
 
 export async function SearchDisease({ text, limit }) {
-  const { data } = await server.get('/disease', { params: { text, limit } })
+  let authorization = localStorage.auth_token
+
+  const { data } = await server.get('/disease', { params: { text, limit }, headers: { authorization } } )
 
   return data
 }
 
 export async function GetDisease(id) {
-  const { data } = await server.get(`/disease/${id}`)
+  let authorization = localStorage.auth_token
+
+  const { data } = await server.get(`/disease/${id}`, { headers: { authorization } })
 
   return data
 }
 
 export async function UpdateDisease({ id, ...attr }) {
-  const { data } = await server.put(`/disease/${id}`, attr)
+  let authorization = localStorage.auth_token
+
+  const { data } = await server.put(`/disease/${id}`, attr, { headers: { authorization } })
 
   return data
 }
 
 export async function DeleteDisease(id) {
-  const { data } = await server.delete(`/disease/${id}`)
+  let authorization = localStorage.auth_token
+
+  const { data } = await server.delete(`/disease/${id}`, { headers: { authorization } })
 
   return data
 }

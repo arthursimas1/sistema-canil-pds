@@ -57,19 +57,19 @@ waterline.initialize(conf, async (err, ontology) => {
 
     await user.create({
       id: 'admin-user-9ZjC28G9',
-      username: 'admin',
+      email: 'admin@pds.3wx.ru',
       name: 'Admin User',
-      password: 'Jb_nqk4AL9',
+      password: '123456',
       roles: ['admin'],
     }).then(() => console.log('admin account created'))
       .catch(() => console.log('admin account exists'))
 
     await user.create({
       id: 'regular-user-3k4e4QzB',
-      username: 'user',
+      email: 'user@pds.3wx.ru',
       name: 'Regular User',
-      password: 'K_cH3mtZFZ',
-      roles: ['regular'],
+      password: '123456',
+      roles: ['employee'],
     }).then(() => console.log('regular account created'))
       .catch(() => console.log('regular account exists'))
 

@@ -17,10 +17,11 @@ export default {
   primaryKey: 'id',
   attributes: {
     id: { type: 'string', columnName: '_id' },
-    username: { type: 'string', required: true, autoMigrations: { unique: true } },
+    email: { type: 'string', required: true, autoMigrations: { unique: true } },
     name: { type: 'string' },
     password: { type: 'string' },
-    roles: { type: 'json', defaultsTo: ['spectator'] }, //[string]
+    roles: { type: 'json', defaultsTo: ['employee'] }, //[string]
+    disabled: { type: 'boolean', defaultsTo: false },
   },
   beforeCreate: Normalize,
   beforeUpdate: Normalize,

@@ -1,25 +1,33 @@
 import { server } from './index'
 
 export async function AddOwner(attr) {
-  const { data } = await server.post('/owner', attr)
+  let authorization = localStorage.auth_token
+
+  const { data } = await server.post('/owner', attr, { headers: { authorization } })
 
   return data
 }
 
 export async function SearchOwner(query) {
-  const { data } = await server.get('/owner', { params: query })
+  let authorization = localStorage.auth_token
+
+  const { data } = await server.get('/owner', { params: query, headers: { authorization } } )
 
   return data
 }
 
 export async function GetOwner(id) {
-  const { data } = await server.get(`/owner/${id}`)
+  let authorization = localStorage.auth_token
+
+  const { data } = await server.get(`/owner/${id}`, { headers: { authorization } })
 
   return data
 }
 
 export async function UpdateOwner({ id, ...attr }) {
-  const { data } = await server.put(`/owner/${id}`, attr)
+  let authorization = localStorage.auth_token
+
+  const { data } = await server.put(`/owner/${id}`, attr, { headers: { authorization } })
 
   return data
 }

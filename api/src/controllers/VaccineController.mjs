@@ -1,7 +1,11 @@
 import wlc from '../database/waterline.mjs'
+import { ACL, Auth } from '../middlewares/authenticate.mjs'
 
 export default function Controller(routes) {
-  routes.post('/vaccine', async (request, response) => {
+  routes.post('/vaccine', Auth, async (request, response) => {
+    const permission = ACL.can(request.user.roles).createAny('vaccine')
+    if (!permission.granted) return response.json({ err: 'not_allowed' })
+
     delete request.body.id // doesn't allow id to be set
 
     try {
@@ -17,7 +21,10 @@ export default function Controller(routes) {
     }
   })
 
-  routes.get('/vaccine', async (request, response) => {
+  routes.get('/vaccine', Auth, async (request, response) => {
+    const permission = ACL.can(request.user.roles).readAny('vaccine')
+    if (!permission.granted) return response.json({ err: 'not_allowed' })
+
     let { limit } = { limit: 20, ...request.query } // limit defaults to 20
 
     const vaccine = await wlc.vaccine.find({
@@ -36,7 +43,10 @@ export default function Controller(routes) {
     return response.json(vaccine)
   })
 
-  routes.get('/vaccine/:id', async (request, response) => {
+  routes.get('/vaccine/:id', Auth, async (request, response) => {
+    const permission = ACL.can(request.user.roles).readAny('vaccine')
+    if (!permission.granted) return response.json({ err: 'not_allowed' })
+
     const { id } = request.params
     const vaccine = await wlc.vaccine.findOne({ id })
 
@@ -46,7 +56,10 @@ export default function Controller(routes) {
     return response.json({ err: 'not_found' })
   })
 
-  routes.put('/vaccine/:id', async (request, response) => {
+  routes.put('/vaccine/:id', Auth, async (request, response) => {
+    const permission = ACL.can(request.user.roles).updateAny('vaccine')
+    if (!permission.granted) return response.json({ err: 'not_allowed' })
+
     const { id } = request.params
     delete request.body.id // doesn't allow id to be updated
 
@@ -63,7 +76,10 @@ export default function Controller(routes) {
     }
   })
 
-  routes.delete('/vaccine/:id', async (request, response) => {
+  routes.delete('/vaccine/:id', Auth, async (request, response) => {
+    const permission = ACL.can(request.user.roles).deleteAny('vaccine')
+    if (!permission.granted) return response.json({ err: 'not_allowed' })
+
     const { id } = request.params
 
     try {

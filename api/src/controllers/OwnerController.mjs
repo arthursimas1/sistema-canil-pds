@@ -1,7 +1,11 @@
 import wlc from '../database/waterline.mjs'
+import { ACL, Auth } from '../middlewares/authenticate.mjs'
 
 export default function Controller(routes) {
-  routes.post('/owner', async (request, response) => {
+  routes.post('/owner', Auth, async (request, response) => {
+    const permission = ACL.can(request.user.roles).createAny('owner')
+    if (!permission.granted) return response.json({ err: 'not_allowed' })
+
     delete request.body.id // doesn't allow id to be set
 
     try {
@@ -17,13 +21,19 @@ export default function Controller(routes) {
     }
   })
 
-  routes.get('/owner', async (request, response) => {
+  routes.get('/owner', Auth, async (request, response) => {
+    const permission = ACL.can(request.user.roles).readAny('owner')
+    if (!permission.granted) return response.json({ err: 'not_allowed' })
+
     const owner = await wlc.owner.find({ cpf: request.query.cpf })
 
     return response.json(owner)
   })
 
-  routes.get('/owner/:id', async (request, response) => {
+  routes.get('/owner/:id', Auth, async (request, response) => {
+    const permission = ACL.can(request.user.roles).readAny('owner')
+    if (!permission.granted) return response.json({ err: 'not_allowed' })
+
     const { id } = request.params
     const owner = await wlc.owner.findOne({ id }).populate('current_pets').populate('previous_pets')
 
@@ -33,7 +43,10 @@ export default function Controller(routes) {
     return response.json({ err: 'not_found' })
   })
 
-  routes.put('/owner/:id', async (request, response) => {
+  routes.put('/owner/:id', Auth, async (request, response) => {
+    const permission = ACL.can(request.user.roles).updateAny('owner')
+    if (!permission.granted) return response.json({ err: 'not_allowed' })
+
     const { id } = request.params
     delete request.body.id // doesn't allow id to be updated
 

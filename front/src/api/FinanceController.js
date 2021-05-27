@@ -1,13 +1,17 @@
 import { server } from './index'
 
 export async function AddFinance(attr) {
-  const { data } = await server.post('/finance', attr)
+  let authorization = localStorage.auth_token
+
+  const { data } = await server.post('/finance', attr, { headers: { authorization } })
 
   return data
 }
 
 export async function GetAllFinance() {
-  const { data } = await server.get('/finance')
+  let authorization = localStorage.auth_token
+
+  const { data } = await server.get('/finance', { headers: { authorization } })
 
   return data
 }

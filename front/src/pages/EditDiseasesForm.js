@@ -14,6 +14,7 @@ import Box from '../components/Box'
 import { SearchDisease, UpdateDisease, DeleteDisease } from '../api/DiseaseController'
 import StatusBox from '../components/StatusBox'
 import { IsLogged } from '../api/AccountController'
+import { can } from '../api/authenticate'
 
 const Main = styles.main`
   //background-color: red;
@@ -167,7 +168,7 @@ class EditableDisease extends Component {
     })
   }
 
-  renderDisplay() {
+  renderData() {
     return (
       <tr><td>{this.state.name}</td><td style={{ width: '350px', whiteSpace: 'pre-line' }} dangerouslySetInnerHTML={{ __html: this.state.description }} /><td><EditIcon className='edit' onClick={() => this.setEdit()} /></td></tr>
     )
@@ -195,7 +196,7 @@ class EditableDisease extends Component {
     if (this.state.deleted)
       return null
 
-    return this.state.editing ? this.renderEditing() : this.renderDisplay()
+    return this.state.editing ? this.renderEditing() : this.renderData()
   }
 }
 
@@ -243,7 +244,7 @@ export default class EditDiseasesForm extends Component {
           <Menu>
             <span>&#8592; <Link to='/'>Voltar</Link></span>
             <h3>Buscar Doenças</h3>
-            <Link to='/add-disease'>Adicionar Doença</Link>
+            <Link to='/add-disease' hidden={!can().createAny('disease').granted}>Adicionar Doença</Link>
             <br />
 
             <div className='fields'>

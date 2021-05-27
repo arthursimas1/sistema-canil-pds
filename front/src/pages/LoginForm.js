@@ -19,7 +19,7 @@ const StyledLoginForm = styles.div`
   color: var(--white);
   background: var(--lightgray);
   //width: fit-content;
-  width: 420px;
+  //width: 420px;
   //color: var(--white);
   margin: 120px auto 60px;
   padding: 20px;
@@ -64,7 +64,7 @@ export default class LoginForm extends Component {
     super(props)
 
     this.initial_state = {
-      username: '',
+      email: '',
       password: '',
 
       loading: false,
@@ -105,7 +105,7 @@ export default class LoginForm extends Component {
           <h1>Login</h1>
           <StatusBox err={this.state.err} success={this.state.success} />
           <div className='fields'>
-            <TextField label='Usuário' type='user' autoComplete='username' variant='outlined' error={this.state.err === 'wrong_credentials'} value={this.state.username} onChange={(e) => this.setState({ username: e.target.value })} required />
+            <TextField label='E-mail' type='email' autoComplete='username' variant='outlined' error={this.state.err === 'wrong_credentials'} value={this.state.email} onChange={(e) => this.setState({ email: e.target.value })} required />
             <TextField label='Senha' type='password' autoComplete='current-password' variant='outlined' error={this.state.err === 'wrong_credentials'} value={this.state.password} onChange={(e) => this.setState({ password: e.target.value })} required />
             <LoadingButton disabled={ this.state.loading } onClick={ () => this.submit() } variant='contained' pending={this.state.loading} pendingPosition='center'>Entrar</LoadingButton>
           </div>

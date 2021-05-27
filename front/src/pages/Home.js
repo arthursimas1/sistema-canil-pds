@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import Header from '../components/Header'
 import Box from '../components/Box'
 import { IsLogged } from '../api/AccountController'
+import { can } from '../api/authenticate'
 
 const Main = styles.main`
   //background-color: red;
@@ -47,6 +48,8 @@ export default function Home() {
 
           <h3>Gerência</h3>
           <Link to='/finance'>Finanças</Link>
+          <Link to='/users-management' hidden={!can().readAny('user').granted}>Usuários</Link>
+          <Link to='/my-account'>Minha Conta</Link>
         </Menu>
       </Box>
     </Main>

@@ -1,6 +1,3 @@
-import config from 'config'
-import jwt from 'jsonwebtoken'
-import wlc from '../database/waterline.mjs'
 import AccessControl from 'accesscontrol'
 
 export const ACL = new AccessControl()
@@ -29,25 +26,4 @@ ACL.grant('employee')
     .deleteAny(collection)
 })
 
-export async function AuthHealthCheck(request, response, next) {
-  if (request.ip === '::ffff:127.0.0.1')
-    return next()
-
-  return response.json({ err: 'auth' })
-}
-
-export async function Auth(request, response, next) {
-  const token = request.headers.authorization
-
-  jwt.verify(token, config.get('jwt_secret'), async (err, data) => {
-    if (err)
-      return response.json({ err: 'auth' })
-
-    request.user = await wlc.user.findOne({ id: data.id, disabled: false })
-
-    if (!request.user)
-      return response.json({ err: 'auth' })
-
-    return next()
-  })
-}
+export const can = () => ACL.can(JSON.parse(localStorage.roles))
