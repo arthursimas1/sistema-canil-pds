@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import styles from 'styled-components'
 import { TextField } from '@material-ui/core'
 import { LoadingButton } from '@material-ui/lab'
-import { Link } from 'react-router-dom'
 import { IsLogged, Login } from '../api/AccountController'
 
 import StatusBox from '../components/StatusBox'

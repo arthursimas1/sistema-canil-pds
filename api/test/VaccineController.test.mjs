@@ -9,10 +9,10 @@ chai.use(chaiHttp)
 let request = chai.request(app).keepOpen()
 
 describe('VaccineController', () => {
-  let vaccines, expected_vaccines = 0
+  let vaccines
   before(() => {
     vaccines = [
-    {      
+    {
       name: "Primo-vacinação",
       manufacturer: "diversos",
       description: "Tomar ao perfazer 6 semanas."
@@ -42,20 +42,22 @@ describe('VaccineController', () => {
         res.body.length.should.be.eql(0)
 
         done()
-      })    
-    
+      })
+
   })
   it('adding vaccines', (done) => {
+    let insertions = 0
     vaccines.forEach((element) => {
-      expected_vaccines += 1
       request.post(`/vaccine`)
         .send(element)
         .end((err, res) => {
           res.should.have.status(200)
           res.body.should.not.have.property('err')
+
+          if (++insertions === vaccines.length)
+            done()
         })
-    })    
-    done()
+    })
   })
   it('search for "primo"', (done) => {
     request.get(`/vaccine`).query({ text: 'primo' })
@@ -74,7 +76,7 @@ describe('VaccineController', () => {
         res.should.have.status(200)
         res.body.should.not.have.property('err')
 
-        res.body.length.should.be.eql(expected_vaccines)
+        res.body.length.should.be.eql(vaccines.length)
 
         done()
       })

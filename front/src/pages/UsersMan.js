@@ -145,7 +145,6 @@ class Editable extends Component {
   }
 
   async submit() {
-
     let data = {
       id: this.props.id,
       name: this.state.name,
