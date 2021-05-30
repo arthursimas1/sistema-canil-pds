@@ -15,7 +15,12 @@ import HealingIcon from '@material-ui/icons/Healing'
 import InfoIcon from '@material-ui/icons/Info'
 import SearchIcon from '@material-ui/icons/Search'
 
+import MarkerRedIcon from '../assets/marker-red-43px.png'
+import MarkerGreenIcon from '../assets/marker-green-43px.png'
+
 import { LoadingButton } from '@material-ui/lab'
+
+import { GoogleMap, LoadScript, Marker, InfoWindow } from '@react-google-maps/api'
 
 import Header from '../components/Header'
 import { BoxNoMargin } from '../components/Box'
@@ -419,7 +424,11 @@ export default class PetTimeline extends Component {
       birthdate: null,
       gender: '',
       owner: {},
+      previous_owners: [],
       timeline: [],
+      map_markers: [],
+      map_marker_open: -1,
+      map_center: { lat: 0, lng: 0 },
 
       // component-related stuff
       loading: false,
@@ -446,6 +455,8 @@ export default class PetTimeline extends Component {
       timeline,
       loading: false,
     })
+
+    this.markers_builder(pet_data.owner, pet_data.previous_owners)
   }
 
   async edit_pet() {
@@ -455,10 +466,44 @@ export default class PetTimeline extends Component {
     this.setState({ loading: false, err, success: !err && 'PET atualizado' })
   }
 
+  markers_builder(owner, previous_owners) {
+    const owners_list = [ { ...owner } , ...previous_owners ]
+    owners_list[0].name += ' (dono atual)'
+
+    const map_markers = owners_list.map((po) => ({
+      position: { lat: po.lat, lng: po.lng },
+      icon: MarkerGreenIcon,
+      opacity: .7,
+      child: <><b>{po.name}</b><br />{ po.streetname }, { po.number}<br />{ po.city } - { po.state }<br />{ po.postalcode }</>,
+    }))
+    map_markers[0].icon = MarkerRedIcon
+    delete map_markers[0].opacity
+
+    this.setState({ map_markers, map_center: { lat: owner.lat, lng: owner.lng } })
+  }
+
+  onOwnerChange(new_owner) {
+    const previous_owners = [ this.state.owner, ...this.state.previous_owners.filter((po) => po.id !== new_owner.id) ]
+    this.setState({ owner: new_owner, previous_owners })
+    this.markers_builder(new_owner, previous_owners)
+  }
+
   render() {
     return (
       <Main>
         <Header/>
+
+        <LoadScript googleMapsApiKey={process.env.REACT_APP_MAPS_TOKEN}>
+          <GoogleMap
+            mapContainerStyle={{ width: '60vw', height: '80vh' }}
+            center={this.state.map_center}
+            zoom={13}
+            onClick={() => this.setState({ map_marker_open: -1 })}
+            options={{ styles: [{ featureType: 'poi', stylers: [{ visibility: 'off' }] }] }}
+          >
+            <>{ this.state.map_markers.map(({ child, ...props }, i) => <Marker key={i} {...props} onClick={() => child && this.setState({ map_marker_open: this.state.map_marker_open === i ? -1 : i })} >{ this.state.map_marker_open === i && <InfoWindow onCloseClick={() => this.setState({ map_marker_open: -1 })}>{ child }</InfoWindow> }</Marker>) }</>
+          </GoogleMap>
+        </LoadScript>
 
         <Timeline style={{ marginLeft: 'auto' }}>
           <h3>Linha do Tempo do PET</h3>
@@ -467,7 +512,7 @@ export default class PetTimeline extends Component {
             <NewEvent pet={this.props.match.params.id} owner={this.state.owner} onNewEvent={(event) => {
               this.state.timeline.push(event)
               this.setState({ timeline: this.state.timeline })
-            }} onOwnerChange={(new_owner) => this.setState({ owner: new_owner })} />
+            }} onOwnerChange={(new_owner) => this.onOwnerChange(new_owner)} />
           </div>
         </Timeline>
 

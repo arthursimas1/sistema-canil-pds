@@ -12,6 +12,8 @@ export default {
     postalcode: { type: 'string' },
     state: { type: 'string' },
     city: { type: 'string' },
+    lat: { type: 'number' },
+    lng: { type: 'number' },
     has_animals: { type: 'boolean', defaultsTo: false },
     had_animals: { type: 'boolean', defaultsTo: false },
     notes: { type: 'string' },

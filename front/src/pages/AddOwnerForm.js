@@ -17,6 +17,7 @@ import StatusBox from '../components/StatusBox'
 import { AddOwner } from '../api/OwnerController'
 import GENDERS from '../assets/genders_human.json'
 import { IsLogged } from '../api/AccountController'
+import { QueryPostalCode } from '../api/PostalCodeController'
 
 const Main = styles.main`
   //background-color: red;
@@ -120,6 +121,19 @@ export default class AddOwnerForm extends Component {
       return this.props.history.push(`/owner/${owner}`)
   }
 
+  async set_postalcode(pc) {
+    this.setState({ postalcode: pc })
+
+    if (pc.length !== 8) return
+
+    let data = await QueryPostalCode(pc)
+    if (data.erro) return
+
+    const { cep: postalcode, logradouro: streetname, localidade: city, uf: state } = data
+
+    this.setState({ postalcode, streetname, city, state })
+  }
+
   renderForm() {
     return (
       <>
@@ -150,7 +164,7 @@ export default class AddOwnerForm extends Component {
           />
         </MuiPickersUtilsProvider>
 
-        <TextField label='CEP' variant='outlined' value={this.state.postalcode} onChange={(e) => this.setState({ postalcode: e.target.value })} required />
+        <TextField label='CEP' variant='outlined' value={this.state.postalcode} onChange={(e) => this.set_postalcode(e.target.value)} required />
 
         <TextField label='Logradouro' variant='outlined' value={this.state.streetname} onChange={(e) => this.setState({ streetname: e.target.value })} required />
 
