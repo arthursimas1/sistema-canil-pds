@@ -10,6 +10,7 @@ import Box from '../components/Box'
 import { SearchOwner } from '../api/OwnerController'
 import StatusBox from '../components/StatusBox'
 import { IsLogged } from '../api/AccountController'
+import InputMask from 'react-input-mask'
 
 const Main = styles.main`
   //background-color: red;
@@ -132,7 +133,9 @@ export default class SearchOwnerForm extends Component {
             <br />
 
             <div className='fields'>
-              <TextField label='CPF' variant='outlined' value={this.state.cpf} onChange={(e) => this.setState({ cpf: e.target.value })} />
+              <InputMask mask='999.999.999-99' value={this.state.cpf} onChange={(e) => this.setState({ cpf: e.target.value })}>
+                { (inputProps) => <TextField {...inputProps} label='CPF' variant='outlined' type='text' inputProps={{ pattern: '\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}' }} required /> }
+              </InputMask>
             </div>
 
             <div className='search-button'>

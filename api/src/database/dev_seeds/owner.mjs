@@ -5,7 +5,7 @@ export default () =>
     {
       id: '_9Mkv8cJC7RayNq3WQyBQ',
       name: 'Underdog Kennels',
-      cpf: '00000000000',
+      cpf: '000.000.000-00',
       email: 'contato@pds.3wx.ru',
       gender: 'Masculino',
       birthdate: '2021-05-07T02:25:00.000Z',
@@ -23,7 +23,7 @@ export default () =>
     {
       id: 'dEWVp2db7x_PzZvl9GKfO',
       name: 'Arthur Simas',
-      cpf: '42636917845',
+      cpf: '426.369.178-45',
       email: 'arthursimas1@gmail.com',
       gender: 'Masculino',
       birthdate: '2000-06-18T02:25:00.000Z',
@@ -41,7 +41,7 @@ export default () =>
     {
       id: 'zPR1i264oBj6q51DuzFKI',
       name: 'Guilherme Riveira',
-      cpf: '12625566840',
+      cpf: '126.255.668-40',
       email: 'gui.riv@gmail.com',
       gender: 'Masculino',
       birthdate: '2000-07-20T02:25:00.000Z',

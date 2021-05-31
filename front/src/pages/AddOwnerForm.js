@@ -7,6 +7,7 @@ import DateFnsUtils from '@date-io/date-fns'
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers'
 
 import { Button, TextField, MenuItem, FormControlLabel, Checkbox } from '@material-ui/core'
+import InputMask from 'react-input-mask'
 
 import { LoadingButton } from '@material-ui/lab'
 
@@ -85,6 +86,7 @@ export default class AddOwnerForm extends Component {
       err: false,
     }
     this.state = { ...this.initial_state }
+    this.postalcode_ref = null
   }
 
   componentDidMount() {
@@ -124,14 +126,19 @@ export default class AddOwnerForm extends Component {
   async set_postalcode(pc) {
     this.setState({ postalcode: pc })
 
+    pc = pc.split('').filter((char) => /\d/.test(char)).join('')
+
     if (pc.length !== 8) return
 
     let data = await QueryPostalCode(pc)
-    if (data.erro) return
 
-    const { cep: postalcode, logradouro: streetname, localidade: city, uf: state } = data
+    if (data.err) {
+      this.postalcode_ref.setCustomValidity('CEP não encontrado')
+      this.postalcode_ref.oninput = (e) => e.target.setCustomValidity('')
+      this.postalcode_ref.reportValidity()
+    }
 
-    this.setState({ postalcode, streetname, city, state })
+    this.setState(data)
   }
 
   renderForm() {
@@ -139,7 +146,9 @@ export default class AddOwnerForm extends Component {
       <>
         <TextField label='Nome' variant='outlined' value={this.state.name} onChange={(e) => this.setState({ name: e.target.value })} required />
 
-        <TextField label='CPF' variant='outlined' value={this.state.cpf} onChange={(e) => this.setState({ cpf: e.target.value })} required />
+        <InputMask mask='999.999.999-99' value={this.state.cpf} onChange={(e) => this.setState({ cpf: e.target.value })}>
+          { (inputProps) => <TextField {...inputProps} label='CPF' variant='outlined' type='text' inputProps={{ pattern: '\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}' }} required /> }
+        </InputMask>
 
         <TextField label='E-mail' type='email' autoComplete='email' variant='outlined' value={this.state.email} onChange={(e) => this.setState({ email: e.target.value })} required />
 
@@ -164,7 +173,9 @@ export default class AddOwnerForm extends Component {
           />
         </MuiPickersUtilsProvider>
 
-        <TextField label='CEP' variant='outlined' value={this.state.postalcode} onChange={(e) => this.set_postalcode(e.target.value)} required />
+        <InputMask mask='99999-999' value={this.state.postalcode} onChange={(e) => this.set_postalcode(e.target.value)}>
+          { (inputProps) => <TextField {...inputProps} inputRef={(x) => this.postalcode_ref = x } label='CEP' variant='outlined' type='text' inputProps={{ pattern: '\\d{5}-\\d{3}' }} required /> }
+        </InputMask>
 
         <TextField label='Logradouro' variant='outlined' value={this.state.streetname} onChange={(e) => this.setState({ streetname: e.target.value })} required />
 

@@ -36,6 +36,7 @@ import { SearchOwner } from '../api/OwnerController'
 import GENDERS from '../assets/genders_pet.json'
 import BREEDS from '../assets/breeds.json'
 import { IsLogged } from '../api/AccountController'
+import InputMask from 'react-input-mask'
 
 const EVENTS = [
   ['vaccination', 'Vacinação'],
@@ -357,13 +358,9 @@ class NewEvent extends Component {
         {
           (this.state.event === 'donation' || this.state.event === 'sell') &&
             <>
-              <TextField
-                label='Buscar Novo Dono (CPF)'
-                value={this.state.new_owner_cpf}
-                onChange={(e) => this.setState({ new_owner_cpf: e.target.value })}
-                InputProps={{ endAdornment: <InputAdornment position='end'><IconButton onClick={() => this.search_owner()} edge='end'><SearchIcon color={'primary'}/></IconButton></InputAdornment> }}
-                variant='outlined'
-              />
+              <InputMask mask='999.999.999-99' value={this.state.new_owner_cpf} onChange={(e) => this.setState({ new_owner_cpf: e.target.value })}>
+                { (inputProps) => <TextField {...inputProps} label='Buscar Novo Dono (CPF)' variant='outlined' type='text' inputProps={{ pattern: '\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}' }} InputProps={{ endAdornment: <InputAdornment position='end'><IconButton onClick={() => this.search_owner()} edge='end'><SearchIcon color={'primary'}/></IconButton></InputAdornment> }} required /> }
+              </InputMask>
               {this.state.owner_result && <span style={{ color: 'white' }}>Novo dono: {this.state.owner_result.name} ({this.state.owner_result.cpf})</span>}
               <span hidden={this.state.owner_result !== null} style={{ color: 'white' }}>Não encontrado</span>
 

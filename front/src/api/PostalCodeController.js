@@ -8,5 +8,10 @@ export const viacep = axios.create({
 export async function QueryPostalCode(cep) {
   const { data } = await viacep.get(`/ws/${cep}/json/`)
 
-  return data
+  return {
+    err: data.erro === true,
+    streetname: data.logradouro || '',
+    city: data.localidade || '',
+    state: data.uf || '',
+  }
 }
