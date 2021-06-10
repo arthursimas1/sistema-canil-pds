@@ -1,3 +1,6 @@
+import axios from 'axios'
+import config from 'config'
+import querystring from 'querystring'
 import wlc from '../database/waterline.mjs'
 import { ACL, Auth } from '../middlewares/authenticate.mjs'
 
@@ -8,8 +11,10 @@ export default function Controller(routes) {
 
     delete request.body.id // doesn't allow id to be set
 
+    let coordinates = forward_geocode(request.body)
+
     try {
-      const owner = await wlc.owner.create(request.body).fetch()
+      const owner = await wlc.owner.create({ ...request.body, ...coordinates }).fetch()
 
       await wlc.log.create({ user: request.body.user, table: 'owner', operation: 'create', key: owner.id })
 
@@ -50,8 +55,10 @@ export default function Controller(routes) {
     const { id } = request.params
     delete request.body.id // doesn't allow id to be updated
 
+    let coordinates = await forward_geocode(request.body)
+
     try {
-      await wlc.owner.update({ id }).set(request.body)
+      await wlc.owner.update({ id }).set({ ...request.body, ...coordinates })
 
       await wlc.log.create({ user: request.body.user, table: 'owner', operation: 'update', key: id })
 
@@ -62,4 +69,14 @@ export default function Controller(routes) {
       return response.json({ err: 'internal' })
     }
   })
+}
+
+async function forward_geocode({ streetname, number, postalcode, state, city }) {
+  let query = querystring.escape(`${streetname} ${number}, ${city} ${postalcode}, ${state}`)
+  let res = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${query}&region=br&key=${config.get('google_api_geocoding')}`)
+
+  if (res.data.status !== 'OK')
+    return { lat: 0.0, lng: 0.0 }
+
+  return res.data.results[0].geometry.location
 }
