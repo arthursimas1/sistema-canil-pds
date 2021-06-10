@@ -1,5 +1,7 @@
 import wlc from '../database/waterline.mjs'
 import { ACL, Auth } from '../middlewares/authenticate.mjs'
+import SendMail from '../helper/mailer.mjs'
+//import dateFormat from '../dateFormat.mjs'
 
 export default function Controller(routes) {
   routes.post('/pet', Auth, async (request, response) => {
@@ -117,8 +119,64 @@ export default function Controller(routes) {
           }).fetch()
           await wlc.log.create({ user: request.body.user, table: 'finance', operation: 'create', key: finance.id })
         }
-      }
 
+        
+        const new_owner_data = await wlc.owner.findOne({ id: metadata.new_owner })
+        const pet_data = await wlc.pet.findOne({ id: pet })
+        let text = ""
+        let timeline = await wlc.pet_timeline.find({ where: { pet: pet }, sort: 'date ASC' })
+
+        timeline = await Promise.all(timeline.map(async (e) => {
+          switch (e.event) {
+            case 'vaccination':
+              e.metadata.vaccine = await wlc.vaccine.findOne({ id: e.metadata.vaccine }) // eslint-disable-line require-atomic-updates
+              break
+
+            case 'sick':
+              e.metadata.disease = await wlc.disease.findOne({ id: e.metadata.disease }) // eslint-disable-line require-atomic-updates
+              break
+          }
+          delete e.pet
+
+          return e
+        }))
+        
+        timeline.map((e) => {
+          switch (e.event) {
+            case 'vaccination':
+              text = text.concat('\nVacinação - ' + e.date + '\n')
+              text = text.concat('Recebeu ' + e.metadata.amount + ' ' + (e.metadata.amount === 1 ? 'dose' : 'doses') + ' da vacina ' + e.metadata.vaccine.name + '.\n')
+              if(e.description.length > 0)
+                text = text.concat('Detalhes: ' + e.description + '\n')
+              break
+
+            case 'sick':
+              text = text.concat('\nDoença - ' + e.date + '\n')
+              text = text.concat('Foi acometido por ' + e.metadata.disease.name + '.\n')
+              if(e.description.length > 0)
+                text = text.concat('Detalhes: ' + e.description + '\n')
+              break
+
+            case 'other':
+              text = text.concat('\nOutro - ' + e.date + '\n')
+              text = text.concat('Detalhes: ' + e.description + '\n')
+            break
+          }          
+        })        
+        
+        await SendMail({
+          template: 'pet_transfering',
+          to: `"${new_owner_data.name}" <${new_owner_data.email}>`,
+          context: {
+            name: new_owner_data.name,
+            pet_name: pet_data.name,
+            breed: pet_data.breed,
+            birthdate: pet_data.birthdate,
+            gender: pet_data.gender,
+            timeline: text
+            },
+        })
+      }
       return response.json({ })
     } catch (e) {
       console.log(e)
