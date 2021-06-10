@@ -28,9 +28,9 @@ const Menu = styles.div`
   }
 `
 
-export default function Home() {
+export default function Home({ history }) {
   if (!IsLogged())
-    return this.props.history.push('/login')
+    return history.push('/login')
 
   return (
     <Main>

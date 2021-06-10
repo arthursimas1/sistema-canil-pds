@@ -14,7 +14,7 @@ export default function Controller(routes) {
       return response.json({ err: 'internal' })
     }
   })
-  
+
   routes.get('/log', async (request, response) => {
     const logs = await wlc.log.find({
       sort: 'date DESC',

@@ -9,7 +9,7 @@ export default function Controller(routes) {
     delete request.body.id // doesn't allow id to be set
 
     try {
-      const data = await wlc.vaccine.create(request.body).fetch()      
+      const data = await wlc.vaccine.create(request.body).fetch()
 
       await wlc.log.create({ user: request.body.user, table: 'vaccine', operation: 'create', key: data.id })
 

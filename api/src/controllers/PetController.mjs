@@ -1,7 +1,7 @@
 import wlc from '../database/waterline.mjs'
 import { ACL, Auth } from '../middlewares/authenticate.mjs'
 import SendMail from '../helper/mailer.mjs'
-//import dateFormat from '../dateFormat.mjs'
+import dateFormat from '../helper/dateFormat.mjs'
 
 export default function Controller(routes) {
   routes.post('/pet', Auth, async (request, response) => {
@@ -111,6 +111,8 @@ export default function Controller(routes) {
         await wlc.pet.addToCollection(pet, 'previous_owners', metadata.previous_owner)
         await wlc.pet.removeFromCollection(pet, 'previous_owners', metadata.new_owner)
 
+        let email_headline
+
         if (metadata.type === 'sell') {
           // date set at modeling level
           const finance = await wlc.finance.create({
@@ -118,65 +120,65 @@ export default function Controller(routes) {
             description: `PET [pet](${pet}) vendido de [owner](${metadata.previous_owner}) para [owner](${metadata.new_owner}).`,
           }).fetch()
           await wlc.log.create({ user: request.body.user, table: 'finance', operation: 'create', key: finance.id })
+
+          email_headline = `A compra do seu novo PET por $${metadata.price} foi confirmada!`
+        } else { // metadata.type === 'donation'
+          email_headline = 'A transferência do seu novo PET foi confirmada!'
         }
 
-        
         const new_owner_data = await wlc.owner.findOne({ id: metadata.new_owner })
         const pet_data = await wlc.pet.findOne({ id: pet })
-        let text = ""
-        let timeline = await wlc.pet_timeline.find({ where: { pet: pet }, sort: 'date ASC' })
+        let timeline = await wlc.pet_timeline.find({ where: { id: { '!=': pet_timeline.id }, pet: pet }, sort: 'date ASC' })
 
-        timeline = await Promise.all(timeline.map(async (e) => {
+        let timeline_text = await Promise.all(timeline.map(async (e) => {
+          let text = `<b>${dateFormat(e.date, 'HH:mm dd/MM/yy')}</b>: `
+          let subquery
+
           switch (e.event) {
+            case 'new_pet':
+              return text.concat('PET adicionado!')
+
+            case 'ownership_transfer':
+              return text.concat(`Transferência de dono (${e.metadata.type === 'donation' ? 'doação' : 'venda'})`)
+
             case 'vaccination':
-              e.metadata.vaccine = await wlc.vaccine.findOne({ id: e.metadata.vaccine }) // eslint-disable-line require-atomic-updates
-              break
+              subquery = await wlc.vaccine.findOne({ id: e.metadata.vaccine })
+              text = text.concat(`Vacinação<br />Recebeu ${e.metadata.amount} ${e.metadata.amount === 1 ? 'dose' : 'doses'} da vacina ${subquery.name}`)
+              if (e.description.length > 0)
+                text = text.concat(`<br />Detalhes: ${e.description}`)
+
+              return text
 
             case 'sick':
-              e.metadata.disease = await wlc.disease.findOne({ id: e.metadata.disease }) // eslint-disable-line require-atomic-updates
-              break
+              subquery = await wlc.disease.findOne({ id: e.metadata.disease })
+              text = text.concat(`Doença<br />Foi acometido por ${subquery.name}`)
+              if (e.description.length > 0)
+                text = text.concat(`<br />Detalhes: ${e.description}`)
+
+              return text
+
+            //case 'other':
+            default:
+              return text.concat(`Outro<br />Detalhes: ${e.description}`)
           }
-          delete e.pet
-
-          return e
         }))
-        
-        timeline.map((e) => {
-          switch (e.event) {
-            case 'vaccination':
-              text = text.concat('\nVacinação - ' + e.date + '\n')
-              text = text.concat('Recebeu ' + e.metadata.amount + ' ' + (e.metadata.amount === 1 ? 'dose' : 'doses') + ' da vacina ' + e.metadata.vaccine.name + '.\n')
-              if(e.description.length > 0)
-                text = text.concat('Detalhes: ' + e.description + '\n')
-              break
 
-            case 'sick':
-              text = text.concat('\nDoença - ' + e.date + '\n')
-              text = text.concat('Foi acometido por ' + e.metadata.disease.name + '.\n')
-              if(e.description.length > 0)
-                text = text.concat('Detalhes: ' + e.description + '\n')
-              break
-
-            case 'other':
-              text = text.concat('\nOutro - ' + e.date + '\n')
-              text = text.concat('Detalhes: ' + e.description + '\n')
-            break
-          }          
-        })        
-        
         await SendMail({
           template: 'pet_transfering',
           to: `"${new_owner_data.name}" <${new_owner_data.email}>`,
           context: {
             name: new_owner_data.name,
             pet_name: pet_data.name,
+            email_headline,
+            description,
             breed: pet_data.breed,
-            birthdate: pet_data.birthdate,
+            birthdate: dateFormat(pet_data.birthdate, 'dd/MM/yy'),
             gender: pet_data.gender,
-            timeline: text
-            },
+            timeline: timeline_text.join('<br /><br />'),
+          },
         })
       }
+
       return response.json({ })
     } catch (e) {
       console.log(e)
