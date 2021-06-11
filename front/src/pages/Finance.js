@@ -6,6 +6,8 @@ import { TextField, MenuItem } from '@material-ui/core'
 
 import { LoadingButton } from '@material-ui/lab'
 
+import ReactMarkdown from 'react-markdown'
+
 import Header from '../components/Header'
 import Box from '../components/Box'
 import StatusBox from '../components/StatusBox'
@@ -181,7 +183,7 @@ export default class Finance extends Component {
             <table className='finance' hidden={this.state.events.length <= 0}>
               <tbody>
                 <tr><th>Valor</th><th>Descrição</th><th>Data</th></tr>
-                { this.state.events.map((e) => <tr className={e.amount > 0 ? 'entrada' : 'saida'} key={e.id}><td>R$&nbsp;{e.amount}</td><td style={{ width: '350px' }} dangerouslySetInnerHTML={{ __html: e.description }} /><td>{dateFormat(e.date, 'HH:mm\xa0dd/MM/yy')}</td></tr>) }
+                { this.state.events.map((e) => <tr className={e.amount > 0 ? 'entrada' : 'saida'} key={e.id}><td>R$&nbsp;{e.amount}</td><td style={{ width: '350px' }}><ReactMarkdown components={{ a: ({ href, children }) => <Link to={href}>{children}</Link> }}>{ e.description }</ReactMarkdown></td><td>{dateFormat(e.date, 'HH:mm\xa0dd/MM/yy')}</td></tr>) }
               </tbody>
             </table>
           </Menu>

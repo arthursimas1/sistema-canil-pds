@@ -47,8 +47,9 @@ export default function Controller(routes) {
     for (const event of events) {
       event.description = await ReplaceAsync(event.description, /\[(.*?)\]\((.*?)\)/g, async (str, collection, id) => {
         let page = collection === 'pet' ? 'pet-timeline' : collection
+        let query = await wlc[collection].findOne({ id })
 
-        return `<a href='${page}/${id}'>${(await wlc[collection].findOne({ id })).name}</a>`
+        return `[${query.name}](/${page}/${id})`
       })
     }
 
