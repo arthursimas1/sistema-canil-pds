@@ -25,7 +25,7 @@ COPY ./config /build/config/
 #COPY ./test /build/test/
 COPY ./src /build/src/
 
-STOPSIGNAL HUP
+STOPSIGNAL SIGINT
 
 HEALTHCHECK --interval=5m --timeout=5s --retries=3 \
   CMD curl http://127.0.0.1/health_check -fs > dev/null || exit 1
