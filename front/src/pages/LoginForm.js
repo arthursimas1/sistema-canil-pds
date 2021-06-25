@@ -16,7 +16,7 @@ const Main = styles.main`
 
 const StyledLoginForm = styles.div`
   color: var(--white);
-  background: var(--lightgray);
+  background: var(--darkgray);
   //width: fit-content;
   //width: 420px;
   //color: var(--white);

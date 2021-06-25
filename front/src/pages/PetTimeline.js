@@ -266,7 +266,7 @@ class NewEvent extends Component {
       owner_result = false
       err = 'Não pode ser o mesmo dono'
     } else if (owner_result && this.state.event === 'sell') {
-       this.create_paypal_button()
+      this.create_paypal_button()
     }
 
     this.setState({ loading: false, owner_result, err, success: !err })
@@ -412,7 +412,9 @@ class NewEvent extends Component {
 
         <div style={{ color: 'white' }}><AddIcon color='secondary' style={{ marginBottom: '-4px' }} /> Adicionar evento</div>
 
-        <TextField select label='Tipo' variant='outlined' value={this.state.event} onChange={(e) => { this.setState({ event: e.target.value }); this.clear_paypal_button() }} required>
+        <TextField select label='Tipo' variant='outlined' value={this.state.event} onChange={(e) => {
+          this.setState({ event: e.target.value }); this.clear_paypal_button()
+        }} required>
           {EVENTS.map(([name, label]) => <MenuItem key={name} value={name} style={{ color: 'black', ...this.state.event === name ? { background: '#9e9e9e', fontWeight: 'bold' } : {} }}>{label}</MenuItem>)}
         </TextField>
 

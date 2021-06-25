@@ -258,6 +258,15 @@ export default class Owner extends Component {
 
               <Divider style={{ background: '#C0C0C0' }} />
               <h3>Endereço</h3>
+
+              <div className='text'>
+                <span>
+                  <InputMask mask='99999-999' value={this.state.postalcode} onChange={(e) => this.set_postalcode(e.target.value)}>
+                    { (inputProps) => <TextField {...inputProps} inputRef={(x) => this.postalcode_ref = x } label='CEP' variant='outlined' type='text' inputProps={{ pattern: '\\d{5}-\\d{3}' }} required /> }
+                  </InputMask>
+                </span>
+              </div>
+
               <div className='text'>
                 <TextField style={{ width: 600 }} label='Logradouro' variant='outlined' value={this.state.streetname} onChange={(e) => this.setState({ streetname: e.target.value })} required />
 
@@ -268,10 +277,6 @@ export default class Owner extends Component {
                 <TextField style={{ width: 400 }} label='Cidade' variant='outlined' value={this.state.city} onChange={(e) => this.setState({ city: e.target.value })} required />
 
                 <TextField label='Estado' variant='outlined' value={this.state.state} onChange={(e) => this.setState({ state: e.target.value })} required />
-
-                <InputMask mask='99999-999' value={this.state.postalcode} onChange={(e) => this.set_postalcode(e.target.value)}>
-                  { (inputProps) => <TextField {...inputProps} inputRef={(x) => this.postalcode_ref = x } label='CEP' variant='outlined' type='text' inputProps={{ pattern: '\\d{5}-\\d{3}' }} required /> }
-                </InputMask>
               </div>
 
               <Divider style={{ background: '#C0C0C0' }} />
