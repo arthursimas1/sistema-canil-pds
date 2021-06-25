@@ -60,7 +60,7 @@ export default function Controller(routes) {
     try {
       const owner = await wlc.owner.update({ id }).set({ ...request.body, ...coordinates }).fetch()
 
-      await wlc.log.create({ user: request.user.name, table: 'owner', operation: 'update', key: owner.id })
+      await wlc.log.create({ user: request.user.name, table: 'owner', operation: 'update', key: id })
 
       return response.json({ })
     } catch (e) {

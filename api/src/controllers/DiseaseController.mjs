@@ -65,7 +65,7 @@ export default function Controller(routes) {
     try {
       const disease = await wlc.disease.update({ id }).set(request.body).fetch()
 
-      await wlc.log.create({ user: request.user.name, table: 'disease', operation: 'update', key: disease.id })
+      await wlc.log.create({ user: request.user.name, table: 'disease', operation: 'update', key: id })
 
       return response.json({ })
     } catch (e) {

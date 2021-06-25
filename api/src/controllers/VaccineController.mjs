@@ -66,7 +66,7 @@ export default function Controller(routes) {
     try {
       const vaccine = await wlc.vaccine.update({ id }).set(request.body).fetch()
 
-      await wlc.log.create({ user: request.user.name, table: 'vaccine', operation: 'update', key: vaccine.id })
+      await wlc.log.create({ user: request.user.name, table: 'vaccine', operation: 'update', key: id })
 
       return response.json({ })
     } catch (e) {
