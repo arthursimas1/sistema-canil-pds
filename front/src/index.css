@@ -46,6 +46,7 @@
   --black: #000000ff;
   --white: #ffffffff;
   --lightgray: #a9a9a9ff;
+  --darkgray: #505050;
 
   --error: #c61c1c;
   --success: #2e8b57ff;
@@ -67,7 +68,9 @@ a {
 #root {
   min-height: 100vh;
   padding-top: 80px;
-  background-image: linear-gradient(#fff, #f3f2f0);
+  background-color: #cfd8dc;
+  border: 1px solid white;
+  /*background-image: linear-gradient(#fff, #f3f2f0);*/
 }
 
 [hidden] { display: none !important; }
@@ -76,9 +79,13 @@ center {
   text-align: center;
 }
 
+div.MuiInputBase-root {
+  background-color: #404040;
+}
+
 legend.MuiFormLabel-root,
 label.MuiInputLabel-root {
-  color: var(--white);
+  color: var(--white);  
 }
 
 div.MuiPickersBasePicker-pickerView {

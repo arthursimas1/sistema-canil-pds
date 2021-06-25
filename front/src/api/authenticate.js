@@ -25,5 +25,7 @@ ACL.grant('employee')
     .updateAny(collection)
     .deleteAny(collection)
 })
+ACL.grant('admin')
+  .readAny('log')
 
 export const can = () => ACL.can(JSON.parse(localStorage.roles))

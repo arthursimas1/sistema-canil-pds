@@ -14,6 +14,7 @@ import { LoadingButton } from '@material-ui/lab'
 import Header from '../components/Header'
 import Box from '../components/Box'
 import StatusBox from '../components/StatusBox'
+import Divider from '@material-ui/core/Divider'
 
 import { AddOwner } from '../api/OwnerController'
 import GENDERS from '../assets/genders_human.json'
@@ -30,7 +31,7 @@ const Main = styles.main`
 
 const Menu = styles.div`
   display: flex;
-  width: 250px;
+  width: 1000px;
   margin: 0 auto;
   flex-direction: column;
   //background: pink;
@@ -56,6 +57,20 @@ const Menu = styles.div`
 
     .MuiInputBase-inputMultiline {
       min-height: 66px;
+    }    
+  }
+
+  div.text {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: left;
+
+    > *:not(:last-child) {
+      margin-right: 20px;
+    }
+    > *:last-child {
+      flex: 1;
     }
   }
 `
@@ -144,56 +159,71 @@ export default class AddOwnerForm extends Component {
   renderForm() {
     return (
       <>
-        <TextField label='Nome' variant='outlined' value={this.state.name} onChange={(e) => this.setState({ name: e.target.value })} required />
+        <h3>Informações pessoais</h3>
+        <div className='text'>
+          <TextField style={{ width: 500 }} label='Nome' variant='outlined' value={this.state.name} onChange={(e) => this.setState({ name: e.target.value })} required />
 
-        <InputMask mask='999.999.999-99' value={this.state.cpf} onChange={(e) => this.setState({ cpf: e.target.value })}>
-          { (inputProps) => <TextField {...inputProps} label='CPF' variant='outlined' type='text' inputProps={{ pattern: '\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}' }} required /> }
-        </InputMask>
+          <InputMask mask='999.999.999-99' value={this.state.cpf} onChange={(e) => this.setState({ cpf: e.target.value })}>
+            { (inputProps) => <TextField {...inputProps} label='CPF' variant='outlined' type='text' inputProps={{ pattern: '\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}' }} required /> }
+          </InputMask>
+        </div>
 
-        <TextField label='E-mail' type='email' autoComplete='email' variant='outlined' value={this.state.email} onChange={(e) => this.setState({ email: e.target.value.toLowerCase() })} required />
+        <div className='text'>
+          <TextField style={{ width: 150 }} select label='Gênero' variant='outlined' value={this.state.gender} onChange={(e) => this.setState({ gender: e.target.value })} required >
+            { GENDERS.map((label) => <MenuItem key={label} value={label} style={{ color: 'black', ...this.state.gender === label ? { background: '#9e9e9e', fontWeight: 'bold' } : {} }}>{ label }</MenuItem>) }
+          </TextField>
 
-        <TextField select label='Gênero' variant='outlined' value={this.state.gender} onChange={(e) => this.setState({ gender: e.target.value })} required >
-          { GENDERS.map((label) => <MenuItem key={label} value={label} style={{ color: 'black', ...this.state.gender === label ? { background: '#9e9e9e', fontWeight: 'bold' } : {} }}>{ label }</MenuItem>) }
-        </TextField>
+          <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ptLocale}>
+            <KeyboardDatePicker
+              disableToolbar
+              variant='inline'
+              format='dd/MM/yyyy'
+              //margin='normal'
+              label='Data de nascimento'
+              disableFuture={true}
+              openTo='year'
+              views={['year', 'month', 'date']}
+              value={this.state.birthdate}
+              onChange={(birthdate) => this.setState({ birthdate }) }
+              KeyboardButtonProps={{ 'aria-label': 'change date' }}
+              required
+            />
+          </MuiPickersUtilsProvider>
 
-        <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ptLocale}>
-          <KeyboardDatePicker
-            disableToolbar
-            variant='inline'
-            format='dd/MM/yyyy'
-            margin='normal'
-            label='Data de nascimento'
-            disableFuture={true}
-            openTo='year'
-            views={['year', 'month', 'date']}
-            value={this.state.birthdate}
-            onChange={(birthdate) => this.setState({ birthdate }) }
-            KeyboardButtonProps={{ 'aria-label': 'change date' }}
-            required
+          <TextField label='E-mail' type='email' autoComplete='email' variant='outlined' value={this.state.email} onChange={(e) => this.setState({ email: e.target.value.toLowerCase() })} required />
+        </div>
+
+        <Divider style={{ background: '#C0C0C0' }} />
+        <h3>Endereço</h3>
+        <div className='text'>
+          <TextField style={{ width: 600 }} label='Logradouro' variant='outlined' value={this.state.streetname} onChange={(e) => this.setState({ streetname: e.target.value })} required />
+
+          <TextField label='Número' variant='outlined' value={this.state.number} onChange={(e) => this.setState({ number: e.target.value })} required />
+        </div>
+
+        <div className='text'>
+          <TextField style={{ width: 400 }} label='Cidade' variant='outlined' value={this.state.city} onChange={(e) => this.setState({ city: e.target.value })} required />
+
+          <TextField label='Estado' variant='outlined' value={this.state.state} onChange={(e) => this.setState({ state: e.target.value })} required />
+
+          <InputMask mask='99999-999' value={this.state.postalcode} onChange={(e) => this.set_postalcode(e.target.value)}>
+            { (inputProps) => <TextField {...inputProps} inputRef={(x) => this.postalcode_ref = x } label='CEP' variant='outlined' type='text' inputProps={{ pattern: '\\d{5}-\\d{3}' }} required /> }
+          </InputMask>
+        </div>
+
+        <Divider style={{ background: '#C0C0C0' }} />
+        <h3>Observações</h3>
+        <div className='text'>
+          <FormControlLabel
+            control={<Checkbox checked={this.state.had_animals} onChange={() => this.setState({ had_animals: !this.state.had_animals })} />}
+            label='Teve animais anteriormente?'
           />
-        </MuiPickersUtilsProvider>
 
-        <InputMask mask='99999-999' value={this.state.postalcode} onChange={(e) => this.set_postalcode(e.target.value)}>
-          { (inputProps) => <TextField {...inputProps} inputRef={(x) => this.postalcode_ref = x } label='CEP' variant='outlined' type='text' inputProps={{ pattern: '\\d{5}-\\d{3}' }} required /> }
-        </InputMask>
-
-        <TextField label='Logradouro' variant='outlined' value={this.state.streetname} onChange={(e) => this.setState({ streetname: e.target.value })} required />
-
-        <TextField label='Número' variant='outlined' value={this.state.number} onChange={(e) => this.setState({ number: e.target.value })} required />
-
-        <TextField label='Estado' variant='outlined' value={this.state.state} onChange={(e) => this.setState({ state: e.target.value })} required />
-
-        <TextField label='Cidade' variant='outlined' value={this.state.city} onChange={(e) => this.setState({ city: e.target.value })} required />
-
-        <FormControlLabel
-          control={<Checkbox checked={this.state.had_animals} onChange={() => this.setState({ had_animals: !this.state.had_animals })} />}
-          label='Teve animais anteriormente?'
-        />
-
-        <FormControlLabel
-          control={<Checkbox checked={this.state.has_animals} onChange={() => this.setState({ has_animals: !this.state.has_animals })} />}
-          label='Possui animais?'
-        />
+          <FormControlLabel
+            control={<Checkbox checked={this.state.has_animals} onChange={() => this.setState({ has_animals: !this.state.has_animals })} />}
+            label='Possui animais?'
+          />
+        </div>
 
         <TextField label='Notas adicionais' multiline={true} variant='outlined' value={this.state.notes} onChange={(e) => this.setState({ notes: e.target.value })} />
 
@@ -215,7 +245,7 @@ export default class AddOwnerForm extends Component {
 
         <Box>
           <Menu>
-            <span>&#8592; <Link to='/search-owner'>Voltar</Link></span>
+            <span>&#8592; <Link to='/search-owner' style={{ color: 'var(--white)' }}>Voltar</Link></span>
             <h3>Adicionar Dono</h3>
 
             <StatusBox err={this.state.err} success={this.state.success} />

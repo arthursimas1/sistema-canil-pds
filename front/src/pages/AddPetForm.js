@@ -24,6 +24,8 @@ import { IsLogged } from '../api/AccountController'
 const Main = styles.main`
   //background-color: red;
   min-height: 100%;
+  //background-image: linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%);
+  //min-height: 100vh;
   display: flex;
   flex-direction: column;
   padding: 20px;
@@ -31,7 +33,7 @@ const Main = styles.main`
 
 const Menu = styles.div`
   display: flex;
-  width: 250px;
+  width: 1000px;
   margin: 0 auto;
   flex-direction: column;
   //background: pink;
@@ -57,6 +59,20 @@ const Menu = styles.div`
 
     .MuiInputBase-inputMultiline {
       min-height: 66px;
+    }
+  }
+
+  div.text {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: left;
+
+    > *:not(:last-child) {
+      margin-right: 20px;
+    }
+    > *:last-child {
+      flex: 1;
     }
   }
 `
@@ -112,32 +128,36 @@ export default class AddPetForm extends Component {
   renderForm() {
     return (
       <>
-        <TextField label='Nome' variant='outlined' value={this.state.name} onChange={(e) => this.setState({ name: e.target.value })} required />
+        <div className='text'>
+          <TextField style={{ width: 700 }} label='Nome' variant='outlined' value={this.state.name} onChange={(e) => this.setState({ name: e.target.value })} required />
 
-        <TextField select label='Sexo' variant='outlined' value={this.state.gender} onChange={(e) => this.setState({ gender: e.target.value })} required >
-          { GENDERS.map((label) => <MenuItem key={label} value={label} style={{ color: 'black', ...this.state.gender === label ? { background: '#9e9e9e', fontWeight: 'bold' } : {} }}>{ label }</MenuItem>) }
-        </TextField>
+          <TextField select label='Sexo' variant='outlined' value={this.state.gender} onChange={(e) => this.setState({ gender: e.target.value })} required >
+            { GENDERS.map((label) => <MenuItem key={label} value={label} style={{ color: 'black', ...this.state.gender === label ? { background: '#9e9e9e', fontWeight: 'bold' } : {} }}>{ label }</MenuItem>) }
+          </TextField>
+        </div>
 
-        <TextField select label='Raça' variant='outlined' value={this.state.breed} onChange={(e) => this.setState({ breed: e.target.value })} required >
-          { BREEDS.map((label) => <MenuItem key={label} value={label} style={{ color: 'black', ...this.state.breed === label ? { background: '#9e9e9e', fontWeight: 'bold' } : {} }}>{ label }</MenuItem>) }
-        </TextField>
+        <div className='text'>
+          <TextField style={{ width: 500 }} select label='Raça' variant='outlined' value={this.state.breed} onChange={(e) => this.setState({ breed: e.target.value })} required >
+            { BREEDS.map((label) => <MenuItem key={label} value={label} style={{ color: 'black', ...this.state.breed === label ? { background: '#9e9e9e', fontWeight: 'bold' } : {} }}>{ label }</MenuItem>) }
+          </TextField>
 
-        <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ptLocale}>
-          <KeyboardDatePicker
-            disableToolbar
-            variant='inline'
-            format='dd/MM/yyyy'
-            margin='normal'
-            label='Data de nascimento'
-            disableFuture={true}
-            openTo='year'
-            views={['year', 'month', 'date']}
-            value={this.state.birthdate}
-            onChange={(birthdate) => this.setState({ birthdate }) }
-            KeyboardButtonProps={{ 'aria-label': 'change date' }}
-            required
-          />
-        </MuiPickersUtilsProvider>
+          <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ptLocale}>
+            <KeyboardDatePicker
+              disableToolbar
+              variant='inline'
+              format='dd/MM/yyyy'
+              //margin='normal'
+              label='Data de nascimento'
+              disableFuture={true}
+              openTo='year'
+              views={['year', 'month', 'date']}
+              value={this.state.birthdate}
+              onChange={(birthdate) => this.setState({ birthdate }) }
+              KeyboardButtonProps={{ 'aria-label': 'change date' }}
+              required
+            />
+          </MuiPickersUtilsProvider>
+        </div>
 
         <LoadingButton disabled={ this.state.loading } onClick={ () => this.submit() } variant='contained' pending={ this.state.loading } pendingPosition='center'>Cadastrar</LoadingButton>
       </>

@@ -3,9 +3,12 @@ import styles, { css } from 'styled-components'
 import { Link, withRouter } from 'react-router-dom'
 
 import { IsLogged, Logout } from '../api/AccountController'
+import { can } from '../api/authenticate'
 
 import Logo from '../assets/logo-clean.png'
-import { Button } from '@material-ui/core'
+
+import Button from '@material-ui/core/Button'
+import Divider from '@material-ui/core/Divider'
 
 const Menu = styles.nav(css`
   z-index: 100;
@@ -52,6 +55,16 @@ const StyledLink = styles(Link)(css`
   }
 `)
 
+const Tab = styles(Link)(css`
+  margin-left: 25px;
+  display: flex;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: bold;
+  }
+`)
+
 function Header(props) {
   const firstname = (localStorage.name || '').split(' ')[0]
 
@@ -59,9 +72,31 @@ function Header(props) {
     <Menu>
       <StyledLink to='/' style={{ padding: 0 }}><img src={Logo} /></StyledLink>
       <h1>Underdog Kennels</h1>
+
+      <div style={{ display: 'flex' }} hidden={!IsLogged()}>
+        <Divider style={{ marginLeft: '25px' }} orientation="vertical" flexItem />
+        <Tab to='/search-pet' label="Pets" flexItem><h3>Pets</h3></Tab>
+        <Divider style={{ marginLeft: '25px' }} orientation="vertical" flexItem />
+
+        <Tab to='/search-owner'><h3>Donos</h3></Tab>
+        <Divider style={{ marginLeft: '25px' }} orientation="vertical" flexItem />
+
+        <Tab to='/edit-diseases'><h3>Doenças</h3></Tab>
+        <Divider style={{ marginLeft: '25px' }} orientation="vertical" flexItem />
+
+        <Tab to='/edit-vaccines'><h3>Vacinas</h3></Tab>
+        <Divider style={{ marginLeft: '25px' }} orientation="vertical" flexItem />
+
+        <Tab to='/finance'><h3>Finanças</h3></Tab>
+        <Divider style={{ marginLeft: '25px' }} orientation="vertical" flexItem />
+
+        <Tab to='/users-management' hidden={IsLogged() ? !can().readAny('user').granted : !IsLogged()}><h3>Usuários</h3></Tab>
+        <Divider style={{ marginLeft: '25px' }} orientation="vertical" flexItem hidden={IsLogged() ? !can().readAny('user').granted : !IsLogged()} />
+      </div>
+
       <span style={{ marginLeft: 'auto' }} />
 
-      <span>{ firstname }</span>
+      <span><Link to='/my-account' style={{ textDecoration: 'none' }}>{ firstname }</Link></span>
       <Button onClick={ () => Logout(props.history) } hidden={!IsLogged()}><span style={{ color: 'var(--text)' }}>Sair</span></Button>
     </Menu>
   )

@@ -6,6 +6,9 @@ import { TextField } from '@material-ui/core'
 import { LoadingButton } from '@material-ui/lab'
 import Header from '../components/Header'
 import Box from '../components/Box'
+import Button from '@material-ui/core/Button'
+import AddIcon from '@material-ui/icons/Add'
+import SearchIcon from '@material-ui/icons/Search'
 
 import { SearchOwner } from '../api/OwnerController'
 import StatusBox from '../components/StatusBox'
@@ -15,6 +18,8 @@ import InputMask from 'react-input-mask'
 const Main = styles.main`
   //background-color: red;
   min-height: 100%;
+  //background-image: linear-gradient(45deg, #039be5 30%, #81d4fa 90%);
+  //min-height: 100vh;
   display: flex;
   flex-direction: column;
   padding: 20px;
@@ -22,7 +27,7 @@ const Main = styles.main`
 
 const Menu = styles.div`
   display: flex;
-  width: auto;
+  width: 1000px;
   margin: 0 auto;
   flex-direction: column;
   //background: pink;
@@ -55,7 +60,29 @@ const Menu = styles.div`
     }
   }
 
+  div.buttons {
+    display: flex;
+    flex-direction: row;
+    //justify-content: space-between;
+    justify-content: center;
+    margin-top: 20px;
+    //margin-right: 20px;
+
+    > *:not(:last-child) {
+      margin-right: 20px;
+    }
+  }
+
+  .confirm-button {
+    background-color: #32CD32;
+    &:hover {
+      background-color: #228B22;
+    }
+  }
+
   .search-button {
+    //display: flex;
+    //flex-direction: column;
     text-align: right;
     margin-top: 20px;
     margin-right: 20px;
@@ -76,6 +103,7 @@ const Menu = styles.div`
 
     th, td {
       padding: 8px;
+      border: 1px solid rgba(0, 0, 0, 0.4);
 
       a {
         color: var(--white);
@@ -127,19 +155,19 @@ export default class SearchOwnerForm extends Component {
 
         <Box>
           <Menu>
-            <span>&#8592; <Link to='/'>Voltar</Link></span>
+            <span>&#8592; <Link to='/' style={{ color: 'var(--white)' }}>Voltar</Link></span>
             <h3>Buscar Dono</h3>
-            <Link to='/add-owner'>Adicionar Dono</Link>
-            <br />
 
             <div className='fields'>
-              <InputMask mask='999.999.999-99' value={this.state.cpf} onChange={(e) => this.setState({ cpf: e.target.value })}>
+              <InputMask style={{ flex: 1 }} mask='999.999.999-99' value={ this.state.cpf } onChange={ (e) => this.setState({ cpf: e.target.value }) }>
                 { (inputProps) => <TextField {...inputProps} label='CPF' variant='outlined' type='text' inputProps={{ pattern: '\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}' }} required /> }
               </InputMask>
             </div>
 
-            <div className='search-button'>
-              <LoadingButton disabled={ this.state.loading } onClick={ () => this.search() } variant='contained' pending={ this.state.loading } pendingPosition='center'>Buscar</LoadingButton>
+            <div className='buttons'>
+              <Button className='confirm-button' component={Link} to='/add-owner' variant='contained' startIcon={<AddIcon/>}>Adicionar</Button>
+
+              <LoadingButton disabled={ this.state.loading } onClick={ () => this.search() } variant='contained' pending={ this.state.loading } pendingPosition='center' startIcon={<SearchIcon/>}>Buscar</LoadingButton>
             </div>
 
             <StatusBox err={this.state.err} />

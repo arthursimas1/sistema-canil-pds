@@ -9,9 +9,9 @@ export default function Controller(routes) {
     delete request.body.id // doesn't allow id to be set
 
     try {
-      const data = await wlc.vaccine.create(request.body).fetch()
+      const vaccine = await wlc.vaccine.create(request.body).fetch()
 
-      await wlc.log.create({ user: request.body.user, table: 'vaccine', operation: 'create', key: data.id })
+      await wlc.log.create({ user: request.user.name, table: 'vaccine', operation: 'create', key: vaccine.id })
 
       return response.json({ })
     } catch (e) {
@@ -64,9 +64,9 @@ export default function Controller(routes) {
     delete request.body.id // doesn't allow id to be updated
 
     try {
-      await wlc.vaccine.update({ id }).set(request.body)
+      const vaccine = await wlc.vaccine.update({ id }).set(request.body).fetch()
 
-      await wlc.log.create({ user: request.body.user, table: 'vaccine', operation: 'update', key: id })
+      await wlc.log.create({ user: request.user.name, table: 'vaccine', operation: 'update', key: vaccine.id })
 
       return response.json({ })
     } catch (e) {
@@ -83,9 +83,9 @@ export default function Controller(routes) {
     const { id } = request.params
 
     try {
-      await wlc.vaccine.update({ id }).set({ hidden: true })
+      const vaccine = await wlc.vaccine.update({ id }).set({ hidden: true }).fetch()
 
-      await wlc.log.create({ user: request.body.user, table: 'vaccine', operation: 'delete', key: id })
+      await wlc.log.create({ user: request.user.name, table: 'vaccine', operation: 'delete', key: vaccine.id })
 
       return response.json({ })
     } catch (e) {

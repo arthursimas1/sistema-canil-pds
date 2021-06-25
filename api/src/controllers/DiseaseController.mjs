@@ -11,7 +11,7 @@ export default function Controller(routes) {
     try {
       const disease = await wlc.disease.create(request.body).fetch()
 
-      await wlc.log.create({ user: request.body.user, table: 'disease', operation: 'create', key: disease.id })
+      await wlc.log.create({ user: request.user.name, table: 'disease', operation: 'create', key: disease.id })
 
       return response.json({ })
     } catch (e) {
@@ -63,9 +63,9 @@ export default function Controller(routes) {
     delete request.body.id // doesn't allow id to be updated
 
     try {
-      await wlc.disease.update({ id }).set(request.body)
+      const disease = await wlc.disease.update({ id }).set(request.body).fetch()
 
-      await wlc.log.create({ user: request.body.user, table: 'disease', operation: 'update', key: id })
+      await wlc.log.create({ user: request.user.name, table: 'disease', operation: 'update', key: disease.id })
 
       return response.json({ })
     } catch (e) {
@@ -82,9 +82,9 @@ export default function Controller(routes) {
     const { id } = request.params
 
     try {
-      await wlc.disease.update({ id }).set({ hidden: true })
+      const disease = await wlc.disease.update({ id }).set({ hidden: true }).fetch()
 
-      await wlc.log.create({ user: request.body.user, table: 'disease', operation: 'delete', key: id })
+      await wlc.log.create({ user: request.user.name, table: 'disease', operation: 'delete', key: disease.id })
 
       return response.json({ })
     } catch (e) {

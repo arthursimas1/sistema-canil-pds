@@ -2,7 +2,7 @@ import React from 'react'
 import styles from 'styled-components'
 
 const StyledLink = styles.span`
-  color: var(--text);
+  color: var(--white);
   text-decoration: underline;
   cursor: pointer;
 `

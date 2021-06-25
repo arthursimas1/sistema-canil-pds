@@ -43,7 +43,9 @@ export default function Controller(routes) {
     const { id } = request.params
 
     try {
-      await wlc.user.updateOne({ id }).set(request.body)
+      const account = await wlc.user.updateOne({ id }).set(request.body).fetch()
+
+      await wlc.log.create({ user: request.user.name, table: 'user', operation: 'update', key: account.id })
     } catch (e) {
       if (e.code === 'E_UNIQUE' && e.attrNames.indexOf('email') > -1)
         return response.json({ err: 'duplicate_email' })
@@ -62,7 +64,9 @@ export default function Controller(routes) {
     if (!permission.granted) return response.json({ err: 'not_allowed' })
 
     try {
-      await wlc.user.create(request.body)
+      const account = await wlc.user.create(request.body).fetch()
+
+      await wlc.log.create({ user: request.user.name, table: 'user', operation: 'create', key: account.id })
     } catch (e) {
       if (e.code === 'E_UNIQUE' && e.attrNames.indexOf('email') > -1)
         return response.json({ err: 'duplicate_email' })
@@ -99,7 +103,9 @@ export default function Controller(routes) {
       delete updater.password
 
     try {
-      await wlc.user.updateOne({ id: request.user.id }).set(updater)
+      const account = await wlc.user.updateOne({ id: request.user.id }).set(updater).fetch()
+
+      await wlc.log.create({ user: request.user.name, table: 'user', operation: 'update', key: account.id })
     } catch (e) {
       if (e.code === 'E_UNIQUE' && e.attrNames.indexOf('email') > -1)
         return response.json({ err: 'duplicate_email' })

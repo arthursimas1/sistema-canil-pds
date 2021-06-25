@@ -24,7 +24,7 @@ const Main = styles.main`
 
 const Menu = styles.div`
   display: flex;
-  width: 250px;
+  width: 1000px;
   margin: 0 auto;
   flex-direction: column;
   //background: pink;
@@ -119,7 +119,7 @@ export default class AddDiseaseForm extends Component {
 
         <Box>
           <Menu>
-            <span>&#8592; <Link to='/edit-diseases'>Voltar</Link></span>
+            <span>&#8592; <Link to='/edit-diseases' style={{ color: 'var(--white)' }}>Voltar</Link></span>
             <h3>Adicionar Doença</h3>
 
             <StatusBox err={this.state.err} success={this.state.success} />

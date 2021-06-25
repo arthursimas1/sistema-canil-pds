@@ -10,6 +10,9 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import { LoadingButton } from '@material-ui/lab'
 import Header from '../components/Header'
 import Box from '../components/Box'
+import Button from '@material-ui/core/Button'
+import AddIcon from '@material-ui/icons/Add'
+import SearchIcon from '@material-ui/icons/Search'
 
 import { SearchDisease, UpdateDisease, DeleteDisease } from '../api/DiseaseController'
 import StatusBox from '../components/StatusBox'
@@ -26,7 +29,7 @@ const Main = styles.main`
 
 const Menu = styles.div`
   display: flex;
-  width: auto;
+  width: 1000px;
   margin: 0 auto;
   flex-direction: column;
   //background: pink;
@@ -59,6 +62,45 @@ const Menu = styles.div`
     }
   }
 
+  div.buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 20px;
+
+    > *:not(:last-child) {
+      margin-right: 20px;
+    }
+  }
+
+  .confirm-button {
+    background-color: #32CD32;
+    &:hover {
+      background-color: #228B22;
+    }
+  }
+
+  .confirm-icon {
+    fill: #32CD32;
+    &:hover {
+      fill: #228B22;
+    }
+  }
+
+  .decline-icon {
+    fill: var(--white);
+    &:hover {
+      fill: var(--lightgray);
+    }
+  }
+
+  .remove-icon {
+    fill: #D00000;
+    &:hover {
+      fill: #900000;
+    }
+  }
+
   .search-button {
     text-align: right;
     margin-top: 20px;
@@ -77,6 +119,7 @@ const Menu = styles.div`
         background: rgba(0, 0, 0, 0.03);
       }
 
+      /*
       .MuiSvgIcon-root {
         cursor: pointer;
         fill: var(--background);
@@ -94,11 +137,12 @@ const Menu = styles.div`
       &:hover .MuiSvgIcon-root.edit {
         //display: block;
         opacity: 1;
-      }
+      }*/
     }
 
     th, td {
       padding: 8px;
+      border: 1px solid rgba(0, 0, 0, 0.4);
 
       a {
         color: var(--white);
@@ -170,7 +214,7 @@ class EditableDisease extends Component {
 
   renderData() {
     return (
-      <tr><td>{this.state.name}</td><td style={{ width: '350px', whiteSpace: 'pre-line' }} dangerouslySetInnerHTML={{ __html: this.state.description }} /><td><EditIcon className='edit' onClick={() => this.setEdit()} /></td></tr>
+      <tr><td style={{ width: '200px' }}>{this.state.name}</td><td style={{ width: '700', whiteSpace: 'pre-line' }} dangerouslySetInnerHTML={{ __html: this.state.description }} /><td hidden={!can().updateAny('disease').granted}><EditIcon className='decline-icon' onClick={() => this.setEdit()} /></td></tr>
     )
   }
 
@@ -178,19 +222,25 @@ class EditableDisease extends Component {
     return (
       <tr>
         <td>
-          <TextField value={this.state.name} onChange={(e) => this.setState({ name: e.target.value })} required />
+          <TextField style={{ width: '200px' }} value={this.state.name} onChange={(e) => this.setState({ name: e.target.value })} required />
         </td>
         <td>
-          <TextField multiline={true} value={this.state.description} onChange={(e) => this.setState({ description: e.target.value })} required />
+          <TextField style={{ width: '700px' }} multiline={true} value={this.state.description} onChange={(e) => this.setState({ description: e.target.value })} required />
         </td>
         <td>
-          <DeleteIcon onClick={() => this.delete()} />
-          <BlockIcon onClick={() => this.unsetEdit()} />
-          <DoneIcon onClick={() => this.submit()} />
+          <DeleteIcon className='remove-icon' onClick={() => this.delete()} />
+          <BlockIcon className='decline-icon' onClick={() => this.unsetEdit()} />
+          <DoneIcon className='confirm-icon' onClick={() => this.submit()} />
         </td>
       </tr>
     )
   }
+
+  /*
+          <Button className='decline-button' style={{width: '100%'}} onClick={() => this.delete()} variant='contained' startIcon={<DeleteIcon style={{fill: "rgba(0, 0, 0, 0.87)"}} />}>Excluir</Button>
+          <Button style={{width: '100%'}} onClick={() => this.unsetEdit()} variant='contained' startIcon={<BlockIcon style={{fill: "rgba(0, 0, 0, 0.87)"}} />}>Cancelar</Button>
+          <Button className='confirm-button' style={{width: '100%'}} onClick={() => this.submit()} variant='contained' startIcon={<DoneIcon style={{fill: "rgba(0, 0, 0, 0.87)"}} />}>Confirmar</Button>
+  */
 
   render() {
     if (this.state.deleted)
@@ -242,17 +292,17 @@ export default class EditDiseasesForm extends Component {
 
         <Box>
           <Menu>
-            <span>&#8592; <Link to='/'>Voltar</Link></span>
+            <span>&#8592; <Link to='/' style={{ color: 'var(--white)' }}>Voltar</Link></span>
             <h3>Buscar Doenças</h3>
-            <Link to='/add-disease' hidden={!can().createAny('disease').granted}>Adicionar Doença</Link>
-            <br />
 
             <div className='fields'>
-              <TextField label='Nome ou descrição' variant='outlined' value={this.state.text} onChange={(e) => this.setState({ text: e.target.value })} />
+              <TextField style={{ flex: 1 }} label='Nome ou descrição' variant='outlined' value={this.state.text} onChange={(e) => this.setState({ text: e.target.value })} />
             </div>
 
-            <div className='search-button'>
-              <LoadingButton disabled={ this.state.loading } onClick={ () => this.search() } variant='contained' pending={ this.state.loading } pendingPosition='center'>Buscar</LoadingButton>
+            <div className='buttons'>
+              <Button className='confirm-button' component={Link} to='/add-disease' variant='contained' startIcon={<AddIcon/>} hidden={!can().createAny('disease').granted}>Adicionar</Button>
+
+              <LoadingButton disabled={ this.state.loading } onClick={ () => this.search() } variant='contained' pending={ this.state.loading } pendingPosition='center' startIcon={<SearchIcon/>}>Buscar</LoadingButton>
             </div>
 
             <StatusBox err={this.state.err} />
@@ -263,7 +313,7 @@ export default class EditDiseasesForm extends Component {
           <Menu>
             <table className='results'>
               <tbody>
-                <tr><th>Nome</th><th>Descrição</th><th /></tr>
+                <tr><th>Nome</th><th>Descrição</th><th hidden={!can().updateAny('disease').granted}/></tr>
                 { this.state.results.map((e) => <EditableDisease key={e.id} {...e} />) }
               </tbody>
             </table>

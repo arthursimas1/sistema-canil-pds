@@ -59,6 +59,20 @@ const Menu = styles.div`
     }
   }
 
+  .confirm-icon {
+    fill: #32CD32;
+    &:hover {
+      fill: #228B22;
+    }
+  }
+
+  .decline-icon {
+    fill: var(--white);
+    &:hover {
+      fill: var(--lightgray);
+    }
+  }
+
   .search-button {
     text-align: right;
     margin-top: 20px;
@@ -76,29 +90,11 @@ const Menu = styles.div`
       &:nth-child(even) {
         background: rgba(0, 0, 0, 0.03);
       }
-
-      .MuiSvgIcon-root {
-        cursor: pointer;
-        fill: var(--background);
-
-        &.edit {
-          //display: none;
-          opacity: 0;
-        }
-
-        &:hover {
-          fill: var(--white);
-        }
-      }
-
-      &:hover .MuiSvgIcon-root.edit {
-        //display: block;
-        opacity: 1;
-      }
     }
 
     th, td {
       padding: 8px;
+      border: 1px solid rgba(0, 0, 0, 0.4);
 
       a {
         color: var(--white);
@@ -174,7 +170,7 @@ class Editable extends Component {
   }
 
   renderData() {
-    return <tr><td>{this.state.name}</td><td>{this.state.email}</td><td>{this.state.roles.join(', ')}</td><td><EditIcon className='edit' onClick={() => this.setEdit()} /></td></tr>
+    return <tr><td>{this.state.name}</td><td>{this.state.email}</td><td>{this.state.roles.join(', ')}</td><td><EditIcon className='decline-icon' onClick={() => this.setEdit()} /></td></tr>
   }
 
   renderEditing() {
@@ -206,8 +202,8 @@ class Editable extends Component {
           </FormControl>
         </td>
         <td>
-          <BlockIcon onClick={() => this.unsetEdit()} />
-          <DoneIcon onClick={() => this.submit()} />
+          <BlockIcon className='decline-icon' onClick={() => this.unsetEdit()} />
+          <DoneIcon className='confirm-icon' onClick={() => this.submit()} />
         </td>
       </tr>
     )
@@ -268,7 +264,7 @@ export default class UsersMan extends Component {
 
         <Box>
           <Menu>
-            <span>&#8592; <Link to='/'>Voltar</Link></span>
+            <span>&#8592; <Link to='/' style={{ color: 'var(--white)' }}>Voltar</Link></span>
             <h3>Usuários</h3>
 
             <table className='results'>

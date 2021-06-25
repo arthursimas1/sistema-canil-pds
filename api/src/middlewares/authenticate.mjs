@@ -28,6 +28,8 @@ ACL.grant('employee')
     .updateAny(collection)
     .deleteAny(collection)
 })
+ACL.grant('admin')
+  .readAny('log')
 
 export async function AuthHealthCheck(request, response, next) {
   if (request.ip === '::ffff:127.0.0.1')

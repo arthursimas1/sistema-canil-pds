@@ -13,7 +13,7 @@ export default function Controller(routes) {
     try {
       const pet = await wlc.pet.create(request.body).fetch()
 
-      await wlc.log.create({ user: request.body.user, table: 'pet', operation: 'create', key: pet.id })
+      await wlc.log.create({ user: request.user.name, table: 'pet', operation: 'create', key: pet.id })
 
       // date set at modeling level
       const pet_timeline = await wlc.pet_timeline.create({
@@ -21,7 +21,7 @@ export default function Controller(routes) {
         pet: pet.id,
       }).fetch()
 
-      await wlc.log.create({ user: request.body.user, table: 'pet_timeline', operation: 'create', key: pet_timeline.id })
+      await wlc.log.create({ user: request.user.name, table: 'pet_timeline', operation: 'create', key: pet_timeline.id })
 
       return response.json({ pet: pet.id })
     } catch (e) {
@@ -75,9 +75,9 @@ export default function Controller(routes) {
     delete request.body.owner // doesn't allow owner to be updated by this route
 
     try {
-      await wlc.pet.update({ id }).set(request.body)
+      const pet = await wlc.pet.update({ id }).set(request.body).fetch()
 
-      await wlc.log.create({ user: request.body.user, table: 'pet', operation: 'update', key: id })
+      await wlc.log.create({ user: request.user.name, table: 'pet', operation: 'update', key: id })
 
       return response.json({ })
     } catch (e) {
@@ -104,7 +104,7 @@ export default function Controller(routes) {
       // date set at modeling level
       const pet_timeline = await wlc.pet_timeline.create({ pet, event, description, metadata }).fetch()
 
-      await wlc.log.create({ user: request.body.user, table: 'pet_timeline', operation: 'create', key: pet_timeline.id })
+      await wlc.log.create({ user: request.user.name, table: 'pet_timeline', operation: 'create', key: pet_timeline.id })
 
       if (event === 'ownership_transfer') {
         await wlc.pet.update({ id: pet }).set({ owner: metadata.new_owner })
@@ -119,7 +119,7 @@ export default function Controller(routes) {
             amount: metadata.price,
             description: `PET [pet](${pet}) vendido de [owner](${metadata.previous_owner}) para [owner](${metadata.new_owner}).`,
           }).fetch()
-          await wlc.log.create({ user: request.body.user, table: 'finance', operation: 'create', key: finance.id })
+          await wlc.log.create({ user: request.user.name, table: 'finance', operation: 'create', key: finance.id })
 
           email_headline = `A compra do seu novo PET por $${metadata.price} foi confirmada!`
         } else { // metadata.type === 'donation'

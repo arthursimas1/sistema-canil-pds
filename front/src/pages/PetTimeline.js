@@ -82,7 +82,7 @@ const Menu = styles.div`
     .MuiInputBase-inputMultiline {
       min-height: 66px;
     }
-  }
+  }  
 
   table.pets {
     margin-top: 20px;
@@ -113,7 +113,7 @@ const Timeline = styles.div`
 `
 
 const StyledEvent = styles.div`
-  // background: var(--lightgray);
+  background: var(--white);
   // border-radius: 4px;
   width: 250px;
   border: solid var(--white) 3px;
@@ -128,10 +128,17 @@ const StyledEvent = styles.div`
 `
 
 const StyledEventDark = styles(StyledEvent)`
-  background: var(--lightgray);
+  background: var(--darkgray);
   & > * {
     width: 100%;
     margin: 10px 0 !important;
+  }
+
+  .confirm-button {
+    background-color: #32CD32;
+    &:hover {
+      background-color: #228B22;
+    }
   }
 `
 
@@ -404,7 +411,7 @@ class NewEvent extends Component {
 
         <TextField label='Detalhes' variant='outlined' multiline={true} hidden={this.state.event === ''} value={this.state.description} onChange={(e) => this.setState({ description: e.target.value })} />
 
-        <LoadingButton disabled={this.state.loading} hidden={this.state.event === ''} onClick={() => this.submit()} variant='contained' pending={this.state.loading} pendingPosition='center'>Adicionar</LoadingButton>
+        <LoadingButton className='confirm-button' disabled={this.state.loading} hidden={this.state.event === ''} onClick={() => this.submit()} variant='contained' pending={this.state.loading} pendingPosition='center' startIcon={<AddIcon />}>Adicionar</LoadingButton>
       </StyledEventDark>
     )
   }
@@ -517,7 +524,7 @@ export default class PetTimeline extends Component {
           <Menu>
             <span>&#8592; <LinkOnClick onClick={() => this.props.history.goBack()}>Voltar</LinkOnClick></span><br />
 
-            <span>Dono: <Link to={`/owner/${this.state.owner.id}`}>{this.state.owner.name}</Link></span><br />
+            <span>Dono: <Link to={`/owner/${this.state.owner.id}`} style={{ color: 'var(--white)' }}>{this.state.owner.name}</Link></span><br />
 
             <StatusBox err={this.state.err} success={this.state.success}/>
 

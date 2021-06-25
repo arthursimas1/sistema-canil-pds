@@ -16,7 +16,7 @@ export default function Controller(routes) {
     try {
       const owner = await wlc.owner.create({ ...request.body, ...coordinates }).fetch()
 
-      await wlc.log.create({ user: request.body.user, table: 'owner', operation: 'create', key: owner.id })
+      await wlc.log.create({ user: request.user.name, table: 'owner', operation: 'create', key: owner.id })
 
       return response.json({ owner: owner.id })
     } catch (e) {
@@ -58,9 +58,9 @@ export default function Controller(routes) {
     let coordinates = await forward_geocode(request.body)
 
     try {
-      await wlc.owner.update({ id }).set({ ...request.body, ...coordinates })
+      const owner = await wlc.owner.update({ id }).set({ ...request.body, ...coordinates }).fetch()
 
-      await wlc.log.create({ user: request.body.user, table: 'owner', operation: 'update', key: id })
+      await wlc.log.create({ user: request.user.name, table: 'owner', operation: 'update', key: owner.id })
 
       return response.json({ })
     } catch (e) {

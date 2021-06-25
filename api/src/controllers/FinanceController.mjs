@@ -12,7 +12,7 @@ export default function Controller(routes) {
       // date set at modeling level
       const finance = await wlc.finance.create(request.body).fetch()
 
-      await wlc.log.create({ user: request.body.user, table: 'finance', operation: 'create', key: finance.id })
+      await wlc.log.create({ user: request.user.name, table: 'finance', operation: 'create', key: finance.id })
 
       return response.json({ })
     } catch (e) {

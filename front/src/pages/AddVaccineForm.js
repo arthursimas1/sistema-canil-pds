@@ -24,7 +24,7 @@ const Main = styles.main`
 
 const Menu = styles.div`
   display: flex;
-  width: 250px;
+  width: 1000px;
   margin: 0 auto;
   flex-direction: column;
   //background: pink;
@@ -50,6 +50,20 @@ const Menu = styles.div`
 
     .MuiInputBase-inputMultiline {
       min-height: 66px;
+    }
+  }
+
+  div.text {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: left;
+
+    > *:not(:last-child) {
+      margin-right: 20px;
+    }
+    > *:last-child {
+      flex: 1;
     }
   }
 `
@@ -98,9 +112,11 @@ export default class AddVaccineForm extends Component {
   renderForm() {
     return (
       <>
-        <TextField label='Nome' variant='outlined' value={this.state.name} onChange={(e) => this.setState({ name: e.target.value })} required />
+        <div className='text'>
+          <TextField style={{ width: '600px' }} label='Nome' variant='outlined' value={this.state.name} onChange={(e) => this.setState({ name: e.target.value })} required />
 
-        <TextField label='Fabricante' variant='outlined' value={this.state.manufacturer} onChange={(e) => this.setState({ manufacturer: e.target.value })} required />
+          <TextField label='Fabricante' variant='outlined' value={this.state.manufacturer} onChange={(e) => this.setState({ manufacturer: e.target.value })} required />
+        </div>
 
         <TextField label='Descrição' multiline={true} variant='outlined' value={this.state.description} onChange={(e) => this.setState({ description: e.target.value })} required />
 
@@ -122,7 +138,7 @@ export default class AddVaccineForm extends Component {
 
         <Box>
           <Menu>
-            <span>&#8592; <Link to='/edit-vaccines'>Voltar</Link></span>
+            <span>&#8592; <Link to='/edit-vaccines' style={{ color: 'var(--white)' }}>Voltar</Link></span>
             <h3>Adicionar Vacina</h3>
 
             <StatusBox err={this.state.err} success={this.state.success} />

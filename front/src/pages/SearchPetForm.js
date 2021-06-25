@@ -6,6 +6,7 @@ import { TextField, MenuItem } from '@material-ui/core'
 import { LoadingButton } from '@material-ui/lab'
 import Header from '../components/Header'
 import Box from '../components/Box'
+import SearchIcon from '@material-ui/icons/Search'
 
 import { SearchPet } from '../api/PetController'
 import BREEDS from '../assets/breeds.json'
@@ -16,6 +17,8 @@ import { IsLogged } from '../api/AccountController'
 const Main = styles.main`
   //background-color: red;
   min-height: 100%;
+  //background-image: linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%);
+  //min-height: 100vh;
   display: flex;
   flex-direction: column;
   padding: 20px;
@@ -23,7 +26,7 @@ const Main = styles.main`
 
 const Menu = styles.div`
   display: flex;
-  width: auto;
+  width: 1000px;
   margin: 0 auto;
   flex-direction: column;
   //background: pink;
@@ -57,7 +60,7 @@ const Menu = styles.div`
   }
 
   .search-button {
-    text-align: right;
+    text-align: center;
     margin-top: 20px;
     margin-right: 20px;
   }
@@ -77,6 +80,7 @@ const Menu = styles.div`
 
     th, td {
       padding: 8px;
+      border: 1px solid rgba(0, 0, 0, 0.4);
 
       a {
         color: var(--white);
@@ -130,7 +134,7 @@ export default class SearchPetForm extends Component {
 
         <Box>
           <Menu>
-            <span>&#8592; <Link to='/'>Voltar</Link></span>
+            <span>&#8592; <Link to='/' style={{ color: 'var(--white)' }}>Voltar</Link></span>
             <h3>Buscar PET</h3>
             <br />
 
@@ -150,7 +154,7 @@ export default class SearchPetForm extends Component {
             </div>
 
             <div className='search-button'>
-              <LoadingButton disabled={ this.state.loading } onClick={ () => this.search() } variant='contained' pending={ this.state.loading } pendingPosition='center'>Buscar</LoadingButton>
+              <LoadingButton disabled={ this.state.loading } onClick={ () => this.search() } variant='contained' pending={ this.state.loading } pendingPosition='center' startIcon={<SearchIcon />}>Buscar</LoadingButton>
             </div>
 
             <StatusBox err={this.state.err} />

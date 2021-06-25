@@ -1,25 +1,15 @@
 import wlc from '../database/waterline.mjs'
+import { ACL, Auth } from '../middlewares/authenticate.mjs'
 
 export default function Controller(routes) {
-  routes.post('/log', async (request, response) => {
-    delete request.body.id // doesn't allow id to be set
+  routes.get('/log', Auth, async (request, response) => {
+    const permission = ACL.can(request.user.roles).readAny('log')
+    if (!permission.granted) return response.json({ err: 'not_allowed' })
 
-    try {
-      await wlc.log.create(request.body)
-
-      return response.json({ })
-    } catch (e) {
-      console.log(e)
-
-      return response.json({ err: 'internal' })
-    }
-  })
-
-  routes.get('/log', async (request, response) => {
-    const logs = await wlc.log.find({
+    const events = await wlc.log.find({
       sort: 'date DESC',
     })
 
-    return response.json(logs)
+    return response.json(events)
   })
 }

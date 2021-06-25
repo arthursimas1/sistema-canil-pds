@@ -11,6 +11,8 @@ import ReactMarkdown from 'react-markdown'
 import Header from '../components/Header'
 import Box from '../components/Box'
 import StatusBox from '../components/StatusBox'
+import AddIcon from '@material-ui/icons/Add'
+import Divider from '@material-ui/core/Divider'
 
 import dateFormat from '../dateFormat'
 
@@ -28,7 +30,7 @@ const Main = styles.main`
 
 const Menu = styles.div`
   display: flex;
-  //width: 250px;
+  width: 1000px;
   margin: 0 auto;
   flex-direction: column;
   //background: pink;
@@ -57,6 +59,27 @@ const Menu = styles.div`
     }
   }
 
+  div.text {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: left;
+
+    > *:not(:last-child) {
+      margin-right: 20px;
+    }
+    > *:last-child {
+      flex: 1;
+    }
+  }
+
+  .confirm-button {
+    background-color: #32CD32;
+    &:hover {
+      background-color: #228B22;
+    }
+  }
+
   table.finance {
     margin-top: 20px;
     border-collapse: collapse;
@@ -64,8 +87,12 @@ const Menu = styles.div`
     tr {
       text-align: left;
 
+      &:first-child {
+        background: rgba(0, 0, 0, 0.10);
+      }
+
       &:not(:first-child,:last-child) {
-        border-bottom: solid white 2px;
+        //border-bottom: solid white 2px;
       }
 
       &.entrada {
@@ -79,6 +106,7 @@ const Menu = styles.div`
 
     th, td {
       padding: 8px;
+      border: 1px solid rgba(0, 0, 0, 0.4);
 
       a {
         color: var(--white);
@@ -156,21 +184,23 @@ export default class Finance extends Component {
 
         <Box>
           <Menu>
-            <span>&#8592; <Link to='/'>Voltar</Link></span>
+            <span>&#8592; <Link to='/' style={{ color: 'var(--white)' }}>Voltar</Link></span>
             <h3>Finanças</h3>
 
             <StatusBox err={this.state.err} success={this.state.success} />
 
             <div className='fields'>
-              <TextField select label='Tipo' variant='outlined' value={this.state.type} onChange={(e) => this.setState({ type: e.target.value })} required >
-                { ['Entrada', 'Saída'].map((label) => <MenuItem key={label} value={label} style={{ color: 'black', ...this.state.type === label ? { background: '#9e9e9e', fontWeight: 'bold' } : {} }}>{ label }</MenuItem>) }
-              </TextField>
+              <div className='text'>
+                <TextField style={{ width: '450px' }} select label='Tipo' variant='outlined' value={this.state.type} onChange={(e) => this.setState({ type: e.target.value })} required >
+                  {['Entrada', 'Saída'].map((label) => <MenuItem key={label} value={label} style={{ color: 'black', ...this.state.type === label ? { background: '#9e9e9e', fontWeight: 'bold' } : {} }}>{ label }</MenuItem>) }
+                </TextField>
 
-              <TextField label='Valor' variant='outlined' value={this.state.amount} inputProps={{ min: 1, step: '0.01' }} type='number' onChange={(e) => this.setState({ amount: e.target.value })} required />
+                <TextField label='Valor' variant='outlined' value={this.state.amount} inputProps={{ min: 1, step: '0.01' }} type='number' onChange={(e) => this.setState({ amount: e.target.value })} required />
+              </div>
 
               <TextField label='Descrição' variant='outlined' value={this.state.description} onChange={(e) => this.setState({ description: e.target.value })} required />
 
-              <LoadingButton disabled={ this.state.loading } onClick={ () => this.submit() } variant='contained' pending={ this.state.loading } pendingPosition='center'>Adicionar</LoadingButton>
+              <LoadingButton className='confirm-button' disabled={ this.state.loading } onClick={ () => this.submit() } variant='contained' pending={ this.state.loading } pendingPosition='center' startIcon={<AddIcon />}>Adicionar</LoadingButton>
             </div>
           </Menu>
         </Box>
@@ -178,6 +208,7 @@ export default class Finance extends Component {
         <Box hidden={!can().readAny('finance').granted}>
           <Menu>
             <h3>Balanço: R$ {this.state.balance}</h3>
+            <Divider style={{ marginTop: '15px', background: '#C0C0C0' }} />
             <h3>Eventos</h3>
             <span hidden={this.state.events.length > 0}>Não foram encontrados eventos</span>
             <table className='finance' hidden={this.state.events.length <= 0}>

@@ -9,7 +9,9 @@ import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/picker
 import { TextField, MenuItem } from '@material-ui/core'
 import InputMask from 'react-input-mask'
 
+import Button from '@material-ui/core/Button'
 import { LoadingButton } from '@material-ui/lab'
+import AddIcon from '@material-ui/icons/Add'
 
 import Header from '../components/Header'
 import Box from '../components/Box'
@@ -21,6 +23,8 @@ import GENDERS from '../assets/genders_human.json'
 import { IsLogged } from '../api/AccountController'
 import { QueryPostalCode } from '../api/PostalCodeController'
 
+import Divider from '@material-ui/core/Divider'
+
 const Main = styles.main`
   //background-color: red;
   min-height: 100%;
@@ -31,7 +35,7 @@ const Main = styles.main`
 
 const Menu = styles.div`
   display: flex;
-  width: 250px;
+  width: 1000px;
   margin: 0 auto;
   flex-direction: column;
   //background: pink;
@@ -60,8 +64,35 @@ const Menu = styles.div`
     }
   }
 
+  div.text {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: left;
+
+    > *:not(:last-child) {
+      margin-right: 20px;
+    }
+    > *:last-child {
+      flex: 1;
+    }
+  }
+
+  div.center {
+    display: flex;
+    flex-direction: row;
+    place-content: center;
+  }
+
+  .confirm-button {
+    background-color: #32CD32;
+    &:hover {
+      background-color: #228B22;
+    }
+  }
+
   table.pets {
-    margin-top: 20px;
+    //margin-top: 20px;
     border-collapse: collapse;
 
     tr {
@@ -75,7 +106,8 @@ const Menu = styles.div`
 
     th, td {
       padding: 8px;
-
+      border: 1px solid rgba(0, 0, 0, 0.4);
+      
       a {
         color: var(--white);
       }
@@ -190,51 +222,67 @@ export default class Owner extends Component {
             <StatusBox err={this.state.err} success={this.state.success} />
 
             <div className='fields'>
-              <Link to={`/add-pet?owner=${this.state.id}`}>Adicionar PET</Link>
+              <h3>Informações pessoais</h3>
+              <div className='text'>
+                <TextField style={{ width: 500 }} label='Nome' variant='outlined' value={this.state.name} onChange={(e) => this.setState({ name: e.target.value })} required />
 
-              <TextField label='Nome' variant='outlined' value={this.state.name} onChange={(e) => this.setState({ name: e.target.value })} required />
+                <InputMask mask='999.999.999-99' value={this.state.cpf} onChange={(e) => this.setState({ cpf: e.target.value })}>
+                  { (inputProps) => <TextField {...inputProps} label='CPF' variant='outlined' type='text' inputProps={{ pattern: '\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}' }} required /> }
+                </InputMask>
+              </div>
 
-              <InputMask mask='999.999.999-99' value={this.state.cpf} onChange={(e) => this.setState({ cpf: e.target.value })}>
-                { (inputProps) => <TextField {...inputProps} label='CPF' variant='outlined' type='text' inputProps={{ pattern: '\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}' }} required /> }
-              </InputMask>
+              <div className='text'>
+                <TextField style={{ width: 150 }} select label='Gênero' variant='outlined' value={this.state.gender} onChange={(e) => this.setState({ gender: e.target.value })} required >
+                  { GENDERS.map((label) => <MenuItem key={label} value={label} style={{ color: 'black', ...this.state.gender === label ? { background: '#9e9e9e', fontWeight: 'bold' } : {} }}>{ label }</MenuItem>) }
+                </TextField>
 
-              <TextField label='E-mail' type='email' autoComplete='email' variant='outlined' value={this.state.email} onChange={(e) => this.setState({ email: e.target.value.toLowerCase() })} required />
+                <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ptLocale}>
+                  <KeyboardDatePicker
+                    disableToolbar
+                    variant='inline'
+                    format='dd/MM/yyyy'
+                    //margin='normal'
+                    label='Data de nascimento'
+                    disableFuture={true}
+                    openTo='year'
+                    views={['year', 'month', 'date']}
+                    value={this.state.birthdate}
+                    onChange={(birthdate) => this.setState({ birthdate }) }
+                    KeyboardButtonProps={{ 'aria-label': 'change date' }}
+                    required
+                  />
+                </MuiPickersUtilsProvider>
 
-              <TextField select label='Gênero' variant='outlined' value={this.state.gender} onChange={(e) => this.setState({ gender: e.target.value })} required >
-                { GENDERS.map((label) => <MenuItem key={label} value={label} style={{ color: 'black', ...this.state.gender === label ? { background: '#9e9e9e', fontWeight: 'bold' } : {} }}>{ label }</MenuItem>) }
-              </TextField>
+                <TextField label='E-mail' type='email' autoComplete='email' variant='outlined' value={this.state.email} onChange={(e) => this.setState({ email: e.target.value.toLowerCase() })} required />
+              </div>
 
-              <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ptLocale}>
-                <KeyboardDatePicker
-                  disableToolbar
-                  variant='inline'
-                  format='dd/MM/yyyy'
-                  margin='normal'
-                  label='Data de nascimento'
-                  disableFuture={true}
-                  openTo='year'
-                  views={['year', 'month', 'date']}
-                  value={this.state.birthdate}
-                  onChange={(birthdate) => this.setState({ birthdate }) }
-                  KeyboardButtonProps={{ 'aria-label': 'change date' }}
-                  required
-                />
-              </MuiPickersUtilsProvider>
+              <Divider style={{ background: '#C0C0C0' }} />
+              <h3>Endereço</h3>
+              <div className='text'>
+                <TextField style={{ width: 600 }} label='Logradouro' variant='outlined' value={this.state.streetname} onChange={(e) => this.setState({ streetname: e.target.value })} required />
 
-              <InputMask mask='99999-999' value={this.state.postalcode} onChange={(e) => this.set_postalcode(e.target.value)}>
-                { (inputProps) => <TextField {...inputProps} inputRef={(x) => this.postalcode_ref = x } label='CEP' variant='outlined' type='text' inputProps={{ pattern: '\\d{5}-\\d{3}' }} required /> }
-              </InputMask>
+                <TextField label='Número' variant='outlined' value={this.state.number} onChange={(e) => this.setState({ number: e.target.value })} required />
+              </div>
 
-              <TextField label='Logradouro' variant='outlined' value={this.state.streetname} onChange={(e) => this.setState({ streetname: e.target.value })} required />
+              <div className='text'>
+                <TextField style={{ width: 400 }} label='Cidade' variant='outlined' value={this.state.city} onChange={(e) => this.setState({ city: e.target.value })} required />
 
-              <TextField label='Número' variant='outlined' value={this.state.number} onChange={(e) => this.setState({ number: e.target.value })} required />
+                <TextField label='Estado' variant='outlined' value={this.state.state} onChange={(e) => this.setState({ state: e.target.value })} required />
 
-              <TextField label='Estado' variant='outlined' value={this.state.state} onChange={(e) => this.setState({ state: e.target.value })} required />
+                <InputMask mask='99999-999' value={this.state.postalcode} onChange={(e) => this.set_postalcode(e.target.value)}>
+                  { (inputProps) => <TextField {...inputProps} inputRef={(x) => this.postalcode_ref = x } label='CEP' variant='outlined' type='text' inputProps={{ pattern: '\\d{5}-\\d{3}' }} required /> }
+                </InputMask>
+              </div>
 
-              <TextField label='Cidade' variant='outlined' value={this.state.city} onChange={(e) => this.setState({ city: e.target.value })} required />
-
+              <Divider style={{ background: '#C0C0C0' }} />
+              <h3>Observações</h3>
               <TextField label='Notas adicionais' multiline={true} variant='outlined' value={this.state.notes} onChange={(e) => this.setState({ notes: e.target.value })} />
 
+              <div className='center'>
+                <LoadingButton disabled={ this.state.loading } onClick={ () => this.submit() } variant='contained' pending={ this.state.loading } pendingPosition='center'>Atualizar</LoadingButton>
+              </div>
+
+              <Divider style={{ background: '#C0C0C0' }} />
               <h3>PETs atuais</h3>
               <span hidden={this.state.current_pets.length > 0}>Não foram encontrados PETs atuais</span>
               <table className='pets' hidden={this.state.current_pets.length <= 0}>
@@ -253,7 +301,9 @@ export default class Owner extends Component {
                 </tbody>
               </table>
 
-              <LoadingButton disabled={ this.state.loading } onClick={ () => this.submit() } variant='contained' pending={ this.state.loading } pendingPosition='center'>Atualizar</LoadingButton>
+              <div className='center'>
+                <Button className='confirm-button' component={Link} to={`/add-pet?owner=${this.state.id}`} variant='contained' startIcon={<AddIcon/>}>Adicionar</Button>
+              </div>
             </div>
           </Menu>
         </Box>
