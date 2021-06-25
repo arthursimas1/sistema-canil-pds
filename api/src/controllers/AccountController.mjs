@@ -1,8 +1,7 @@
 import bcrypt from 'bcryptjs'
-import jwt from 'jsonwebtoken'
-import config from 'config'
 import wlc from '../database/waterline.mjs'
 import { ACL, Auth } from '../middlewares/authenticate.mjs'
+import tokenlib from '../helper/tokenlib.mjs'
 
 export default function Controller(routes) {
   routes.post('/login', async (request, response) => {
@@ -14,7 +13,7 @@ export default function Controller(routes) {
     const user = await wlc.user.findOne({ email: email.toLowerCase().trim(), disabled: false })
 
     if (user && bcrypt.compareSync(password, user.password)) {
-      const token = jwt.sign({ id: user.id }, config.get('jwt_secret'))
+      const token = await tokenlib.Create({ sub: user.id, aud: tokenlib.AUDIENCES.AUTH })
 
       return response.json({ token, name: user.name, roles: user.roles })
     }

@@ -29,8 +29,11 @@ const Menu = styles.div`
 `
 
 export default function Home({ history }) {
-  if (!IsLogged())
-    return history.push('/login')
+  if (!IsLogged()) {
+    history.push('/login')
+
+    return <></>
+  }
 
   return (
     <Main>

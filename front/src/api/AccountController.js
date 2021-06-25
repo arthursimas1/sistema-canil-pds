@@ -1,4 +1,5 @@
 import { server } from './index'
+import { decodeToken } from 'react-jwt'
 
 export async function Login({ email, password }) {
   const { data } = await server.post('/login', { email, password })
@@ -19,7 +20,7 @@ export async function Login({ email, password }) {
 }
 
 export function IsLogged() {
-  return typeof localStorage.auth_token === 'string' && localStorage.auth_token.length > 80
+  return decodeToken(localStorage.auth_token) !== null
 }
 
 export function Logout(history = false) {
