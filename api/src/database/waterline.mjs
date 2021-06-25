@@ -10,7 +10,7 @@ const WaterlineStatic = {}
 
 export default WaterlineStatic
 
-let waterline = new Waterline()
+export let waterline = new Waterline()
 
 Object.entries(models)
   .map(([name, model]) => {

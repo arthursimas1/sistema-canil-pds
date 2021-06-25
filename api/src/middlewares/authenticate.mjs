@@ -1,6 +1,5 @@
-import config from 'config'
-import jwt from 'jsonwebtoken'
 import wlc from '../database/waterline.mjs'
+import tokenlib from '../helper/tokenlib.mjs'
 import AccessControl from 'accesscontrol'
 
 export const ACL = new AccessControl()
@@ -41,15 +40,11 @@ export async function AuthHealthCheck(request, response, next) {
 export async function Auth(request, response, next) {
   const token = request.headers.authorization
 
-  jwt.verify(token, config.get('jwt_secret'), async (err, data) => {
-    if (err)
-      return response.json({ err: 'auth' })
+  tokenlib.Verify(token, tokenlib.AUDIENCES.AUTH)
+    .then(async (decoded) => {
+      request.user = await wlc.user.findOne({ id: decoded.sub, disabled: false })
 
-    request.user = await wlc.user.findOne({ id: data.id, disabled: false })
-
-    if (!request.user)
-      return response.json({ err: 'auth' })
-
-    return next()
-  })
+      return next()
+    })
+    .catch(() => response.json({ err: 'auth' }))
 }

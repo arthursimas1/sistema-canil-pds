@@ -1,18 +1,21 @@
 #!/usr/bin/env bash
 
-cleanup() {
+function cleanup() {
   echo "caught Signal ... stopping application ..."
 
-  killall -HUP node
+  kill -s SIGINT $(cat /var/run/node.pid)
 
   echo "done."
   exit 0
 }
 
-trap cleanup HUP
+trap cleanup SIGINT SIGHUP SIGQUIT SIGKILL SIGTERM
 
 if [[ -z "$@" ]]; then
-  yarn --cwd /build startp
+  rm -f /var/run/node.pid
+  #yarn --cwd /build startp
+  cd /build
+  NODE_ENV=production node src/index.mjs
   exit $?
 
 elif [[ "$@" == "test" ]]; then

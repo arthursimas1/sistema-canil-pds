@@ -102,8 +102,11 @@ const Main = styles.main`
 `
 
 export default function Home({ history }) {
-  if (!IsLogged())
-    return history.push('/login')
+  if (!IsLogged()) {
+    history.push('/login')
+
+    return <></>
+  }
 
   const classes = useStyles()
 

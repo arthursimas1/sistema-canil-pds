@@ -234,7 +234,7 @@ class NewEvent extends Component {
       new_owner_cpf: '',
       owner_result: false,
 
-      sell_price: 1,
+      sell_price: '1',
 
       // component-related stuff
       loading: false,
@@ -265,9 +265,63 @@ class NewEvent extends Component {
     if (owner_result?.cpf === this.props.owner.cpf) {
       owner_result = false
       err = 'Não pode ser o mesmo dono'
+    } else if (owner_result && this.state.event === 'sell') {
+       this.create_paypal_button()
     }
 
     this.setState({ loading: false, owner_result, err, success: !err })
+  }
+
+  clear_paypal_button() {
+    document.getElementById('paypal-button-container').innerHTML = ''
+  }
+
+  create_paypal_button() {
+    /*
+    id: "_9Mkv8cJC7RayNq3WQyBQ"
+    cpf: "000.000.000-00"
+    name: "Underdog Kennels"
+    email: "contato@pds.3wx.ru"
+    birthdate: "2021-05-07T02:25:00.000Z"
+    streetname: "Rod. João Leme dos Santos km 110 - SP-264"
+    number: "S/N"
+    postalcode: "18052-780"
+    city: "Sorocaba"
+    state: "SP"
+    */
+
+    paypal.Buttons({
+      style: {
+        color: 'silver',
+        label: 'pay',
+        tagline: false,
+      },
+      createOrder: (data, actions) => actions.order.create({
+        payer: {
+          name: {
+            given_name: 'ARTHUR',
+            surname: 'SIMAS',
+          },
+          birth_date: '2000-06-17',
+          tax_info: { tax_id: '42636917845', tax_id_type: 'BR_CPF' },
+          address: {
+            admin_line_1: 'ABC',
+            admin_line_2: 'DEF',
+            admin_area_1: 'SP',
+            admin_area_2: 'San Jose',
+            postal_code: '95121',
+            country_code: 'BR',
+          },
+          email_address: 'arthursimas1@gmail.com',
+        },
+        purchase_units: [{ amount: { currency_code: 'BRL', value: this.state.sell_price } }],
+      }),
+      onApprove: (data, actions) => actions.order.capture().then((details) => this.submit()),
+      //onError: (err) => ('Transaction not authorized (onError)') && console.log( err),
+      //onCancel: (err) => alert('Transaction not authorized (onCancel)') && console.log( err),
+    }).render('#paypal-button-container')
+
+    return true
   }
 
   async submit() {
@@ -358,7 +412,7 @@ class NewEvent extends Component {
 
         <div style={{ color: 'white' }}><AddIcon color='secondary' style={{ marginBottom: '-4px' }} /> Adicionar evento</div>
 
-        <TextField select label='Tipo' variant='outlined' value={this.state.event} onChange={(e) => this.setState({ event: e.target.value })} required>
+        <TextField select label='Tipo' variant='outlined' value={this.state.event} onChange={(e) => { this.setState({ event: e.target.value }); this.clear_paypal_button() }} required>
           {EVENTS.map(([name, label]) => <MenuItem key={name} value={name} style={{ color: 'black', ...this.state.event === name ? { background: '#9e9e9e', fontWeight: 'bold' } : {} }}>{label}</MenuItem>)}
         </TextField>
 
@@ -411,7 +465,9 @@ class NewEvent extends Component {
 
         <TextField label='Detalhes' variant='outlined' multiline={true} hidden={this.state.event === ''} value={this.state.description} onChange={(e) => this.setState({ description: e.target.value })} />
 
-        <LoadingButton className='confirm-button' disabled={this.state.loading} hidden={this.state.event === ''} onClick={() => this.submit()} variant='contained' pending={this.state.loading} pendingPosition='center' startIcon={<AddIcon />}>Adicionar</LoadingButton>
+        <div id='paypal-button-container' />
+
+        <LoadingButton className='confirm-button' disabled={this.state.loading} hidden={this.state.event === '' || this.state.event === 'sell'} onClick={() => this.submit()} variant='contained' pending={this.state.loading} pendingPosition='center' startIcon={<AddIcon />}>Adicionar</LoadingButton>
       </StyledEventDark>
     )
   }

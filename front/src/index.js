@@ -3,7 +3,11 @@ import ReactDOM from 'react-dom'
 import { Route, BrowserRouter, Switch, Redirect } from 'react-router-dom'
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles'
 
+import { Start } from './api'
+
 import './index.css'
+
+Start()
 
 import Home from './pages/Home'
 import LoginForm from './pages/LoginForm'

@@ -1,6 +1,8 @@
+import fs from 'fs'
 import express from 'express'
 import cors from 'cors'
 import config from 'config'
+import { waterline } from './database/waterline.mjs'
 
 const app = express()
 export default app
@@ -41,7 +43,24 @@ app.use(routes)
 const http_port = config.get('http_port')
 
 if (process.env.NODE_ENV !== 'test') {
-  app.listen(http_port, () => {
+  let server = app.listen(http_port, () => {
     console.info(`HTTP backend server listening on port ${http_port}`)
   })
+
+  process.on('SIGINT', () => {
+    console.info('received SIGINT')
+
+    server.close(() => {
+      console.info('HTTP backend server closed.')
+
+      waterline.teardown(() => {
+        console.info('Waterline closed.')
+        console.info('gracefully shutting down node...')
+        process.exit(0)
+      })
+    })
+  })
 }
+
+if (process.env.NODE_ENV === 'production')
+  fs.writeFile('/var/run/node.pid', String(process.pid), (err) => err && console.error('failed to write pid file:', err))
