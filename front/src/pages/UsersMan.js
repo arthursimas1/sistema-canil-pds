@@ -133,7 +133,7 @@ class Editable extends Component {
     // save state when cancel editing
     this.initial_state = { ...this.state }
 
-    this.setState({ editing: true })
+    this.setState({ new_user: false, editing: true })
   }
 
   unsetEdit() {
@@ -214,13 +214,13 @@ class Editable extends Component {
   }
 
   render() {
-    if (this.state.new_user && !this.state.editing)
+    if (this.props.new_user && this.state.new_user)
       return <tr><td /><td /><td style={{ textDecoration: 'underline' }} onClick={() => this.setEdit()}>Adicionar usuário</td><td /></tr>
 
     return (
       <>
         { this.state.editing ? this.renderEditing() : this.renderData() }
-        { this.state.new_user !== this.props.new_user && <Editable new_user={true} /> }
+        { this.props.new_user && !this.state.new_user && <Editable new_user={true} /> }
       </>
     )
   }
